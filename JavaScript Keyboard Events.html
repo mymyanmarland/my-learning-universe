@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="my" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Keyboard Events - Cute & Modern</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts: Quicksand (Cute English), Padauk (Myanmar), Fira Code (Code) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Padauk:wght@400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons (Fixed UMD Link for Stability) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable manual dark mode toggle
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'Padauk', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                        burmese: ['Padauk', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            pink: '#FFD1DC',
+                            blue: '#BFE6FF',
+                            purple: '#E0BBE4',
+                            mint: '#D0F0C0',
+                            yellow: '#FFF4BD',
+                            dark: '#4A4A4A'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        'bubbly': '4px 4px 0px 0px rgba(0,0,0,0.1)',
+                        'pressed': 'inset 2px 2px 5px rgba(0,0,0,0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            /* Light Mode Pattern */
+            background-color: #FFF9F9;
+            background-image: radial-gradient(#E0BBE4 0.5px, transparent 0.5px), radial-gradient(#BFE6FF 0.5px, #FFF9F9 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Dark Mode Styles */
+        .dark body {
+            background-color: #0f172a;
+            background-image: radial-gradient(#334155 0.5px, transparent 0.5px), radial-gradient(#1e293b 0.5px, #0f172a 0.5px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF4BD; 
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFB7B2; 
+            border-radius: 10px;
+            border: 2px solid #FFF4BD;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-color: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF9E99; 
+        }
+        
+        /* Game Box Animation */
+        #gameBox {
+            transition: top 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), left 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.9); /* Dark Slate */
+            border-color: #334155;
+        }
+        
+        /* Drum Pad Animation */
+        .drum-pad {
+            transition: all 0.1s ease;
+        }
+        .drum-pad.active {
+            transform: scale(0.95);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            border-color: white;
+        }
+
+        /* Syntax Highlighting */
+        .code-keyword { color: #ff79c6; font-weight: bold; }
+        .code-function { color: #8be9fd; }
+        .code-string { color: #f1fa8c; }
+        .code-comment { color: #6272a4; font-style: italic; }
+    </style>
+</head>
+<body class="text-gray-800 dark:text-gray-200 font-sans antialiased selection:bg-pink-200 selection:text-pink-900 dark:selection:bg-pink-900 dark:selection:text-pink-100">
+
+    <div class="max-w-7xl mx-auto min-h-screen flex flex-col lg:flex-row gap-6 p-4 lg:p-6">
+        
+        <!-- Mobile Header with Dark Mode Toggle -->
+        <div class="lg:hidden flex justify-between items-center p-4 glass-panel rounded-2xl shadow-soft mb-2">
+            <span class="font-bold text-gray-800 dark:text-white">JS Events</span>
+            <button onclick="toggleTheme()" class="p-2 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-yellow-300 transition-transform active:scale-95">
+                <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+            </button>
+        </div>
+
+        <!-- Left Sidebar (Sticky Navigation) -->
+        <aside class="hidden lg:block w-72 flex-shrink-0 h-[calc(100vh-3rem)] sticky top-6">
+            <div class="glass-panel w-full h-full rounded-[2rem] border-2 border-white dark:border-slate-700 shadow-soft p-6 flex flex-col overflow-y-auto transition-colors">
+                <div class="flex items-center gap-3 mb-8 px-2">
+                    <div class="bg-gradient-to-tr from-pink-300 to-purple-300 p-3 rounded-2xl text-white shadow-lg rotate-3 hover:rotate-6 transition">
+                        <i data-lucide="keyboard" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Learn JS</span>
+                        <span class="font-bold text-xl text-gray-800 dark:text-white">Keyboard Events</span>
+                    </div>
+                </div>
+                
+                <nav class="space-y-3 flex-1">
+                    <a href="#intro" class="group flex items-center gap-4 px-4 py-3 text-sm font-bold rounded-2xl bg-pink-50 dark:bg-pink-900/30 text-pink-600 dark:text-pink-300 transition-all hover:scale-105 hover:shadow-sm">
+                        <div class="bg-white dark:bg-slate-800 p-1.5 rounded-lg text-pink-400 dark:text-pink-300 group-hover:text-pink-600">
+                            <i data-lucide="book-heart" class="w-5 h-5"></i>
+                        </div>
+                        မိတ်ဆက် (Intro)
+                    </a>
+                    <a href="#basics" class="group flex items-center gap-4 px-4 py-3 text-sm font-bold rounded-2xl text-gray-600 dark:text-gray-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-300 transition-all hover:pl-6">
+                        <div class="bg-gray-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 p-1.5 rounded-lg text-gray-400 dark:text-gray-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </div>
+                        Basic Logging
+                    </a>
+                    <a href="#sound-board" class="group flex items-center gap-4 px-4 py-3 text-sm font-bold rounded-2xl text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 dark:hover:text-purple-300 transition-all hover:pl-6">
+                        <div class="bg-gray-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 p-1.5 rounded-lg text-gray-400 dark:text-gray-500 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition">
+                            <i data-lucide="music" class="w-5 h-5"></i>
+                        </div>
+                        Virtual Drum Kit
+                    </a>
+                    <a href="#key-vs-code" class="group flex items-center gap-4 px-4 py-3 text-sm font-bold rounded-2xl text-gray-600 dark:text-gray-400 hover:bg-green-50 dark:hover:bg-green-900/30 hover:text-green-600 dark:hover:text-green-300 transition-all hover:pl-6">
+                        <div class="bg-gray-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 p-1.5 rounded-lg text-gray-400 dark:text-gray-500 group-hover:text-green-500 dark:group-hover:text-green-400 transition">
+                            <i data-lucide="scale" class="w-5 h-5"></i>
+                        </div>
+                        Key vs Code
+                    </a>
+                    <a href="#game-dev" class="group flex items-center gap-4 px-4 py-3 text-sm font-bold rounded-2xl text-gray-600 dark:text-gray-400 hover:bg-orange-50 dark:hover:bg-orange-900/30 hover:text-orange-600 dark:hover:text-orange-300 transition-all hover:pl-6">
+                        <div class="bg-gray-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 p-1.5 rounded-lg text-gray-400 dark:text-gray-500 group-hover:text-orange-500 dark:group-hover:text-orange-400 transition">
+                            <i data-lucide="gamepad-2" class="w-5 h-5"></i>
+                        </div>
+                        Mini Game Logic
+                    </a>
+                </nav>
+
+                <!-- Dark Mode Toggle Button -->
+                <button onclick="toggleTheme()" class="mt-4 flex items-center justify-between px-4 py-3 rounded-2xl bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition">
+                    <span class="text-sm font-bold">Dark Mode</span>
+                    <div class="relative w-10 h-5 bg-gray-300 dark:bg-slate-600 rounded-full transition-colors">
+                        <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow-sm transform transition-transform dark:translate-x-5 flex items-center justify-center">
+                            <i data-lucide="moon" class="w-2.5 h-2.5 text-slate-700 hidden dark:block"></i>
+                            <i data-lucide="sun" class="w-2.5 h-2.5 text-yellow-500 block dark:hidden"></i>
+                        </div>
+                    </div>
+                </button>
+
+                <div class="mt-4 p-5 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/40 dark:to-purple-900/40 rounded-3xl border border-indigo-100 dark:border-indigo-800 text-center">
+                    <span class="text-2xl block mb-2">💡</span>
+                    <p class="text-sm text-indigo-800 dark:text-indigo-200 font-burmese font-bold leading-relaxed">
+                        ကွန်ပျူတာ (PC) ဖြင့် စမ်းသပ်လျှင် ပိုမို အဆင်ပြေပါတယ်နော်!
+                    </p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 space-y-8 pb-20">
+            
+            <!-- Header Section -->
+            <section id="intro" class="glass-panel rounded-[2.5rem] p-8 lg:p-10 border-2 border-white dark:border-slate-700 shadow-soft relative overflow-hidden transition-colors">
+                <!-- Decorative Circle -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-yellow-100 dark:bg-yellow-900/30 rounded-full blur-2xl opacity-60"></div>
+
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-300 text-xs font-bold uppercase tracking-wider mb-4 border border-pink-200 dark:border-pink-800">
+                        <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
+                        Beginner Guide
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-gray-800 dark:text-white font-burmese mb-6 leading-tight">
+                        JavaScript <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">Keyboard Events</span>
+                    </h1>
+                    <p class="text-lg lg:text-xl text-gray-600 dark:text-gray-300 font-burmese font-medium leading-loose max-w-2xl">
+                        Web Applications တွေနဲ့ Games တွေဖန်တီးတဲ့အခါ မရှိမဖြစ်လိုအပ်တဲ့ <code class="bg-white dark:bg-slate-800 border-2 border-purple-200 dark:border-purple-800 px-2 py-0.5 rounded-lg text-purple-600 dark:text-purple-300 font-bold text-base font-mono shadow-sm">keydown</code> နဲ့ <code class="bg-white dark:bg-slate-800 border-2 border-pink-200 dark:border-pink-800 px-2 py-0.5 rounded-lg text-pink-600 dark:text-pink-300 font-bold text-base font-mono shadow-sm">keyup</code> အကြောင်းကို ပေါ့ပေါ့ပါးပါး လေ့လာကြမယ်နော်။
+                    </p>
+                </div>
+
+                <!-- Cute Event Flow Diagram -->
+                <div class="mt-10 bg-white/60 dark:bg-slate-800/60 rounded-[2rem] p-8 border-2 border-dashed border-purple-200 dark:border-purple-800 transition-colors">
+                    <h3 class="text-center text-sm font-bold text-purple-400 dark:text-purple-300 uppercase tracking-widest mb-8">Event Process Flow</h3>
+                    
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0">
+                        
+                        <!-- Step 1 -->
+                        <div class="flex flex-col items-center group">
+                            <div class="w-24 h-24 bg-white dark:bg-slate-700 rounded-full border-4 border-blue-200 dark:border-blue-800 shadow-sm flex flex-col items-center justify-center text-center p-2 z-10 transition group-hover:scale-110 group-hover:border-blue-400 dark:group-hover:border-blue-600">
+                                <i data-lucide="fingerprint" class="w-6 h-6 text-blue-400 dark:text-blue-300 mb-1"></i>
+                                <span class="text-xs font-bold text-gray-600 dark:text-gray-300">User</span>
+                                <span class="text-[10px] text-gray-400 dark:text-gray-500">Presses Key</span>
+                            </div>
+                        </div>
+
+                        <!-- Connector -->
+                        <div class="h-12 w-1 md:w-20 md:h-1 bg-gray-200 dark:bg-slate-600 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-blue-300 dark:bg-blue-600 w-full h-full -translate-x-full md:animate-[shimmer_2s_infinite]"></div>
+                        </div>
+
+                        <!-- Step 2 (Active) -->
+                        <div class="flex flex-col items-center group relative">
+                            <div class="absolute -top-10 bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-bounce">
+                                Action Starts!
+                            </div>
+                            <div class="w-28 h-28 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/50 dark:to-purple-900/50 rounded-full border-4 border-pink-300 dark:border-pink-700 shadow-md flex flex-col items-center justify-center text-center p-2 z-10 transition group-hover:rotate-3">
+                                <span class="font-mono font-bold text-pink-600 dark:text-pink-300 text-sm">keydown</span>
+                                <i data-lucide="arrow-down-to-line" class="w-5 h-5 text-pink-400 dark:text-pink-300 mt-1"></i>
+                            </div>
+                        </div>
+
+                        <!-- Connector -->
+                        <div class="h-12 w-1 md:w-20 md:h-1 bg-gray-200 dark:bg-slate-600"></div>
+
+                        <!-- Step 3 -->
+                        <div class="flex flex-col items-center group">
+                            <div class="w-24 h-24 bg-white dark:bg-slate-700 rounded-full border-4 border-green-200 dark:border-green-800 shadow-sm flex flex-col items-center justify-center text-center p-2 z-10 transition group-hover:scale-110 group-hover:border-green-400 dark:group-hover:border-green-600">
+                                <span class="font-mono font-bold text-green-600 dark:text-green-300 text-xs">keyup</span>
+                                <span class="text-[10px] text-gray-400 dark:text-gray-500 mt-1">Released</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1. Basic Key Logging -->
+            <section id="basics" class="glass-panel rounded-[2.5rem] p-1 border-2 border-white dark:border-slate-700 shadow-soft transition-colors">
+                <div class="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/40 dark:to-cyan-900/40 rounded-t-[2.4rem] p-6 border-b border-blue-100 dark:border-blue-800">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white font-burmese flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-500 text-white flex items-center justify-center text-lg shadow-lg shadow-blue-200 dark:shadow-none">1</div>
+                        Basic Key Logging
+                    </h2>
+                </div>
+                
+                <div class="p-6 lg:p-8 grid lg:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <p class="font-burmese text-gray-700 dark:text-gray-300 font-medium text-lg leading-loose">
+                            ဒါကတော့ အရိုးရှင်းဆုံး ဥပမာလေးပါ။ User က Keyboard ခလုတ်တစ်ခုခုကို နှိပ်လိုက်တိုင်း ဘာနှိပ်လိုက်လဲဆိုတာကို ဖမ်းယူပြီး ပြပေးမှာ ဖြစ်ပါတယ်။
+                        </p>
+                        
+                        <!-- Info Box -->
+                        <div class="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 p-5 rounded-3xl flex gap-4 items-start">
+                            <div class="bg-blue-200 dark:bg-blue-800 p-2 rounded-full text-blue-600 dark:text-blue-300 shrink-0">
+                                <i data-lucide="info" class="w-5 h-5"></i>
+                            </div>
+                            <p class="text-sm text-blue-800 dark:text-blue-200 font-burmese font-semibold pt-1 leading-relaxed">
+                                <code class="font-bold bg-white dark:bg-slate-900 px-2 py-0.5 rounded text-blue-600 dark:text-blue-400">document</code> ပေါ်မှာ Listener တပ်ထားတဲ့အတွက် Page ရဲ့ ဘယ်နားမှာပဲ နှိပ်နှိပ် အလုပ်လုပ်ပါတယ်နော်။
+                            </p>
+                        </div>
+
+                        <!-- Interactive Demo Area -->
+                        <div class="bg-gray-800 rounded-3xl p-6 text-center border-4 border-gray-700 shadow-xl relative overflow-hidden group">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600"></div>
+                            <p class="text-xs text-gray-400 uppercase tracking-widest mb-4 font-bold">Interactive Terminal</p>
+                            <p class="mb-4 font-burmese text-gray-300">Keyboard ခလုတ်တစ်ခုခု နှိပ်ကြည့်ပါဦး...</p>
+                            <div id="demo1-output" class="text-3xl font-mono font-bold text-green-400 h-12 flex items-center justify-center transition-all group-hover:scale-110">
+                                Waiting...<span class="animate-pulse">_</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code Block -->
+                    <div class="bg-[#282a36] rounded-3xl shadow-2xl overflow-hidden border-4 border-[#44475a]">
+                        <div class="flex items-center px-4 py-3 bg-[#44475a] border-b border-[#6272a4]">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-[#ff5555]"></div>
+                                <div class="w-3 h-3 rounded-full bg-[#f1fa8c]"></div>
+                                <div class="w-3 h-3 rounded-full bg-[#50fa7b]"></div>
+                            </div>
+                            <span class="ml-4 text-xs text-gray-300 font-mono font-bold opacity-70">script.js</span>
+                        </div>
+                        <div class="p-6 overflow-x-auto text-sm font-mono leading-loose text-white">
+<pre><code><span class="code-keyword">document</span>.<span class="code-function">addEventListener</span>(<span class="code-string">'keydown'</span>, <span class="code-keyword">function</span>(event) {
+    
+    <span class="code-comment">// event.key သည် နှိပ်လိုက်သော စာလုံးကို ပြပေးသည်</span>
+    <span class="code-keyword">console</span>.<span class="code-function">log</span>(<span class="code-string">"You pressed: "</span> + event.key);
+
+});</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Virtual Drum Kit (REPLACED CHAT APP) -->
+            <section id="sound-board" class="glass-panel rounded-[2.5rem] p-1 border-2 border-white dark:border-slate-700 shadow-soft transition-colors">
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 rounded-t-[2.4rem] p-6 border-b border-purple-100 dark:border-purple-800">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white font-burmese flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-purple-500 text-white flex items-center justify-center text-lg shadow-lg shadow-purple-200 dark:shadow-none">2</div>
+                        Virtual Drum Kit
+                    </h2>
+                </div>
+                
+                <div class="p-6 lg:p-8">
+                    <p class="font-burmese text-gray-700 dark:text-gray-300 font-medium text-lg leading-loose mb-8 max-w-3xl">
+                        Chat App အစား ပိုပြီးသေချာတဲ့ Event ဥပမာလေးနဲ့ အစားထိုးလိုက်ပါတယ်။ 
+                        <br>Keyboard ပေါ်က <span class="inline-flex items-center px-2 py-1 rounded-lg border-b-4 border-gray-300 dark:border-slate-600 bg-gray-100 dark:bg-slate-700 text-xs font-bold text-gray-700 dark:text-gray-200 font-mono mx-1">A</span> <span class="inline-flex items-center px-2 py-1 rounded-lg border-b-4 border-gray-300 dark:border-slate-600 bg-gray-100 dark:bg-slate-700 text-xs font-bold text-gray-700 dark:text-gray-200 font-mono mx-1">S</span> <span class="inline-flex items-center px-2 py-1 rounded-lg border-b-4 border-gray-300 dark:border-slate-600 bg-gray-100 dark:bg-slate-700 text-xs font-bold text-gray-700 dark:text-gray-200 font-mono mx-1">D</span> <span class="inline-flex items-center px-2 py-1 rounded-lg border-b-4 border-gray-300 dark:border-slate-600 bg-gray-100 dark:bg-slate-700 text-xs font-bold text-gray-700 dark:text-gray-200 font-mono mx-1">F</span> ခလုတ်တွေကို နှိပ်ပြီး စမ်းသပ်ကြည့်ပါ။
+                    </p>
+
+                    <div class="grid lg:grid-cols-2 gap-8 items-center">
+                        <!-- Code Block -->
+                        <div class="bg-[#282a36] rounded-3xl shadow-2xl overflow-hidden border-4 border-[#44475a] order-2 lg:order-1 h-fit">
+                            <div class="flex items-center px-4 py-3 bg-[#44475a]">
+                                <div class="flex gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-[#ff5555]"></div>
+                                    <div class="w-3 h-3 rounded-full bg-[#f1fa8c]"></div>
+                                </div>
+                                <span class="ml-4 text-xs text-gray-300 font-mono font-bold">sound_logic.js</span>
+                            </div>
+                            <div class="p-6 overflow-x-auto text-sm font-mono leading-loose text-white">
+<pre><code><span class="code-keyword">document</span>.<span class="code-function">addEventListener</span>(<span class="code-string">'keydown'</span>, (event) => {
+    
+    <span class="code-keyword">switch</span>(event.key.toLowerCase()) {
+        <span class="code-keyword">case</span> <span class="code-string">'a'</span>:
+            <span class="code-function">animatePad</span>(<span class="code-string">'pad-a'</span>);
+            <span class="code-keyword">break</span>;
+        <span class="code-keyword">case</span> <span class="code-string">'s'</span>:
+            <span class="code-function">animatePad</span>(<span class="code-string">'pad-s'</span>);
+            <span class="code-keyword">break</span>;
+        <span class="code-comment">// ... d and f</span>
+    }
+
+});</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Live Demo: Drum Pads -->
+                        <div class="order-1 lg:order-2 flex flex-col items-center">
+                            <div class="grid grid-cols-2 gap-4 w-full max-w-sm">
+                                <!-- Pad A -->
+                                <div id="pad-a" class="drum-pad aspect-square bg-rose-400 dark:bg-rose-600 rounded-2xl shadow-bubbly border-b-8 border-rose-600 dark:border-rose-800 flex flex-col items-center justify-center text-white cursor-pointer transition-transform active:scale-95 active:border-b-0 active:translate-y-2">
+                                    <span class="text-4xl font-bold mb-2">A</span>
+                                    <span class="text-xs uppercase tracking-widest opacity-80">Clap</span>
+                                </div>
+                                <!-- Pad S -->
+                                <div id="pad-s" class="drum-pad aspect-square bg-sky-400 dark:bg-sky-600 rounded-2xl shadow-bubbly border-b-8 border-sky-600 dark:border-sky-800 flex flex-col items-center justify-center text-white cursor-pointer transition-transform active:scale-95 active:border-b-0 active:translate-y-2">
+                                    <span class="text-4xl font-bold mb-2">S</span>
+                                    <span class="text-xs uppercase tracking-widest opacity-80">Hi-Hat</span>
+                                </div>
+                                <!-- Pad D -->
+                                <div id="pad-d" class="drum-pad aspect-square bg-amber-400 dark:bg-amber-600 rounded-2xl shadow-bubbly border-b-8 border-amber-600 dark:border-amber-800 flex flex-col items-center justify-center text-white cursor-pointer transition-transform active:scale-95 active:border-b-0 active:translate-y-2">
+                                    <span class="text-4xl font-bold mb-2">D</span>
+                                    <span class="text-xs uppercase tracking-widest opacity-80">Kick</span>
+                                </div>
+                                <!-- Pad F -->
+                                <div id="pad-f" class="drum-pad aspect-square bg-emerald-400 dark:bg-emerald-600 rounded-2xl shadow-bubbly border-b-8 border-emerald-600 dark:border-emerald-800 flex flex-col items-center justify-center text-white cursor-pointer transition-transform active:scale-95 active:border-b-0 active:translate-y-2">
+                                    <span class="text-4xl font-bold mb-2">F</span>
+                                    <span class="text-xs uppercase tracking-widest opacity-80">Snare</span>
+                                </div>
+                            </div>
+                            <p id="drum-feedback" class="text-center text-sm text-purple-500 font-bold mt-6 h-6 uppercase tracking-widest font-mono">Press keys to play!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Key vs Code -->
+            <section id="key-vs-code" class="glass-panel rounded-[2.5rem] p-1 border-2 border-white dark:border-slate-700 shadow-soft transition-colors">
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/40 dark:to-emerald-900/40 rounded-t-[2.4rem] p-6 border-b border-green-100 dark:border-green-800">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white font-burmese flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-green-500 text-white flex items-center justify-center text-lg shadow-lg shadow-green-200 dark:shadow-none">3</div>
+                        Key vs Code
+                    </h2>
+                </div>
+                
+                <div class="p-6 lg:p-8">
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-[2rem] border-2 border-orange-100 dark:border-orange-800 hover:border-orange-300 dark:hover:border-orange-600 transition">
+                            <h3 class="font-bold text-orange-600 dark:text-orange-400 mb-3 flex items-center gap-2 text-lg">
+                                <i data-lucide="type" class="w-5 h-5"></i> event.key
+                            </h3>
+                            <p class="text-gray-700 dark:text-gray-300 font-burmese font-medium leading-relaxed">
+                                သူက ရိုက်လိုက်တဲ့ <strong>"တန်ဖိုး (Value)"</strong> အတိုင်း ထွက်ပါတယ်။ 
+                                <br><span class="text-sm opacity-80 mt-2 block bg-white/50 dark:bg-slate-800/50 p-2 rounded-lg">ဥပမာ: 'a' (သို့) 'A' (Shift ဖိထားရင်)</span>
+                            </p>
+                        </div>
+                        <div class="bg-teal-50 dark:bg-teal-900/20 p-6 rounded-[2rem] border-2 border-teal-100 dark:border-teal-800 hover:border-teal-300 dark:hover:border-teal-600 transition">
+                            <h3 class="font-bold text-teal-600 dark:text-teal-400 mb-3 flex items-center gap-2 text-lg">
+                                <i data-lucide="cpu" class="w-5 h-5"></i> event.code
+                            </h3>
+                            <p class="text-gray-700 dark:text-gray-300 font-burmese font-medium leading-relaxed">
+                                သူက Keyboard ပေါ်က <strong>"တည်နေရာ (Physical Key)"</strong> အတိုင်း ထွက်ပါတယ်။
+                                <br><span class="text-sm opacity-80 mt-2 block bg-white/50 dark:bg-slate-800/50 p-2 rounded-lg">ဥပမာ: Left Shift နဲ့ Right Shift ကို ခွဲသိတယ်။</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Live Comparison Tool -->
+                    <div class="bg-gray-800 rounded-[2.5rem] p-8 text-center text-white border-4 border-gray-700 relative shadow-2xl">
+                        <div class="absolute top-4 left-1/2 -translate-x-1/2 bg-gray-700 px-4 py-1 rounded-full text-xs font-bold text-gray-300 uppercase tracking-widest border border-gray-600">
+                            Tester Area
+                        </div>
+                        
+                        <input type="text" id="comparisonInput" class="w-0 h-0 opacity-0 absolute"> <!-- Hidden Input -->
+                        
+                        <div class="flex flex-col md:flex-row justify-center gap-6 mt-6" id="key-code-display">
+                            <div class="bg-gray-700/50 p-6 rounded-3xl min-w-[160px] border border-gray-600 backdrop-blur-sm">
+                                <span class="text-xs text-orange-300 font-bold uppercase block mb-2">event.key</span>
+                                <span id="displayKey" class="text-4xl font-mono text-white font-bold">-</span>
+                            </div>
+                            <div class="bg-gray-700/50 p-6 rounded-3xl min-w-[160px] border border-gray-600 backdrop-blur-sm">
+                                <span class="text-xs text-teal-300 font-bold uppercase block mb-2">event.code</span>
+                                <span id="displayCode" class="text-4xl font-mono text-white font-bold">-</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 text-sm mt-6 font-burmese font-medium">Keyboard က ကြိုက်ရာခလုတ်တစ်ခုခု နှိပ်ကြည့်လိုက်နော်</p>
+                        <button onclick="document.getElementById('comparisonInput').focus()" class="mt-4 text-xs text-gray-500 hover:text-white underline md:hidden">
+                            Open Keyboard (Mobile)
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Game Logic -->
+            <section id="game-dev" class="glass-panel rounded-[2.5rem] p-1 border-2 border-white dark:border-slate-700 shadow-soft mb-8 transition-colors">
+                <div class="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/40 dark:to-orange-900/40 rounded-t-[2.4rem] p-6 border-b border-red-100 dark:border-red-800">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white font-burmese flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-red-500 text-white flex items-center justify-center text-lg shadow-lg shadow-red-200 dark:shadow-none">4</div>
+                        Mini Game Logic
+                    </h2>
+                </div>
+
+                <div class="p-6 lg:p-8">
+                    <p class="font-burmese text-gray-700 dark:text-gray-300 font-medium text-lg leading-loose mb-8">
+                        Arrow Keys တွေကို သုံးပြီး ဇာတ်ကောင်လေးကို ရွှေ့ကြည့်ရအောင်။ Game Development ရဲ့ အခြေခံ သဘောတရားလေးပါ။
+                    </p>
+
+                    <div class="grid lg:grid-cols-5 gap-8">
+                        <!-- Game Area -->
+                        <div class="lg:col-span-3">
+                            <div class="relative w-full h-80 bg-[#FFF4BD] dark:bg-[#3f3f2d] rounded-[2rem] border-4 border-[#F0E68C] dark:border-[#5c5c3d] overflow-hidden shadow-inner group transition-colors" id="gameArea" tabindex="0">
+                                <!-- Background Pattern -->
+                                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#F4A460 2px, transparent 2px); background-size: 20px 20px;"></div>
+                                
+                                <div class="absolute top-4 right-4 text-[10px] font-bold text-orange-800/50 bg-white/50 px-3 py-1 rounded-full pointer-events-none border border-orange-200/50">
+                                    Click here & use Arrows
+                                </div>
+                                
+                                <!-- The Player -->
+                                <div id="gameBox" class="absolute w-14 h-14 bg-white rounded-2xl shadow-bubbly border-2 border-gray-800 flex items-center justify-center text-gray-800 z-10 transition-transform hover:scale-110" style="top: 100px; left: 100px;">
+                                    <i data-lucide="ghost" class="w-8 h-8 text-pink-500 fill-pink-100"></i>
+                                    <!-- Cute Face -->
+                                    <div class="absolute bottom-1 right-1 w-2 h-2 bg-pink-300 rounded-full opacity-50"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Mobile Controls -->
+                            <div class="flex justify-center gap-3 mt-6 lg:hidden">
+                                <button onclick="moveBox('ArrowLeft')" class="w-12 h-12 bg-white dark:bg-slate-700 rounded-2xl border-b-4 border-gray-200 dark:border-slate-600 active:border-b-0 active:translate-y-1 flex items-center justify-center text-gray-600 dark:text-gray-300 shadow-sm"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                                <div class="flex flex-col gap-3">
+                                    <button onclick="moveBox('ArrowUp')" class="w-12 h-12 bg-white dark:bg-slate-700 rounded-2xl border-b-4 border-gray-200 dark:border-slate-600 active:border-b-0 active:translate-y-1 flex items-center justify-center text-gray-600 dark:text-gray-300 shadow-sm"><i data-lucide="arrow-up" class="w-5 h-5"></i></button>
+                                    <button onclick="moveBox('ArrowDown')" class="w-12 h-12 bg-white dark:bg-slate-700 rounded-2xl border-b-4 border-gray-200 dark:border-slate-600 active:border-b-0 active:translate-y-1 flex items-center justify-center text-gray-600 dark:text-gray-300 shadow-sm"><i data-lucide="arrow-down" class="w-5 h-5"></i></button>
+                                </div>
+                                <button onclick="moveBox('ArrowRight')" class="w-12 h-12 bg-white dark:bg-slate-700 rounded-2xl border-b-4 border-gray-200 dark:border-slate-600 active:border-b-0 active:translate-y-1 flex items-center justify-center text-gray-600 dark:text-gray-300 shadow-sm"><i data-lucide="arrow-right" class="w-5 h-5"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Code Snippet -->
+                        <div class="lg:col-span-2 flex flex-col justify-center">
+                            <div class="bg-[#282a36] rounded-[2rem] shadow-2xl overflow-hidden border-4 border-[#44475a] h-full">
+                                <div class="flex items-center px-4 py-3 bg-[#44475a]">
+                                    <span class="text-xs text-gray-300 font-mono font-bold">game_movement.js</span>
+                                </div>
+                                <div class="p-5 overflow-x-auto text-xs font-mono leading-relaxed h-full text-white">
+<pre><code><span class="code-keyword">switch</span>(event.key) {
+  <span class="code-keyword">case</span> <span class="code-string">'ArrowUp'</span>:
+    y -= speed;
+    <span class="code-keyword">break</span>;
+  <span class="code-keyword">case</span> <span class="code-string">'ArrowDown'</span>:
+    y += speed;
+    <span class="code-keyword">break</span>;
+  <span class="code-keyword">case</span> <span class="code-string">'ArrowLeft'</span>:
+    x -= speed;
+    <span class="code-keyword">break</span>;
+  <span class="code-keyword">case</span> <span class="code-string">'ArrowRight'</span>:
+    x += speed;
+    <span class="code-keyword">break</span>;
+}
+
+<span class="code-comment">// Update CSS</span>
+box.style.top = y + <span class="code-string">'px'</span>;
+box.style.left = x + <span class="code-string">'px'</span>;</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- Footer -->
+             <footer class="text-center py-8">
+                <p class="text-gray-400 text-sm font-burmese font-medium bg-white/50 dark:bg-slate-800/50 inline-block px-6 py-2 rounded-full border border-white dark:border-slate-700 shadow-sm">
+                    ✨ Made with ❤️ for learning JavaScript ✨
+                </p>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Initialize Lucide Icons (With Safety Check)
+        try {
+            if (window.lucide) {
+                lucide.createIcons();
+            } else {
+                console.warn("Lucide library not loaded properly.");
+            }
+        } catch (err) {
+            console.error("Icon initialization failed:", err);
+        }
+
+        // Dark Mode Toggle Logic
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // 1. Basic Logger Logic
+        document.addEventListener('keydown', (e) => {
+            const output = document.getElementById('demo1-output');
+            output.innerText = `"${e.key}"`;
+            output.classList.remove('text-green-400');
+            output.classList.add('text-pink-400');
+            setTimeout(() => {
+                output.classList.remove('text-pink-400');
+                output.classList.add('text-green-400');
+            }, 100);
+        });
+
+        // 2. Virtual Drum Kit Logic (New Interaction)
+        function animatePad(padId, soundName) {
+            const pad = document.getElementById(padId);
+            if(!pad) return;
+            
+            // Visual Animation
+            pad.classList.add('active');
+            pad.style.borderColor = "transparent";
+            
+            const feedback = document.getElementById('drum-feedback');
+            feedback.innerText = "Playing: " + soundName;
+            feedback.classList.remove('text-purple-500');
+            feedback.classList.add('text-pink-500', 'scale-110');
+            
+            setTimeout(() => {
+                pad.classList.remove('active');
+                pad.style.borderColor = ""; // Reset to default
+                
+                feedback.classList.remove('text-pink-500', 'scale-110');
+                feedback.classList.add('text-purple-500');
+            }, 100);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            // Check keys A, S, D, F (case insensitive)
+            switch(e.key.toLowerCase()) {
+                case 'a':
+                    animatePad('pad-a', 'Clap');
+                    break;
+                case 's':
+                    animatePad('pad-s', 'Hi-Hat');
+                    break;
+                case 'd':
+                    animatePad('pad-d', 'Kick');
+                    break;
+                case 'f':
+                    animatePad('pad-f', 'Snare');
+                    break;
+            }
+        });
+
+        // Add Click listeners for mobile support
+        document.getElementById('pad-a').addEventListener('click', () => animatePad('pad-a', 'Clap'));
+        document.getElementById('pad-s').addEventListener('click', () => animatePad('pad-s', 'Hi-Hat'));
+        document.getElementById('pad-d').addEventListener('click', () => animatePad('pad-d', 'Kick'));
+        document.getElementById('pad-f').addEventListener('click', () => animatePad('pad-f', 'Snare'));
+
+
+        // 3. Key vs Code Logic
+        document.addEventListener('keydown', (e) => {
+            document.getElementById('displayKey').innerText = e.key;
+            document.getElementById('displayCode').innerText = e.code;
+        });
+
+        // 4. Game Box Logic
+        const gameArea = document.getElementById('gameArea');
+        const box = document.getElementById('gameBox');
+        let gameX = 100;
+        let gameY = 100;
+        const speed = 20;
+
+        // Prevent scrolling with arrows inside game area
+        window.addEventListener('keydown', function(e) {
+            if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+                // Only prevent default if we are near the game area to avoid annoyance
+                // For this demo, we'll just do it globally for simplicity but add visual feedback
+                e.preventDefault();
+                moveBox(e.key);
+            }
+        }, false);
+
+        function moveBox(key) {
+            const boxSize = 56; // width/height of box (14 * 4)
+
+            switch(key) {
+                case 'ArrowUp':
+                    if(gameY > 0) gameY -= speed;
+                    break;
+                case 'ArrowDown':
+                    if(gameY < 320 - boxSize) gameY += speed; // 320 is height (h-80)
+                    break;
+                case 'ArrowLeft':
+                    if(gameX > 0) gameX -= speed;
+                    break;
+                case 'ArrowRight':
+                    if(gameX < gameArea.offsetWidth - boxSize) gameX += speed;
+                    break;
+            }
+            box.style.top = gameY + 'px';
+            box.style.left = gameX + 'px';
+            
+            // Add a little bounce effect
+            box.style.transform = "scale(0.95)";
+            setTimeout(() => box.style.transform = "scale(1.1)", 100);
+            setTimeout(() => box.style.transform = "scale(1)", 200);
+        }
+    </script>
+</body>
+</html>

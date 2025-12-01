@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuclear Energy Explained</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Quicksand:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            /* --- LIGHT MODE (Default) --- */
+            --bg-color: #FFF5F7;
+            --bg-gradient-1: rgb(255, 241, 242);
+            --bg-gradient-2: rgb(240, 253, 250);
+            --sidebar-bg: #FFFFFF;
+            --sidebar-border: rgba(0,0,0,0.08);
+            
+            /* Text - High Contrast */
+            --text-main: #050505;
+            --text-secondary: #2d2d2d;
+            --text-muted: #4b5563;
+            
+            /* Accents */
+            --primary-pink: #FFB7B2;
+            --primary-pink-dark: #d94646;
+            --soft-mint: #B5EAD7;
+            --mint-dark: #1a7f5a;
+            --pastel-purple: #C7CEEA;
+            --purple-dark: #5846c2;
+            --soft-blue: #BBE1FA;
+            --blue-dark: #093857;
+            --soft-yellow: #FFF2CC;
+            --yellow-dark: #b8860b;
+            --atom-color: #FF6B6B;
+
+            /* Card Styling */
+            --card-bg: #ffffff;
+            --card-radius: 24px;
+            --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+            --card-border: 2px solid #e5e7eb;
+            --card-hover-shadow: 0 20px 50px -10px rgba(0,0,0,0.15);
+            
+            /* Code Theme */
+            --code-bg: #1a1b26;
+            --code-text: #a9b1d6;
+            --code-header: #1f202e;
+            --code-border: #2e303e;
+
+            /* Diagram */
+            --diagram-bg: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+            --flow-box-bg: white;
+        }
+
+        /* --- DARK MODE --- */
+        body.dark-mode {
+            --bg-color: #020617;
+            --bg-gradient-1: #0f172a;
+            --bg-gradient-2: #020617;
+            --sidebar-bg: #0f172a;
+            --sidebar-border: rgba(255,255,255,0.1);
+
+            --text-main: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #cbd5e1;
+
+            --primary-pink: rgba(251, 113, 133, 0.2);
+            --primary-pink-dark: #fda4af;
+            --soft-mint: rgba(52, 211, 153, 0.2);
+            --mint-dark: #6ee7b7;
+            --pastel-purple: rgba(167, 139, 250, 0.2);
+            --purple-dark: #c4b5fd;
+            --soft-blue: rgba(56, 189, 248, 0.2);
+            --blue-dark: #7dd3fc;
+            --soft-yellow: rgba(250, 204, 21, 0.2);
+            --yellow-dark: #fde047;
+            --atom-color: #ff8585;
+
+            --card-bg: #1e293b;
+            --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+            --card-border: 2px solid #334155;
+            --card-hover-shadow: 0 20px 50px -10px rgba(0,0,0,0.7);
+
+            --diagram-bg: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            --flow-box-bg: #334155;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, color 0.3s; }
+
+        body {
+            font-family: 'Quicksand', 'Padauk', 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 10% 20%, var(--bg-gradient-1) 0%, transparent 20%), radial-gradient(circle at 90% 80%, var(--bg-gradient-2) 0%, transparent 20%);
+            color: var(--text-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            padding: 2rem 1.5rem;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--purple-dark), var(--primary-pink-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 16px;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover { background: var(--bg-color); color: var(--purple-dark); transform: translateX(5px); }
+        .nav-link.active { background: var(--pastel-purple); color: var(--purple-dark); }
+
+        .theme-toggle-btn {
+            margin-top: auto;
+            padding: 1rem;
+            border-radius: 16px;
+            background: var(--bg-color);
+            color: var(--text-main);
+            border: 2px solid var(--sidebar-border);
+            cursor: pointer;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Content */
+        main { padding: 3rem 4rem; max-width: 1100px; }
+
+        .mobile-header {
+            display: none;
+            padding: 1rem;
+            background: var(--sidebar-bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--card-shadow);
+            border: var(--card-border);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--card-hover-shadow); }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 8px; height: 100%;
+            background: var(--purple-dark); opacity: 0; transition: opacity 0.3s;
+        }
+        .card:hover::before { opacity: 1; }
+
+        .icon-box {
+            width: 60px; height: 60px; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; margin-right: 1.2rem;
+        }
+        .icon-purple { background: var(--pastel-purple); color: var(--purple-dark); }
+        .icon-blue { background: var(--soft-blue); color: var(--blue-dark); }
+        .icon-orange { background: var(--primary-pink); color: var(--primary-pink-dark); }
+        .icon-green { background: var(--soft-mint); color: var(--mint-dark); }
+
+        h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-main); line-height: 1.2; }
+        h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0; color: var(--text-main); }
+        h3 { font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.8rem; }
+        p { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 1.2rem; font-weight: 600; }
+
+        .badge {
+            display: inline-block; padding: 0.6rem 1.4rem; border-radius: 99px;
+            font-size: 0.95rem; font-weight: 800; margin-bottom: 1rem;
+            text-transform: uppercase; letter-spacing: 1px;
+            background: var(--pastel-purple); color: var(--purple-dark);
+        }
+
+        /* Comparison Grid */
+        .grid-2 {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;
+        }
+        .concept-card {
+            background: var(--card-bg); padding: 1.5rem; border-radius: 20px;
+            border: 2px solid var(--sidebar-border); text-align: center;
+        }
+        .concept-card h3 { color: var(--purple-dark); }
+
+        /* Atom Animation UI */
+        .atom-container {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: var(--diagram-bg);
+            border-radius: 16px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        .nucleus {
+            width: 60px; height: 60px; background: var(--atom-color);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; position: relative; z-index: 2;
+            box-shadow: 0 0 20px var(--atom-color);
+        }
+
+        .electron-ring {
+            position: absolute; border: 2px solid var(--text-muted);
+            border-radius: 50%; animation: spin 4s linear infinite;
+            opacity: 0.3;
+        }
+        .r1 { width: 100px; height: 100px; }
+        .r2 { width: 140px; height: 140px; animation-direction: reverse; }
+        
+        .neutron {
+            width: 15px; height: 15px; background: var(--text-secondary);
+            border-radius: 50%; position: absolute; left: 20px;
+            animation: hitNucleus 2s infinite ease-in;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes hitNucleus {
+            0% { transform: translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            50% { transform: translateX(120px); } /* Hits center */
+            51% { opacity: 0; } /* Disappears */
+            100% { opacity: 0; }
+        }
+
+        /* Code Window */
+        .code-window {
+            background: var(--code-bg); border-radius: 16px; margin: 2rem 0;
+            border: 1px solid var(--code-border); overflow: hidden;
+            font-family: 'Consolas', monospace;
+        }
+        .code-header {
+            background: var(--code-header); padding: 0.8rem 1rem;
+            display: flex; gap: 8px; border-bottom: 1px solid var(--code-border);
+        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+        pre { padding: 1.5rem; color: var(--code-text); overflow-x: auto; font-size: 1rem; }
+        .kwd { color: #bb9af7; } .str { color: #9ece6a; } .cmt { color: #565f89; } .num { color: #ff9e64; }
+
+        @media (max-width: 900px) {
+            .app-container { grid-template-columns: 1fr; }
+            .sidebar { display: none; position: fixed; width: 100%; top: 70px; z-index: 1000; height: auto; border-bottom: 1px solid var(--sidebar-border); }
+            .sidebar.active { display: flex; }
+            .mobile-header { display: flex; }
+            main { padding: 1.5rem; }
+            h1 { font-size: 2.2rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo"><span>☢️</span> Nuclear<span style="color:var(--text-main)">Ed</span></div>
+        <button onclick="toggleTheme()" style="background:none; border:none; font-size:1.2rem; margin-left:auto; margin-right:10px;">🌓</button>
+        <button onclick="toggleMenu()" style="background:var(--pastel-purple); border:none; padding:8px 12px; border-radius:8px; color:var(--purple-dark);">☰</button>
+    </header>
+
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="logo"><span>☢️</span> Nuclear<span style="color:#6C5CE7">Ed</span></div>
+            <a href="#intro" class="nav-link active" onclick="setActive(this)">၁။ မိတ်ဆက်</a>
+            <a href="#fission" class="nav-link" onclick="setActive(this)">၂။ နူကလီးယား ဖြိုခွဲခြင်း</a>
+            <a href="#fusion" class="nav-link" onclick="setActive(this)">၃။ နူကလီးယား ပေါင်းစပ်ခြင်း</a>
+            <a href="#compare" class="nav-link" onclick="setActive(this)">၄။ နှိုင်းယှဉ်ချက်</a>
+            <a href="#safety" class="nav-link" onclick="setActive(this)">၅။ ဘေးကင်းရေး</a>
+
+            <button class="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            <div style="margin-bottom: 3rem;">
+                <span class="badge">Chapter 2</span>
+                <h1>နူကလီးယားစွမ်းအင် ထုတ်လုပ်ပုံ</h1>
+                <p>အိုင်းစတိုင်း၏ $E=mc^2$ ကို လက်တွေ့အသုံးချ၍ ကမ္ဘာကြီးအတွက် လျှပ်စစ်စွမ်းအင် ထုတ်လုပ်ပုံ အသေးစိတ်။</p>
+            </div>
+
+            <!-- 1. Intro -->
+            <section id="intro" class="card">
+                <div style="display:flex; align-items:center; margin-bottom:1.5rem;">
+                    <div class="icon-box icon-blue">💡</div>
+                    <h2>၁။ အခြေခံသဘောတရား</h2>
+                </div>
+                <p>နူကလီးယားစွမ်းအင်ဆိုသည်မှာ အက်တမ် (Atom) ၏ အူတိုင် (Nucleus) အတွင်းမှ ထွက်ပေါ်လာသော စွမ်းအင်ဖြစ်သည်။ ဤစွမ်းအင်ကို နည်းလမ်းနှစ်မျိုးဖြင့် ထုတ်ယူနိုင်သည် -</p>
+                <div class="grid-2">
+                    <div class="concept-card" style="border-color: var(--primary-pink);">
+                        <span style="font-size:2.5rem;">💔</span>
+                        <h3>Nuclear Fission</h3>
+                        <p style="font-size:1rem;">အက်တမ်ကို <strong>ဖြိုခွဲ</strong> ခြင်း<br>(လက်ရှိ စက်ရုံများတွင်သုံး)</p>
+                    </div>
+                    <div class="concept-card" style="border-color: var(--mint-dark);">
+                        <span style="font-size:2.5rem;">🤝</span>
+                        <h3>Nuclear Fusion</h3>
+                        <p style="font-size:1rem;">အက်တမ်ကို <strong>ပေါင်းစပ်</strong> ခြင်း<br>(နေမင်းကြီး၏ စွမ်းအင်)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Fission -->
+            <section id="fission" class="card">
+                <div style="display:flex; align-items:center; margin-bottom:1.5rem;">
+                    <div class="icon-box icon-orange">🏭</div>
+                    <h2>၂။ နူကလီးယား ဖြိုခွဲခြင်း (Fission)</h2>
+                </div>
+                <p>ဒါကတော့ လက်ရှိကမ္ဘာပေါ်က နူကလီးယားဓာတ်အားပေးစက်ရုံတွေမှာ သုံးနေတဲ့ နည်းလမ်းပါ။ <strong>ယူရေနီယမ် (Uranium-235)</strong> ကဲ့သို့သော ကြီးမားလေးလံတဲ့ အက်တမ်အူတိုင်ကို နယူထရွန် (Neutron) လေးတစ်လုံးနဲ့ ပစ်ခွဲလိုက်တာဖြစ်ပါတယ်။</p>
+                
+                <div class="atom-container">
+                    <div class="neutron"></div>
+                    <div class="nucleus">U-235</div>
+                    <div class="electron-ring r1"></div>
+                    <div class="electron-ring r2"></div>
+                </div>
+                
+                <h3 style="color:var(--primary-pink-dark);">ဖြစ်စဉ်အဆင့်ဆင့် (Chain Reaction)</h3>
+                <ul style="list-style:none; padding-left:0; color:var(--text-secondary); font-size:1.1rem;">
+                    <li style="margin-bottom:0.8rem;">💥 ၁။ နယူထရွန်က ယူရေနီယမ် အူတိုင်ကို ဝင်တိုက်သည်။</li>
+                    <li style="margin-bottom:0.8rem;">⚡ ၂။ အူတိုင်က နှစ်ခြမ်းကွဲသွားပြီး အပူစွမ်းအင် ($E$) ထွက်လာသည်။</li>
+                    <li style="margin-bottom:0.8rem;">🔄 ၃။ နောက်ထပ် နယူထရွန်အသစ် (၂) လုံး သို့မဟုတ် (၃) လုံး ထပ်ထွက်လာသည်။</li>
+                    <li style="margin-bottom:0.8rem;">🚀 ၄။ ထိုနယူထရွန်သစ်များက အခြား ယူရေနီယမ်များကို ဆက်တိုက်ဖြိုခွဲသည်။ (ဒါကို <strong>Chain Reaction</strong> ဟုခေါ်သည်)</li>
+                </ul>
+
+                <div class="code-window">
+                    <div class="code-header">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                        <span style="color:#888; margin-left:10px; font-size:12px;">fission_reactor.py</span>
+                    </div>
+                    <pre>
+<span class="kwd">def</span> <span class="str">start_chain_reaction</span>(uranium_atoms):
+    energy_output = <span class="num">0</span>
+    neutrons = <span class="num">1</span> <span class="cmt"># Start with 1 trigger neutron</span>
+
+    <span class="kwd">while</span> uranium_atoms > <span class="num">0</span>:
+        <span class="cmt"># One neutron splits one atom</span>
+        split_atoms = neutrons
+        uranium_atoms -= split_atoms
+        
+        <span class="cmt"># E=mc^2 energy release</span>
+        energy_output += split_atoms * (C ** <span class="num">2</span>)
+        
+        <span class="cmt"># Each split creates 3 new neutrons</span>
+        neutrons = split_atoms * <span class="num">3</span>
+        
+        <span class="kwd">if</span> energy_output > <span class="str">SAFE_LIMIT</span>:
+            control_rods.activate() <span class="cmt"># Stop explosion!</span>
+            <span class="kwd">break</span>
+            
+    <span class="kwd">return</span> energy_output</pre>
+                </div>
+            </section>
+
+            <!-- 3. Fusion -->
+            <section id="fusion" class="card">
+                <div style="display:flex; align-items:center; margin-bottom:1.5rem;">
+                    <div class="icon-box icon-green">☀️</div>
+                    <h2>၃။ နူကလီးယား ပေါင်းစပ်ခြင်း (Fusion)</h2>
+                </div>
+                <p>ဒါကတော့ နေမင်းကြီးပေါ်မှာ ဖြစ်ပျက်နေတဲ့ နည်းလမ်းပါ။ ပေါ့ပါးတဲ့ <strong>ဟိုက်ဒရိုဂျင် (Hydrogen)</strong> အက်တမ်နှစ်ခုကို အလွန်ပြင်းထန်တဲ့ အပူချိန်နဲ့ ဖိအားပေးပြီး ပေါင်းစပ်လိုက်ရင် <strong>ဟီလီယမ် (Helium)</strong> ဖြစ်သွားပါတယ်။</p>
+                <div style="background:var(--highlight-bg); padding:1.5rem; border-radius:16px; border:2px dashed var(--mint-dark); margin-top:1rem;">
+                    <p style="margin:0; font-weight:700; color:var(--text-main);">✨ အားသာချက်: Fusion သည် Fission ထက် စွမ်းအင် ၄ ဆခန့် ပိုထွက်ပြီး ရေဒီယိုသတ္တိကြွ အညစ်အကြေး (Nuclear Waste) လုံးဝ မထွက်ရှိသလောက် နည်းပါးသည်။</p>
+                </div>
+            </section>
+
+            <!-- 4. Comparison -->
+            <section id="compare" class="card">
+                <div style="display:flex; align-items:center; margin-bottom:1.5rem;">
+                    <div class="icon-box icon-purple">⚖️</div>
+                    <h2>၄။ Fission နှင့် Fusion နှိုင်းယှဉ်ချက်</h2>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; min-width:500px;">
+                        <thead>
+                            <tr style="background:var(--pastel-purple); color:var(--purple-dark);">
+                                <th style="padding:1rem; text-align:left; border-radius:12px 0 0 12px;">အကြောင်းအရာ</th>
+                                <th style="padding:1rem; text-align:left;">Fission (ဖြိုခွဲ)</th>
+                                <th style="padding:1rem; text-align:left; border-radius:0 12px 12px 0;">Fusion (ပေါင်းစပ်)</th>
+                            </tr>
+                        </thead>
+                        <tbody style="color:var(--text-secondary);">
+                            <tr style="border-bottom:1px solid var(--sidebar-border);">
+                                <td style="padding:1rem; font-weight:bold;">လုပ်ဆောင်ပုံ</td>
+                                <td style="padding:1rem;">အက်တမ်ကြီးကို ခွဲထုတ်သည်</td>
+                                <td style="padding:1rem;">အက်တမ်ငယ်များကို ပေါင်းသည်</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--sidebar-border);">
+                                <td style="padding:1rem; font-weight:bold;">လောင်စာ</td>
+                                <td style="padding:1rem;">Uranium / Plutonium</td>
+                                <td style="padding:1rem;">Hydrogen Isotopes</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--sidebar-border);">
+                                <td style="padding:1rem; font-weight:bold;">ဘေးထွက်ဆိုးကျိုး</td>
+                                <td style="padding:1rem;">Nuclear Waste များသည်</td>
+                                <td style="padding:1rem;">အလွန်နည်းသည် / သန့်ရှင်းသည်</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:1rem; font-weight:bold;">လက်ရှိအခြေအနေ</td>
+                                <td style="padding:1rem;">ကမ္ဘာ့နေရာအနှံ့ အသုံးပြုနေ</td>
+                                <td style="padding:1rem;">စမ်းသပ်အဆင့်သာ ရှိသေး</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+             <!-- 5. Safety -->
+             <section id="safety" class="card">
+                <div style="display:flex; align-items:center; margin-bottom:1.5rem;">
+                    <div class="icon-box icon-blue">🛡️</div>
+                    <h2>၅။ ဘေးကင်းရေးနှင့် ထိန်းချုပ်ခြင်း</h2>
+                </div>
+                <p>နူကလီးယား ဓာတ်ပေါင်းဖိုများတွင် ပေါက်ကွဲမှုမဖြစ်စေရန် <strong>Control Rods</strong> များကို အသုံးပြုသည်။</p>
+                <p>Control Rods များသည် နယူထရွန်များကို စုပ်ယူလိုက်ခြင်းဖြင့် Chain Reaction ကို နှေးကွေးစေ သို့မဟုတ် ရပ်တန့်စေနိုင်သည်။ ကားတစ်စီး၏ ဘရိတ် (Brake) နှင့် တူညီသည်။</p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Theme Logic
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons(isDark);
+        }
+
+        function updateIcons(isDark) {
+            const icon = isDark ? '☀️' : '🌙';
+            const text = isDark ? 'Light Mode' : 'Dark Mode';
+            document.getElementById('theme-icon').textContent = icon;
+            document.getElementById('theme-text').textContent = text;
+        }
+
+        // Init Theme
+        if(localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            updateIcons(true);
+        }
+
+        // Mobile Menu
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function setActive(el) {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
+            if(window.innerWidth <= 900) toggleMenu();
+        }
+    </script>
+</body>
+</html>

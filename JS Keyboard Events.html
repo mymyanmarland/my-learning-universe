@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Keyboard Events - Modern Interactive Module</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Padauk:wght@400;700&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- PrismJS for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+
+    <style>
+        :root {
+            /* Light Mode Variables */
+            --bg-body: #FFFBF5; /* Creamy warm background */
+            --bg-card: #FFFFFF;
+            --bg-sidebar: #FFFFFF;
+            --text-main: #000000; /* Absolute Black for contrast */
+            --text-secondary: #1f1f1f; /* Much darker gray for better visibility */
+            --text-accent: #4F46E5; /* Darker Indigo for better contrast */
+            
+            --border-color: #E5E7EB;
+            --shadow-soft: 8px 8px 0px rgba(0, 0, 0, 0.08); /* Slightly stronger shadow */
+            --shadow-hover: 12px 12px 0px rgba(0, 0, 0, 0.15);
+            
+            /* Playful Accents */
+            --accent-purple: #9333EA; /* Darker Purple */
+            --accent-purple-bg: #F3E8FF;
+            --accent-mint: #059669; /* Darker Mint */
+            --accent-mint-bg: #ECFDF5;
+            --accent-rose: #E11D48; /* Darker Rose */
+            --accent-rose-bg: #FFF1F2;
+            --accent-blue: #0284C7; /* Darker Blue */
+            --accent-blue-bg: #E0F2FE;
+
+            --radius-card: 24px;
+            --radius-btn: 50px;
+            --font-main: 'Quicksand', 'Padauk', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --bg-body: #0f172a; /* Deeper dark blue */
+            --bg-card: #1e293b;
+            --bg-sidebar: #1e293b;
+            --text-main: #FFFFFF; /* Pure White */
+            --text-secondary: #E2E8F0; /* Very light gray */
+            --text-accent: #818CF8;
+            
+            --border-color: #374151;
+            --shadow-soft: 8px 8px 0px rgba(0, 0, 0, 0.6);
+            --shadow-hover: 8px 8px 0px rgba(99, 102, 241, 0.5);
+
+            --accent-purple: #C084FC;
+            --accent-purple-bg: rgba(168, 85, 247, 0.25);
+            --accent-mint: #34D399;
+            --accent-mint-bg: rgba(16, 185, 129, 0.25);
+            --accent-rose: #FB7185;
+            --accent-rose-bg: rgba(244, 63, 94, 0.25);
+            --accent-blue: #38BDF8;
+            --accent-blue-bg: rgba(14, 165, 233, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.9; /* Increased line height for better readability */
+            font-size: 18px; /* Increased font size */
+            overflow-x: scroll;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 1000;
+            background: var(--bg-card);
+            border: 3px solid var(--text-main);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--text-main);
+            font-size: 1.4rem;
+            color: var(--text-main);
+        }
+
+        .theme-toggle:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--text-main);
+        }
+
+        /* Layout */
+        .container {
+            width: 92%; /* Reduced from 100% to ensure side gaps */
+            max-width: 1250px; /* Increased width for better spread */
+            margin: 40px auto; /* Centered with vertical margin */
+            padding: 0; /* Removing internal padding since width% handles it */
+            display: grid;
+            grid-template-columns: 280px 1fr; /* Slightly wider sidebar */
+            gap: 60px; /* Increased gap for breathing room */
+            align-items: start;
+            flex: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 40px;
+            height: fit-content;
+        }
+
+        .nav-card {
+            background: var(--bg-sidebar);
+            border-radius: var(--radius-card);
+            padding: 24px;
+            border: 3px solid var(--text-main); /* Thicker border */
+            box-shadow: var(--shadow-soft);
+        }
+
+        .nav-title {
+            font-weight: 800; /* Bolder */
+            color: var(--text-main);
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-link {
+            display: block;
+            text-decoration: none;
+            color: var(--text-main); /* Changed to main text color for visibility */
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-weight: 700; /* Bolder */
+            margin-bottom: 8px;
+            border: 2px solid transparent;
+            opacity: 0.8;
+            transition: all 0.2s ease;
+        }
+
+        .toc-link:hover, .toc-link.active {
+            background-color: var(--accent-purple-bg);
+            color: var(--accent-purple);
+            border-color: var(--accent-purple);
+            transform: translateX(5px);
+            opacity: 1;
+        }
+
+        /* Content */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: 40px;
+            border: 3px solid var(--text-main); /* Thicker border */
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        /* Header Decorations */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px; /* Thicker accent line */
+        }
+        
+        .card.purple-top::before { background: var(--accent-purple); }
+        .card.blue-top::before { background: var(--accent-blue); }
+        .card.mint-top::before { background: var(--accent-mint); }
+        .card.rose-top::before { background: var(--accent-rose); }
+
+        /* Typography */
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 900; /* Extra Bold */
+            margin: 0 0 15px 0;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 800; /* Extra Bold */
+            margin-top: 0;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-weight: 800;
+            color: var(--text-main);
+            border-left: 6px solid var(--accent-blue);
+            padding-left: 15px;
+        }
+
+        p, li {
+            color: var(--text-main); /* Changed to absolute black/main color */
+            font-weight: 600; /* Increased weight for clarity */
+            margin-bottom: 1.2em;
+        }
+
+        strong {
+            color: var(--text-main);
+            font-weight: 800;
+            text-decoration: underline;
+            text-decoration-color: var(--accent-purple);
+            text-decoration-thickness: 3px;
+            text-underline-offset: 3px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            border: 2px solid currentColor;
+        }
+
+        .badge-purple { color: var(--accent-purple); background: var(--accent-purple-bg); }
+        .badge-mint { color: var(--accent-mint); background: var(--accent-mint-bg); }
+        .badge-rose { color: var(--accent-rose); background: var(--accent-rose-bg); }
+        .badge-blue { color: var(--accent-blue); background: var(--accent-blue-bg); }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .bento-item {
+            background: var(--bg-body);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+        }
+
+        .bento-item.blue { border-color: var(--accent-blue); background: var(--accent-blue-bg); }
+        .bento-item.purple { border-color: var(--accent-purple); background: var(--accent-purple-bg); }
+        .bento-item.rose { border-color: var(--accent-rose); background: var(--accent-rose-bg); }
+        
+        body.dark-mode .bento-item {
+            background: rgba(255,255,255,0.05); /* Slightly brighter bg in dark mode */
+        }
+        
+        .bento-item h3 {
+            margin-top: 0;
+            border: none;
+            padding: 0;
+        }
+
+        /* Code Block Styling */
+        pre {
+            border-radius: 16px !important;
+            margin: 30px 0 !important;
+            border: 3px solid var(--text-main);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
+        }
+        
+        code {
+            font-family: var(--font-code) !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+        }
+
+        /* Visual Diagram */
+        .diagram-wrapper {
+            background: var(--bg-body);
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px dashed var(--text-secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .d-step {
+            background: var(--bg-card);
+            border: 3px solid var(--text-main);
+            padding: 20px 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 6px 6px 0px var(--text-main);
+            min-width: 160px;
+            font-weight: 700;
+        }
+
+        .d-icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            color: var(--accent-purple);
+        }
+
+        .d-arrow {
+            font-size: 1.8rem;
+            color: var(--text-main);
+        }
+
+        /* Math/Equations */
+        .mjx-chtml {
+            font-size: 120% !important;
+            color: var(--text-main) !important;
+            outline: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container { 
+                grid-template-columns: 1fr; 
+                width: 94%; 
+                gap: 30px;
+            }
+            .sidebar { position: static; margin-bottom: 30px; }
+            .toc-list { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; }
+            .toc-link { white-space: nowrap; border: 2px solid var(--border-color); }
+            .theme-toggle { top: auto; bottom: 20px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle Light/Dark Mode">
+        <i class="fa-solid fa-moon"></i>
+    </button>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav class="nav-card">
+                <div class="nav-title">
+                    <i class="fa-solid fa-layer-group" style="color: var(--accent-purple)"></i> အခန်းကဏ္ဍများ
+                </div>
+                <ul class="toc-list">
+                    <li class="toc-item"><a href="#intro" class="toc-link">မိတ်ဆက်</a></li>
+                    <li class="toc-item"><a href="#technical" class="toc-link">နည်းပညာ ရှင်းလင်းချက်</a></li>
+                    <li class="toc-item"><a href="#simplified" class="toc-link">ရိုးရှင်းသော ရှင်းလင်းချက်</a></li>
+                    <li class="toc-item"><a href="#metaphor" class="toc-link">ဥပမာ (Metaphor)</a></li>
+                    <li class="toc-item"><a href="#keynotes" class="toc-link">မှတ်သားဖွယ်ရာများ</a></li>
+                    <li class="toc-item"><a href="#realworld" class="toc-link">လက်တွေ့ အသုံးပြုပုံ</a></li>
+                    <li class="toc-item"><a href="#diagram" class="toc-link">သဘောတရား ပုံကြမ်း</a></li>
+                    <li class="toc-item"><a href="#scenario" class="toc-link">Complete Scenario</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-area">
+
+            <!-- Title Section -->
+            <section id="intro" class="card purple-top">
+                <span class="badge badge-purple">JavaScript Module</span>
+                <h1>Keyboard Events များအကြောင်း</h1>
+                <p style="font-size: 1.2rem; color: var(--text-main);">
+                    နည်းပညာရှုထောင့်မှ တိုက်ရိုက်နားလည်စေရန်နှင့် လက်တွေ့လုပ်ငန်းခွင်တွင် အသုံးပြုပုံများကို အသေးစိတ် ရှင်းလင်းတင်ပြထားပါသည်။
+                </p>
+            </section>
+
+            <!-- Technical Explanation -->
+            <section id="technical" class="card blue-top">
+                <h2><i class="fa-solid fa-code" style="color: var(--accent-blue)"></i> Technical Explanation</h2>
+                <p>
+                    Web Browser ပေါ်တွင် အလုပ်လုပ်နေစဉ် ကီးဘုတ် (Keyboard) ပေါ်မှ ခလုတ်တစ်ခုခုကို နှိပ်လိုက်သည့်အခါ၊ ဖိထားသည့်အခါ၊ သို့မဟုတ် ပြန်လွှတ်လိုက်သည့်အခါ Browser မှ သိရှိပြီး ထုတ်ပေးလိုက်သော Signal (အချက်ပြမှု) များကို <strong>Keyboard Events</strong> ဟု ခေါ်ပါသည်။
+                </p>
+                <p>
+                    ဤ Events များသည် Document Object Model (DOM) မှတစ်ဆင့် JavaScript သို့ သတင်းအချက်အလက်များ ပို့ဆောင်ပေးပါသည်။
+                </p>
+                
+                <!-- Equation Example -->
+                <div style="background: var(--bg-body); padding: 30px; border-radius: 12px; margin-top: 20px; border: 3px dashed var(--text-secondary); text-align: center;">
+                     <p style="margin-bottom: 10px; font-weight: 800; font-size: 1.1rem;">Equation Representation:</p>
+                     $$ \text{Event}_{\text{total}} = \text{keydown} + \text{keypress} + \text{keyup} $$
+                </div>
+            </section>
+
+            <!-- Simplified Explanation -->
+            <section id="simplified" class="card mint-top">
+                <span class="badge badge-mint">Simply Put</span>
+                <h2><i class="fa-regular fa-lightbulb" style="color: var(--accent-mint)"></i> ရိုးရှင်းသော ရှင်းလင်းချက်</h2>
+                
+                <div class="bento-grid">
+                    <div class="bento-item blue">
+                        <h3>ဒါဘာလဲ?</h3>
+                        <p>ကီးဘုတ်အသုံးပြုမှုကို စောင့်ကြည့်နားထောင်ပေးသော စနစ်ဖြစ်ပြီး၊ အသုံးပြုသူက ကီးဘုတ်မှတစ်ဆင့် Data ထည့်သွင်းခြင်း၊ ဂိမ်းကစားခြင်း သို့မဟုတ် Shortcut များကို အသုံးပြုလိုသည့်အခါ JavaScript ဖြင့် တုံ့ပြန်မှုများ ဖန်တီးရန်ဖြစ်သည်။</p>
+                    </div>
+                    <div class="bento-item purple">
+                        <h3>ဘယ်အချိန်သုံးသလဲ?</h3>
+                        <p>အသုံးပြုသူက ကီးဘုတ်ခလုတ်ကို စတင်ထိလိုက်သည် (Press)၊ ဖိထားသည် (Hold)၊ သို့မဟုတ် ပြန်လွှတ်လိုက်သည် (Release) ဆိုသည့် အချိန်ကာလအပိုင်းအခြားများတွင် အသုံးပြုပါသည်။</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metaphor -->
+            <section id="metaphor" class="card rose-top">
+                <span class="badge badge-rose">Analogy</span>
+                <h2><i class="fa-solid fa-bell" style="color: var(--accent-rose)"></i> လူအိမ်ရှေ့က တံခါးဘဲလ် (Doorbell)</h2>
+                
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: var(--bg-body); border-radius: 20px; border: 2px solid transparent;">
+                        <i class="fa-solid fa-fingerprint" style="color: var(--accent-blue); font-size: 1.8rem;"></i>
+                        <div>
+                            <strong>လက်က ဘဲလ်ခလုတ်ကို စတင်ထိလိုက်ပြီး ဖိလိုက်တဲ့အချိန်</strong>
+                            <div style="font-size: 0.95em; margin-top: 8px; font-family: 'Fira Code'; color: var(--text-accent); font-weight: 700;">event: keydown</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: var(--bg-body); border-radius: 20px; border: 2px solid transparent;">
+                        <i class="fa-solid fa-stopwatch" style="color: var(--accent-purple); font-size: 1.8rem;"></i>
+                        <div>
+                            <strong>လက်က ဘဲလ်ခလုတ်ကို မလွှတ်ဘဲ ဆက်တိုက် ဖိထားခြင်း</strong>
+                            <div style="font-size: 0.95em; margin-top: 8px; font-family: 'Fira Code'; color: var(--text-accent); font-weight: 700;">event: keypress (repeating)</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: var(--bg-body); border-radius: 20px; border: 2px solid transparent;">
+                        <i class="fa-solid fa-hand-sparkles" style="color: var(--accent-mint); font-size: 1.8rem;"></i>
+                        <div>
+                            <strong>လက်ကို ခလုတ်ပေါ်မှ ဖယ်လိုက်ပြီး ခလုတ်ပြန်ကြွလာတဲ့အချိန်</strong>
+                            <div style="font-size: 0.95em; margin-top: 8px; font-family: 'Fira Code'; color: var(--text-accent); font-weight: 700;">event: keyup</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Key Notes -->
+            <section id="keynotes" class="card purple-top">
+                <h2><i class="fa-solid fa-thumbtack" style="color: var(--accent-purple)"></i> အဓိက မှတ်ရမယ့် အချက်များ</h2>
+                
+                <div class="bento-grid">
+                    <div class="bento-item rose">
+                        <h3>Events (၃) ခု</h3>
+                        <p><strong>keydown</strong> (ခလုတ်နှိပ်စ)၊ <strong>keypress</strong> (စာလုံးရိုက်ခြင်း - <em>deprecated</em>)၊ နှင့် <strong>keyup</strong> (ခလုတ်လွှတ်ခြင်း)။</p>
+                    </div>
+                    <div class="bento-item purple">
+                        <h3>event.key vs event.code</h3>
+                        <p><code>event.key</code>: ရိုက်လိုက်သော <strong>တန်ဖိုး</strong> (ဥပမာ - "a", "A", "Enter")။</p>
+                        <p><code>event.code</code>: ကီးဘုတ်ပေါ်ရှိ <strong>ခလုတ်နေရာ</strong> (ဥပမာ - "KeyA")။</p>
+                    </div>
+                    <div class="bento-item blue">
+                        <h3>Focus & Default</h3>
+                        <p>Event အလုပ်လုပ်ရန် Element သည် Focus ရရှိနေရန် လိုသည်။ Browser မူလလုပ်ဆောင်ချက် (ဥပမာ F5) ပိတ်ရန် <code>event.preventDefault()</code> သုံးရသည်။</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real World Usage -->
+            <section id="realworld" class="card blue-top">
+                <h2><i class="fa-solid fa-laptop-code" style="color: var(--accent-blue)"></i> လက်တွေ့ အသုံးပြုပုံ (Real World)</h2>
+
+                <h3>(က) <code>keydown</code> Event</h3>
+                <p>ဂိမ်းများတွင် ဇာတ်ကောင် ရွေ့လျားရန်၊ Shortcut Key များ (Ctrl+C, Ctrl+V) ဖမ်းယူရန် သုံးသည်။</p>
+                <pre><code class="language-javascript">// အသုံးပြုသူက Enter ခလုတ်နှိပ်လျှင် Login ဝင်မည့် Function
+document.addEventListener('keydown', function(event) {
+    // event.key သည် နှိပ်လိုက်သော တန်ဖိုးကို စစ်ဆေးခြင်း
+    if (event.key === 'Enter') {
+        console.log('Login လုပ်ဆောင်ချက် စတင်ပါပြီ...');
+        // performLogin();
+    }
+});</code></pre>
+
+                <h3>(ခ) <code>keyup</code> Event</h3>
+                <p>စာရိုက်ပြီးသွားမှ အလုပ်လုပ်စေချင်သည့်အခါ (ဥပမာ - Search Box တွင် စာရိုက်ပြီးမှ ရှာဖွေခြင်း) သုံးသည်။</p>
+                <pre><code class="language-javascript">const searchInput = document.getElementById('search-box');
+
+searchInput.addEventListener('keyup', function(event) {
+    // လက်ရှိ ရိုက်ထားသော စာသားကို ယူမည်
+    const query = event.target.value;
+    
+    // စာလုံး လွှတ်လိုက်တိုင်း Console တွင် ပေါ်မည်
+    console.log("ရှာဖွေနေသည်: " + query);
+});</code></pre>
+            </section>
+
+            <!-- Diagram -->
+            <section id="diagram" class="card mint-top">
+                <h2><i class="fa-solid fa-shapes" style="color: var(--accent-mint)"></i> သဘောတရား ပုံကြမ်း</h2>
+                
+                <div class="diagram-wrapper">
+                    <div class="d-step">
+                        <div class="d-icon"><i class="fa-solid fa-hand-pointer"></i></div>
+                        <strong>လက်စတင်ထိ</strong>
+                        <div style="font-size: 0.8rem; margin-top: 5px;">keydown</div>
+                    </div>
+                    
+                    <i class="fa-solid fa-arrow-right-long d-arrow"></i>
+                    
+                    <div class="d-step">
+                        <div class="d-icon"><i class="fa-regular fa-hand-pointer"></i></div>
+                        <strong>လက်ဖိထားဆဲ</strong>
+                        <div style="font-size: 0.8rem; margin-top: 5px;">repeating</div>
+                    </div>
+                    
+                    <i class="fa-solid fa-arrow-right-long d-arrow"></i>
+                    
+                    <div class="d-step">
+                        <div class="d-icon"><i class="fa-regular fa-hand-paper"></i></div>
+                        <strong>လက်ပြန်ကြွ</strong>
+                        <div style="font-size: 0.8rem; margin-top: 5px;">keyup</div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--accent-mint-bg); padding: 25px; border-radius: 16px; border: 3px solid var(--accent-mint); margin-top: 25px;">
+                    <strong style="color: var(--accent-mint); font-size: 1.1rem; text-decoration: none;">Real World Scenario (ဂိမ်း):</strong>
+                    <ul style="margin: 10px 0 0 20px; color: var(--text-secondary);">
+                        <li style="color: var(--accent-mint-dark);"><code>keydown</code>: ကား စတင် ကွေ့သည်။ (တာယာဘီး လှည့်သွားသည်)</li>
+                        <li style="color: var(--accent-mint-dark);">Hold Key: ကား ဆက်လက် ကွေ့နေသည်။</li>
+                        <li style="color: var(--accent-mint-dark);"><code>keyup</code>: ကား ကွေ့ခြင်း ရပ်သွားသည်။ (တာယာဘီး တည့်သွားသည်)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Complete Scenario -->
+            <section id="scenario" class="card rose-top">
+                <span class="badge badge-rose">Example Project</span>
+                <h2><i class="fa-solid fa-layer-group" style="color: var(--accent-rose)"></i> Modal Box ပိတ်ခြင်း</h2>
+                <p>Modal Box (Pop-up) တစ်ခု ပွင့်နေချိန်တွင် <code>Escape</code> (Esc) ခလုတ် နှိပ်လိုက်ပါက Modal ကို ပိတ်ပေးရမည့် လုပ်ဆောင်ချက်။</p>
+                
+                <pre><code class="language-javascript">// Modal Element ကို လှမ်းယူခြင်း
+const modal = document.querySelector('.modal');
+
+// Document တစ်ခုလုံးကို နားထောင်မည်
+document.addEventListener('keydown', function(event) {
+    
+    // နှိပ်လိုက်သော ခလုတ်သည် Escape ဖြစ်ပြီး Modal ဖွင့်နေလျှင်
+    if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+        
+        // Modal ကို ပိတ်မည့် Function ခေါ်ခြင်း
+        closeModal();
+        console.log('Escape key ဖြင့် Modal ကို ပိတ်လိုက်ပါပြီ။');
+    }
+});
+
+function closeModal() {
+    modal.classList.add('hidden');
+}</code></pre>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Syntax Highlighting Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+
+    <script>
+        // Smooth scrolling for sidebar links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Theme Toggle Logic
+        const themeBtn = document.getElementById('themeToggle');
+        const icon = themeBtn.querySelector('i');
+        const body = document.body;
+
+        // Check local storage
+        if(localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if(body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>

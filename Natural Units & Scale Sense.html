@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="my" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 7 – Natural Units & Scale Sense</title>
+    
+    <!-- Google Fonts: Inter for UI/Numbers, Noto Sans Myanmar for Text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Myanmar:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- MathJax for LaTeX Rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+    <!-- Custom Config & Styles -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Myanmar', 'sans-serif'],
+                        burmese: ['Noto Sans Myanmar', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#4f46e5',   /* Indigo 600 */
+                        secondary: '#64748b', /* Slate 500 */
+                        bgLight: '#f8fafc',   /* Slate 50 */
+                        cardBg: '#ffffff',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar for Webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Syntax Highlighting Mockup */
+        .code-keyword { color: #c678dd; } /* Purple */
+        .code-function { color: #61afef; } /* Blue */
+        .code-string { color: #98c379; }   /* Green */
+        .code-comment { color: #5c6370; font-style: italic; } /* Grey */
+        .code-number { color: #d19a66; }   /* Orange */
+        
+        /* Smooth scrolling offset for sticky headers */
+        html {
+            scroll-padding-top: 80px;
+        }
+    </style>
+</head>
+<body class="bg-bgLight text-slate-700 font-sans antialiased">
+
+    <div class="flex flex-col lg:flex-row min-h-screen">
+
+        <!-- Sidebar Navigation (Desktop) -->
+        <aside class="hidden lg:flex flex-col w-72 h-screen fixed bg-white border-r border-slate-200 shadow-sm z-20">
+            <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-lg">
+                    φ
+                </div>
+                <h1 class="text-xl font-bold text-slate-800 tracking-tight">Particle Physics</h1>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+                <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Table of Contents</div>
+                
+                <a href="#intro" class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg bg-indigo-50 text-primary transition-colors">
+                    <span>1.</span> Technical Explanation
+                </a>
+                <a href="#analogy" class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                    <span>2.</span> Simplified Analogy
+                </a>
+                <a href="#keynotes" class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                    <span>3.</span> Key Notes
+                </a>
+                <a href="#realworld" class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                    <span>4.</span> Real World Usage
+                </a>
+                <a href="#diagram" class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                    <span>5.</span> Visual Concept
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-100">
+                <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-500">
+                    <p class="font-medium text-slate-700 mb-1">Course Progress</p>
+                    <div class="w-full bg-slate-200 rounded-full h-1.5 mb-2">
+                        <div class="bg-primary h-1.5 rounded-full" style="width: 70%"></div>
+                    </div>
+                    <span>Day 7 of 10 Completed</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mobile Header -->
+        <div class="lg:hidden sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold">φ</div>
+                <span class="font-bold text-slate-800">Particle Physics</span>
+            </div>
+            <button class="text-slate-500 hover:text-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 lg:ml-72 p-4 md:p-8 max-w-5xl mx-auto space-y-8 pb-20">
+            
+            <!-- Header Section -->
+            <header class="mb-10">
+                <span class="inline-block px-3 py-1 rounded-full bg-indigo-100 text-primary text-xs font-semibold tracking-wide uppercase mb-3">Day 7 Module</span>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 leading-tight">
+                    Natural Units & Scale Sense
+                </h1>
+                <p class="text-lg text-slate-600 max-w-2xl leading-relaxed">
+                    အမှုန်ရူပဗေဒ (Particle Physics) တွင် အသုံးပြုသော သဘာဝယူနစ်များ၊ ဒြပ်ထုနှင့် စွမ်းအင် ဆက်နွယ်မှု သဘောတရားများ။
+                </p>
+            </header>
+
+            <!-- 1. Technical Explanation -->
+            <section id="intro" class="scroll-mt-24">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-slate-50 to-white px-6 py-4 border-b border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <span class="text-primary">01.</span> ရူပဗေဒရှုထောင့်မှ တိုက်ရိုက်ရှင်းလင်းချက်
+                        </h2>
+                    </div>
+                    <div class="p-6 md:p-8 space-y-6">
+                        <p class="leading-relaxed">
+                            ဤသင်ခန်းစာသည် <strong class="text-slate-900">Particle Physics (အမှုန်ရူပဗေဒ)</strong> တွင် အသုံးပြုသော <strong class="text-slate-900">Natural Units (သဘာဝယူနစ်များ)</strong> အကြောင်း ဖြစ်သည်။ ဤစနစ်တွင် ရူပဗေဒဆိုင်ရာ အခြေခံကိန်းသေများဖြစ်သည့် အလင်းအလျင် ($c$) နှင့် ပလန့်ကိန်းသေ ($\hbar$) တို့၏ တန်ဖိုးကို "$1$" ဟု သတ်မှတ်လိုက်ပါသည်။
+                        </p>
+                        
+                        <div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
+                            <p class="mb-4">ပုံမှန် ညီမျှခြင်းများတွင် $E = mc^2$ ဟု ရေးရသော်လည်း၊ $c = 1$ ဖြစ်သွားသောအခါ:</p>
+                            <div class="text-center text-2xl font-bold text-slate-800 my-4">
+                                $$E = m$$
+                            </div>
+                            <p class="text-sm text-slate-600 text-center">
+                                (စွမ်းအင် = ဒြပ်ထု)
+                            </p>
+                        </div>
+
+                        <p class="leading-relaxed">
+                            ထို့ကြောင့် စွမ်းအင် (Energy)၊ ဒြပ်ထု (Mass) နှင့် အဟုန် (Momentum) တို့အားလုံးကို ယူနစ်တစ်ခုတည်း (ဥပမာ - electron-volt or eV) ဖြင့် တိုင်းတာဖော်ပြနိုင်သွားသည်။
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+                                <span class="block text-xs font-semibold text-blue-600 uppercase mb-1">Proton Mass</span>
+                                <span class="text-lg font-bold text-slate-800">$\approx 0.94 \text{ GeV}$</span>
+                            </div>
+                            <div class="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+                                <span class="block text-xs font-semibold text-blue-600 uppercase mb-1">Electron Mass</span>
+                                <span class="text-lg font-bold text-slate-800">$\approx 0.511 \text{ MeV}$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Simplified Analogy -->
+            <section id="analogy" class="scroll-mt-24">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-slate-50 to-white px-6 py-4 border-b border-slate-100">
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <span class="text-primary">02.</span> ရိုးရှင်းသော ရှင်းလင်းချက်
+                        </h2>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-slate-900 mb-2">ဒါဘာလဲ? ဘာကြောင့်သုံးရသလဲ?</h3>
+                            <p class="leading-relaxed text-slate-600">
+                                ဒါဟာ တွက်ချက်မှုတွေကို လွယ်ကူမြန်ဆန်စေဖို့ ရှုပ်ထွေးတဲ့ ကိန်းဂဏန်းကြီးများ ($3 \times 10^8$ စသည်) ကို ဖယ်ရှားလိုက်တဲ့ စနစ်တစ်ခု ဖြစ်ပါတယ်။ "$1$" လို့ သတ်မှတ်လိုက်ရင် ညီမျှခြင်းတွေက ပိုတိုပြီး ရှင်းလင်းသွားပါတယ်။
+                            </p>
+                        </div>
+
+                        <div class="bg-amber-50 rounded-xl p-6 border border-amber-100 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 -mt-2 -mr-2 w-16 h-16 bg-amber-200 rounded-full opacity-20"></div>
+                            
+                            <h4 class="text-amber-800 font-bold mb-3 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                Analogy: ခရီးအကွာအဝေးကို အချိန်ဖြင့် တိုင်းတာခြင်း
+                            </h4>
+                            
+                            <p class="text-amber-900/80 mb-4 leading-relaxed">
+                                "ရန်ကုန်ကနေ မန္တလေးကို ဘယ်လောက်ဝေးလဲ" လို့ မေးတဲ့အခါ <span class="font-semibold">"မိုင် ၄၀၀ ဝေးတယ်"</span> လို့ ဖြေမယ့်အစား <span class="font-semibold">"ကားမောင်းရင် ၈ နာရီ ကြာတယ်"</span> လို့ ဖြေတာမျိုးနဲ့ ဆင်တူပါတယ်။
+                            </p>
+                            <p class="text-amber-900/80 leading-relaxed text-sm">
+                                ဒီနေရာမှာ "ကားမောင်းနှုန်း" (Speed) ကို ကိန်းသေတစ်ခုအဖြစ် သတ်မှတ်လိုက်တဲ့အတွက် <strong>အကွာအဝေး</strong> နဲ့ <strong>အချိန်</strong> ကို အပြန်အလှန် ဖလှယ်ပြီး ပြောလို့ရသွားခြင်း ဖြစ်ပါတယ်။ ဒီသဘောတရားအတိုင်း ရူပဗေဒမှာလည်း အလင်းအလျင် $c$ ကို ကိန်းသေ ($1$) ထားလိုက်တဲ့အတွက် <strong>ဒြပ်ထု</strong> ကို <strong>စွမ်းအင်</strong> ယူနစ်နဲ့ တိုက်ရိုက်တိုင်းတာလို့ ရသွားခြင်း ဖြစ်ပါတယ်။
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Key Notes -->
+            <section id="keynotes" class="scroll-mt-24">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Note Card 1 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-indigo-500">
+                        <h3 class="font-bold text-slate-800 mb-2">Unit Unification</h3>
+                        <p class="text-sm text-slate-600">
+                            $c = \hbar = 1$ ဖြစ်သောကြောင့် Energy, Mass, နှင့် Momentum တို့သည် ယူနစ် အတူတူ ဖြစ်သွားသည်။
+                        </p>
+                    </div>
+
+                    <!-- Note Card 2 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-pink-500">
+                        <h3 class="font-bold text-slate-800 mb-2">Conversions</h3>
+                        <ul class="text-sm text-slate-600 space-y-1">
+                            <li>$1 \text{ GeV} = 10^9 \text{ eV}$</li>
+                            <li>$1 \text{ MeV} = 10^6 \text{ eV}$</li>
+                        </ul>
+                    </div>
+
+                    <!-- Note Card 3 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-teal-500">
+                        <h3 class="font-bold text-slate-800 mb-2">Scale Comparison</h3>
+                        <p class="text-sm text-slate-600">
+                            <strong>Proton</strong> (GeV scale) သည် အလွန်လေးလံပြီး၊ <strong>Electron</strong> (MeV scale) ထက် အဆပေါင်း ၂၀၀၀ ခန့် ပိုကြီးသည်။
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Real World Application -->
+            <section id="realworld" class="scroll-mt-24">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-slate-50 to-white px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <span class="text-primary">04.</span> Real World Usage
+                        </h2>
+                        <span class="px-2 py-1 bg-slate-100 text-slate-500 text-xs font-mono rounded">Python Simulation</span>
+                    </div>
+                    
+                    <div class="p-6 md:p-8 grid grid-cols-1 xl:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="font-bold text-slate-900 mb-3">Particle Accelerators (LHC)</h3>
+                            <p class="text-slate-600 mb-4 leading-relaxed">
+                                CERN ကဲ့သို့သော နေရာများတွင် ပရိုတွန်နှစ်ခုကို တိုက်ခိုက်လိုက်သောအခါ ထွက်လာမည့် စွမ်းအင်ကို တွက်ချက်ရာတွင် ဒြပ်ထု ($kg$) ကို ထည့်မတွက်တော့ဘဲ ဒြပ်ထုကိုက စွမ်းအင် ($GeV$) အနေဖြင့် တိုက်ရိုက် ပေါင်းထည့်တွက်ချက်သည်။
+                            </p>
+                            
+                            <h3 class="font-bold text-slate-900 mb-3 mt-6">Computational Physics</h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                Simulation software များတွင် $2.9979 \times 10^8$ ကဲ့သို့ ကိန်းဂဏန်းကြီးများကို သိမ်းဆည်းခြင်းသည် Floating point error များစေနိုင်သည်။ $1$ ဟုထားခြင်းက ပိုမိုတိကျသည်။
+                            </p>
+                        </div>
+
+                        <!-- Code Block -->
+                        <div class="bg-[#282c34] rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
+                            <div class="flex items-center gap-1.5 px-4 py-3 bg-[#21252b] border-b border-[#181a1f]">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                <span class="ml-2 text-xs text-slate-400">particle_sim.py</span>
+                            </div>
+                            <div class="p-4 overflow-x-auto">
+<pre style="margin:0"><code class="text-slate-300">
+<span class="code-keyword">class</span> <span class="code-function">Particle</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-number">self</span>, name, mass_gev):
+        <span class="code-number">self</span>.name = name
+        <span class="code-comment"># Mass is stored directly in GeV</span>
+        <span class="code-number">self</span>.mass = mass_gev  
+        
+    <span class="code-keyword">def</span> <span class="code-function">calculate_rest_energy</span>(<span class="code-number">self</span>):
+        <span class="code-comment"># In natural units, E = m (since c = 1)</span>
+        <span class="code-comment"># No need for E = m * (3e8)**2</span>
+        <span class="code-keyword">return</span> <span class="code-number">self</span>.mass
+
+<span class="code-comment"># Constants</span>
+PROTON_MASS_GEV = <span class="code-number">0.938</span>
+ELECTRON_MASS_GEV = <span class="code-number">0.000511</span>
+
+<span class="code-comment"># Instantiation</span>
+proton = <span class="code-function">Particle</span>(<span class="code-string">"Proton"</span>, PROTON_MASS_GEV)
+
+<span class="code-function">print</span>(<span class="code-string">f"Energy: {proton.calculate_rest_energy()} GeV"</span>)
+<span class="code-comment"># Result: Energy and Mass are identical.</span>
+</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Visual Diagram -->
+            <section id="diagram" class="scroll-mt-24">
+                <div class="bg-indigo-900 rounded-2xl shadow-xl overflow-hidden text-white">
+                    <div class="p-8 text-center">
+                        <h2 class="text-2xl font-bold mb-8">From SI Units to Natural Units</h2>
+                        
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+                            
+                            <!-- Box 1 -->
+                            <div class="bg-indigo-800/50 p-6 rounded-xl border border-indigo-700 w-full md:w-64">
+                                <h3 class="text-indigo-300 font-bold text-sm tracking-widest uppercase mb-4">Standard SI Units</h3>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="px-3 py-1 bg-white/10 rounded">Mass (kg)</span>
+                                </div>
+                                <div class="text-xs text-indigo-400 mb-2">Need to multiply by $c^2$</div>
+                                <div class="flex justify-between items-center">
+                                    <span class="px-3 py-1 bg-white/10 rounded">Energy (J)</span>
+                                </div>
+                                <p class="text-xs text-indigo-300 mt-4 italic">Complex Calculation</p>
+                            </div>
+
+                            <!-- Arrow -->
+                            <div class="flex flex-col items-center">
+                                <span class="text-sm font-mono text-indigo-300 mb-1">Set c = 1</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" class="hidden md:block" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" class="block md:hidden" />
+                                </svg>
+                            </div>
+
+                            <!-- Box 2 -->
+                            <div class="bg-white text-indigo-900 p-6 rounded-xl border border-white w-full md:w-64 transform scale-105 shadow-2xl">
+                                <h3 class="text-indigo-600 font-bold text-sm tracking-widest uppercase mb-4">Natural Units</h3>
+                                <div class="flex flex-col items-center gap-2">
+                                    <div class="text-2xl font-bold">[ Mass ]</div>
+                                    <div class="text-xl">=</div>
+                                    <div class="text-2xl font-bold">[ Energy ]</div>
+                                </div>
+                                <p class="text-xs text-center text-slate-500 mt-4 font-medium">Measured in eV, MeV, GeV</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>
