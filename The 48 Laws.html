@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="my" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 48 Laws: Master Strategy</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* --- 1. HYBRID VARIABLES (Soft Pop + Neo-Brutalism) --- */
+        :root {
+            /* Colors */
+            --bg-body: #FFF9F5;
+            --bg-card: #FFFFFF;
+            --text-main: #1F2937;
+            --text-sub: #4B5563;
+            
+            /* Pop Accents */
+            --pop-pink: #FF9EAA;
+            --pop-blue: #A2D2FF;
+            --pop-green: #B0F2B4;
+            --pop-yellow: #FFF59E;
+            --pop-purple: #CDB4DB;
+            
+            /* UI Styling */
+            --border-black: 3px solid #111827;
+            --shadow-hard: 5px 5px 0px #111827;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+
+            /* Progress Bar */
+            --prog-track: #E5E7EB;
+            --prog-fill: linear-gradient(90deg, #FF9EAA, #A2D2FF);
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #111827;
+            --bg-card: #1F2937;
+            --text-main: #F9FAFB;
+            --text-sub: #D1D5DB;
+            --border-black: 3px solid #000000;
+            --shadow-hard: 5px 5px 0px #000000;
+            
+            /* Brighten accents for dark mode */
+            --pop-pink: #FF758F;
+            --pop-blue: #6FA8DC;
+            --prog-track: #374151;
+        }
+
+        /* --- 2. GLOBAL RESET --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Nunito', 'Padauk', sans-serif;
+            transition: 0.3s ease;
+            padding-bottom: 80px;
+            /* Dot Pattern Background */
+            background-image: radial-gradient(var(--pop-blue) 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+        }
+
+        h1, h2, h3 { font-family: 'Padauk', sans-serif; font-weight: 800; }
+        button { cursor: pointer; font-family: inherit; }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- 3. HEADER & HERO --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-card);
+            border: var(--border-black);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: var(--shadow-hard);
+            margin-bottom: 30px;
+            position: sticky; top: 20px; z-index: 100;
+        }
+        
+        .logo { font-size: 1.4rem; font-weight: 900; display: flex; align-items: center; gap: 10px; }
+        
+        .theme-btn {
+            background: var(--pop-yellow); border: 2px solid #000;
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; box-shadow: 2px 2px 0px #000;
+            transition: 0.1s;
+        }
+        .theme-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000; }
+
+        /* --- 4. VISUAL AIDS (From Design 1) --- */
+        .visual-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;
+        }
+        @media (max-width: 768px) { .visual-grid { grid-template-columns: 1fr; } }
+
+        .visual-card {
+            background: var(--bg-card); border: var(--border-black);
+            border-radius: var(--radius-lg); padding: 20px;
+            box-shadow: var(--shadow-hard);
+        }
+
+        /* Code Block Style */
+        .code-block { background: #282A36; color: white; padding: 15px; border-radius: var(--radius-md); font-family: monospace; font-size: 0.9rem; }
+        .kw { color: #FF79C6; } .fn { color: #50FA7B; } .str { color: #F1FA8C; } .cm { color: #6272A4; font-style: italic; }
+
+        /* Diagram Style */
+        .diagram-node {
+            background: white; border: 2px solid black; padding: 8px 15px;
+            border-radius: 10px; font-weight: bold; color: black; display: inline-block;
+        }
+
+        /* --- 5. PROGRESS & ACTIONS (From Design 2) --- */
+        .game-panel {
+            background: var(--bg-card); border: var(--border-black);
+            border-radius: var(--radius-lg); padding: 25px;
+            box-shadow: var(--shadow-hard); margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .progress-track {
+            height: 20px; background: var(--prog-track); border-radius: 20px;
+            margin: 15px 0; overflow: hidden; border: 2px solid var(--text-main);
+        }
+        .progress-fill {
+            height: 100%; width: 0%; background: var(--prog-fill);
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .action-btns { display: flex; gap: 15px; margin-top: 20px; justify-content: center; }
+        
+        .btn-pop {
+            padding: 12px 24px; border-radius: 50px; border: 2px solid #000;
+            font-weight: 800; box-shadow: 4px 4px 0px #000;
+            transition: 0.1s; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-pop:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
+        .btn-magic { background: var(--pop-pink); color: black; }
+        .btn-reset { background: var(--prog-track); color: var(--text-main); }
+
+        /* --- 6. SEARCH & CARD GRID --- */
+        .search-box {
+            width: 100%; padding: 15px 20px; border-radius: 50px;
+            border: var(--border-black); font-size: 1.1rem;
+            margin-bottom: 30px; font-family: 'Padauk';
+            box-shadow: var(--shadow-hard); outline: none;
+            background: var(--bg-card); color: var(--text-main);
+        }
+        .search-box:focus { transform: translateY(-2px); }
+
+        .card-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;
+        }
+
+        .law-card {
+            background: var(--bg-card); border: var(--border-black);
+            border-radius: var(--radius-lg); padding: 20px;
+            box-shadow: var(--shadow-hard); position: relative;
+            transition: all 0.2s; overflow: hidden;
+        }
+        .law-card:hover { transform: translate(-3px, -3px); box-shadow: 8px 8px 0px var(--text-main); }
+        
+        /* Completed State */
+        .law-card.completed { opacity: 0.6; filter: grayscale(0.8); order: 100; }
+        .law-card.completed::after {
+            content: "✓ READ"; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 3rem; font-weight: 900; color: var(--pop-green);
+            border: 5px solid var(--pop-green); padding: 10px 20px; border-radius: 20px;
+            opacity: 0.8; pointer-events: none;
+        }
+
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .icon-box {
+            width: 50px; height: 50px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; border: 2px solid #000;
+        }
+        .bg-pink { background: var(--pop-pink); }
+        .bg-blue { background: var(--pop-blue); }
+        .bg-green { background: var(--pop-green); }
+        .bg-yellow { background: var(--pop-yellow); }
+
+        .law-btn {
+            background: white; border: 2px solid #000; padding: 5px 15px;
+            border-radius: 20px; font-weight: bold; font-size: 0.8rem;
+            margin-top: 15px; width: 100%; box-shadow: 3px 3px 0px #000;
+        }
+        .law-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000; }
+        .completed .law-btn { background: var(--pop-green); }
+
+        /* --- 7. MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal-content {
+            background: var(--bg-body); border: var(--border-black);
+            padding: 30px; border-radius: var(--radius-lg);
+            max-width: 500px; width: 90%; text-align: center;
+            box-shadow: 10px 10px 0px #000;
+            animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; }}
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <div class="logo">
+            <span>👑</span> The 48 Laws
+        </div>
+        <button class="theme-btn" id="themeBtn">
+            <i class="ri-moon-line"></i>
+        </button>
+    </header>
+
+    <div class="visual-grid">
+        <div class="visual-card" style="background: #282A36; color: white;">
+            <h4 style="margin-bottom:10px; color:var(--pop-pink);">Strategy.js</h4>
+            <div class="code-block" style="background:transparent; padding:0;">
+                <span class="kw">function</span> <span class="fn">winLife</span>() {<br>
+                &nbsp;&nbsp;<span class="kw">if</span> (enemy.isAngry()) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">stayCalm</span>(); <span class="cm">// Law 39</span><br>
+                &nbsp;&nbsp;} <span class="kw">else</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">concealIntent</span>(); <span class="cm">// Law 3</span><br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;<span class="kw">return</span> <span class="str">"VICTORY 🏆"</span>;<br>
+                }
+            </div>
+        </div>
+
+        <div class="visual-card" style="background: var(--pop-blue); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <h4 style="margin-bottom:10px; color:black;">Power Dynamics</h4>
+            <div class="diagram-node" style="background:var(--pop-pink);">MASTER 👑</div>
+            <div style="font-size:1.5rem; color:black;">⬇️</div>
+            <div class="diagram-node">Never Outshine (Law 1)</div>
+            <div style="font-size:1.5rem; color:black;">⬇️</div>
+            <div style="display:flex; gap:10px;">
+                <div class="diagram-node" style="background:var(--pop-green); font-size:0.8rem;">You</div>
+                <div class="diagram-node" style="background:var(--pop-yellow); font-size:0.8rem;">Credit</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-panel">
+        <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.1rem;">
+            <span>Mastery Level</span>
+            <span id="progressText">0%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <p style="color:var(--text-sub);">ဖတ်ပြီးသားတွေကို "Mark as Read" လုပ်ပြီး Level တက်ပါ။</p>
+        
+        <div class="action-btns">
+            <button class="btn-pop btn-magic" onclick="showRandomLaw()">
+                <i class="ri-magic-line"></i> Daily Strategy
+            </button>
+        </div>
+    </div>
+
+    <input type="text" class="search-box" id="searchInput" placeholder="Search Laws (e.g., Friend, Enemy, Silence)...">
+
+    <div class="card-grid" id="cardGrid"></div>
+
+</div>
+
+<div class="modal-overlay" id="randomModal">
+    <div class="modal-content">
+        <div style="font-size: 3rem; margin-bottom: 10px;">✨</div>
+        <h2 id="modalTitle" style="margin-bottom: 10px;">Law Title</h2>
+        <p id="modalDesc" style="margin-bottom: 20px; font-size: 1.1rem; line-height: 1.6; color:var(--text-sub);">Description</p>
+        <button class="btn-pop btn-magic" onclick="closeModal()">Got it!</button>
+    </div>
+</div>
+
+<script>
+    // --- 1. FULL DATA SOURCE (48 LAWS) ---
+    const laws = [
+        { id: 1, icon: "👑", color: "bg-pink", title: "Never Outshine the Master", mm: "ဆရာ့ထက် လူစွမ်းလူစ မလုပ်ပါနှင့်", desc: "အထက်လူကြီးရဲ့ မလုံခြုံစိတ် (Insecurity) ကို မကလိမိပါစေနဲ့။ သူတို့ကို အမြဲတမ်း တော်သယောင် မြှောက်ပေးထားပါ။" },
+        { id: 2, icon: "😈", color: "bg-blue", title: "Don't Trust Friends Too Much", mm: "မိတ်ဆွေကို အယုံမလွန်ပါနှင့်", desc: "မိတ်ဆွေတွေက မနာလိုလွယ်သည်။ ရန်သူဟောင်းကို အသုံးချခြင်းက ပိုသစ္စာရှိတတ်သည်။" },
+        { id: 3, icon: "🎭", color: "bg-green", title: "Conceal Your Intentions", mm: "ရည်ရွယ်ချက်ကို ဖုံးကွယ်ထားပါ", desc: "သင်ဘာလုပ်မလဲဆိုတာ သူများတွေ ကြိုမသိလေ၊ ကာကွယ်ရခက်လေ ဖြစ်သည်။" },
+        { id: 4, icon: "🤐", color: "bg-yellow", title: "Always Say Less than Necessary", mm: "လိုအပ်တာထက် ပိုမပြောပါနှင့်", desc: "စကားနည်းခြင်းက အာဏာရှိပုံပေါက်စေသည်။ စကားများလေ အမှားပါလေ ဖြစ်သည်။" },
+        { id: 5, icon: "🛡️", color: "bg-pink", title: "Guard Reputation with Life", mm: "ဂုဏ်သတင်းကို အသက်ပေး ကာကွယ်ပါ", desc: "ဂုဏ်သတင်းသည် အာဏာ၏ အုတ်မြစ်ဖြစ်သည်။ ပျက်စီးသွားရင် ပြန်ပြင်ဖို့ ခက်သည်။" },
+        { id: 6, icon: "📢", color: "bg-blue", title: "Court Attention at All Cost", mm: "အာရုံစိုက်ခံရအောင် လုပ်ပါ", desc: "လူမသိ သူမသိနေခြင်းသည် ပျောက်ကွယ်ခြင်းဖြစ်သည်။ ထင်ရှားအောင်နေပါ။" },
+        { id: 7, icon: "🏗️", color: "bg-green", title: "Get Others to Do the Work", mm: "သူများကိုခိုင်းပြီး Credit ယူပါ", desc: "အလုပ်ကို သူများလုပ်ပါစေ၊ ဒါပေမယ့် အောင်မြင်မှုမှတ်တမ်းကို ကိုယ်ယူပါ။" },
+        { id: 8, icon: "🎣", color: "bg-yellow", title: "Make People Come to You", mm: "ရန်သူကို ကိုယ့်ဆီလာအောင် မျှားခေါ်ပါ", desc: "ကိုယ့်နယ်မြေမှာ တိုက်ခိုက်ခြင်းက အမြဲတမ်း အသာစီးရစေသည်။" },
+        { id: 9, icon: "🏆", color: "bg-pink", title: "Win Through Actions", mm: "လုပ်ရပ်ဖြင့်သာ သက်သေပြပါ", desc: "ငြင်းခုန်ခြင်းဖြင့် ရသော အနိုင်သည် အပေါ်ယံသာဖြစ်သည်။" },
+        { id: 10, icon: "🦠", color: "bg-blue", title: "Avoid the Unhappy/Unlucky", mm: "ကံဆိုးသူများကို ရှောင်ကြဉ်ပါ", desc: "စိတ်ဓာတ်ကျသူများသည် ရောဂါကူးစက်သလို သင့်ကိုပါ ဆွဲချသွားနိုင်သည်။" },
+        { id: 11, icon: "🔗", color: "bg-green", title: "Keep People Dependent", mm: "လူတွေ ကိုယ့်ကို မှီခိုနေပါစေ", desc: "သင့်ကို မရှိမဖြစ် လိုအပ်နေအောင် ဖန်တီးထားမှ သင့်လွတ်လပ်ခွင့် ရှိမည်။" },
+        { id: 12, icon: "🎁", color: "bg-yellow", title: "Use Selective Honesty", mm: "ရိုးသားဟန်ဆောင်ပြီး လက်နက်ဖြုတ်ပါ", desc: "ရိုးသားမှုတစ်ခုပြလိုက်ခြင်းက တစ်ဖက်လူ၏ သံသယကို လျော့ပါးစေသည်။" },
+        { id: 13, icon: "💡", color: "bg-pink", title: "Appeal to Self-Interest", mm: "အကျိုးစီးပွားကိုသာ ပြပါ", desc: "အကူအညီတောင်းလျှင် သနားစရာကောင်းအောင် မလုပ်ပါနှင့်။ အကျိုးရှိမယ့်အရာကိုပြပါ။" },
+        { id: 14, icon: "🕵️", color: "bg-blue", title: "Pose as a Friend, Work as a Spy", mm: "မိတ်ဆွေလို ပေါင်းပြီး စုံထောက်လို လုပ်ပါ", desc: "သတင်းအချက်အလက်သည် အာဏာဖြစ်သည်။" },
+        { id: 15, icon: "🐍", color: "bg-green", title: "Crush Your Enemy Totally", mm: "ရန်သူကို အမြစ်ဖြတ် သုတ်သင်ပါ", desc: "ပြန်ထလာနိုင်သော ရန်သူသည် အန္တရာယ်အရှိဆုံးဖြစ်သည်။" },
+        { id: 16, icon: "💎", color: "bg-yellow", title: "Use Absence to Increase Respect", mm: "ရှားပါးမှုကို ဖန်တီး၍ တန်ဖိုးမြှင့်ပါ", desc: "လူမြင်များလွန်းလျှင် တန်ဖိုးကျသည်။ ရံဖန်ရံခါ ပျောက်နေတတ်ပါစေ။" },
+        { id: 17, icon: "🌪️", color: "bg-pink", title: "Keep Others in Suspended Terror", mm: "ခန့်မှန်းမရအောင် နေထိုင်ပါ", desc: "ပုံသေနည်းမရှိသော အပြုအမူက လူတွေကို ကြောက်ရွံ့စေသည်။" },
+        { id: 18, icon: "🏰", color: "bg-blue", title: "Do Not Build Fortresses", mm: "တစ်ကိုယ်တည်း ခွဲမနေပါနှင့်", desc: "အထီးကျန်ခြင်းသည် အန္တရာယ်များသည်။ လူအများကြားတွင် ရောနှောနေပါ။" },
+        { id: 19, icon: "🤔", color: "bg-green", title: "Know Who You're Dealing With", mm: "ကိုယ့်ပြိုင်ဘက်က ဘယ်သူလဲ သိပါစေ", desc: "လူမှားပြီး မပြိုင်မိပါစေနှင့်။" },
+        { id: 20, icon: "🤷", color: "bg-yellow", title: "Do Not Commit to Anyone", mm: "ဘယ်သူ့ဘက်မှ မလိုက်ပါနှင့်", desc: "လွတ်လပ်စွာနေသူသာ သခင်ဖြစ်သည်။" },
+        { id: 21, icon: "🤡", color: "bg-pink", title: "Play a Sucker to Catch a Sucker", mm: "တုံးအ သယောင် ဆောင်ပါ", desc: "ကိုယ့်ရန်သူထက် ပိုညံ့သလိုနေလိုက်ပါ။" },
+        { id: 22, icon: "🏳️", color: "bg-blue", title: "Use the Surrender Tactic", mm: "လက်နက်ချခြင်း နည်းဗျူဟာကို သုံးပါ", desc: "အားမမျှတလျှင် မတိုက်ပါနှင့်။ လက်နက်ချပြီး အချိန်ဆွဲပါ။" },
+        { id: 23, icon: "🎯", color: "bg-green", title: "Concentrate Your Forces", mm: "အားအင်တွေကို စုစည်းပါ", desc: "ဟိုစပ်စပ် ဒီစပ်စပ် လုပ်ခြင်းထက် တစ်ခုတည်းကို ထိရောက်စွာလုပ်ပါ။" },
+        { id: 24, icon: "🎭", color: "bg-yellow", title: "Play the Perfect Courtier", mm: "နန်းတွင်းသားကောင်း ပီသပါစေ", desc: "နေရာဒေသအလိုက် နေတတ်ခြင်းသည် ပညာဖြစ်သည်။" },
+        { id: 25, icon: "🎨", color: "bg-pink", title: "Re-Create Yourself", mm: "ကိုယ့်ပုံစံကို ကိုယ်ပြန်ဖန်တီးပါ", desc: "သူများသတ်မှတ်ပေးသော ဘဝတွင် မနေပါနှင့်။" },
+        { id: 26, icon: "🧤", color: "bg-blue", title: "Keep Your Hands Clean", mm: "လက်ကို ညစ်ပတ်မခံပါနှင့်", desc: "မကောင်းမှုလုပ်စရာရှိလျှင် ကြားခံလူကို သုံးပါ။" },
+        { id: 27, icon: "🛐", color: "bg-green", title: "Create a Cult-like Following", mm: "လူတွေ ကိုးကွယ်လာအောင် ဖန်တီးပါ", desc: "လူတွေက ယုံကြည်စရာတစ်ခုခုကို အမြဲရှာနေတတ်သည်။" },
+        { id: 28, icon: "🦁", color: "bg-yellow", title: "Enter Action with Boldness", mm: "ရဲရင့်ပြတ်သားစွာ လုပ်ဆောင်ပါ", desc: "သံသယဖြင့် လုပ်ဆောင်ခြင်းသည် ကျရှုံးစေသည်။" },
+        { id: 29, icon: "🏁", color: "bg-pink", title: "Plan All the Way to the End", mm: "အဆုံးသတ်အထိ ကြိုတင်စီမံပါ", desc: "ကံကြမ္မာကို တွက်ချက်ထားပါ။" },
+        { id: 30, icon: "✨", color: "bg-blue", title: "Make Accomplishments Effortless", mm: "လွယ်ကူသယောင် ဟန်ဆောင်ပါ", desc: "ခက်ခဲနေရင်တောင် လွယ်လွယ်လေးလုပ်ပြလိုက်သလို နေပါ။" },
+        { id: 31, icon: "🃏", color: "bg-green", title: "Control the Options", mm: "ရွေးချယ်စရာများကို ထိန်းချုပ်ထားပါ", desc: "သူများရွေးရမည့် လမ်းကြောင်းကို ကိုယ်တိုင်ဖန်တီးပေးပါ။" },
+        { id: 32, icon: "🦄", color: "bg-yellow", title: "Play to People's Fantasies", mm: "စိတ်ကူးယဉ်အိပ်မက်ကို ကစားပါ", desc: "အမှန်တရားသည် ခါးသီးတတ်သည်။" },
+        { id: 33, icon: "🔩", color: "bg-pink", title: "Discover Each Man's Thumbscrew", mm: "အားနည်းချက်ကို ရှာပါ", desc: "လူတိုင်းတွင် အားနည်းချက် တစ်ခုရှိသည်။" },
+        { id: 34, icon: "👑", color: "bg-blue", title: "Be Royal in Your Own Fashion", mm: "ဘုရင်တစ်ပါးကဲ့သို့ ကျင့်ကြံပါ", desc: "ကိုယ့်ကိုယ်ကိုယ် တန်ဖိုးထားမှ သူများက တန်ဖိုးထားမည်။" },
+        { id: 35, icon: "⏰", color: "bg-green", title: "Master the Art of Timing", mm: "အချိန်ကိုက် လှုပ်ရှားတတ်ပါစေ", desc: "အချိန်ကို စောင့်ဆိုင်းတတ်ခြင်းသည် အကြီးမားဆုံး လက်နက်ဖြစ်သည်။" },
+        { id: 36, icon: "🙈", color: "bg-yellow", title: "Disdain Things You Cannot Have", mm: "မရနိုင်သောအရာကို လစ်လျူရှုပါ", desc: "လစ်လျူရှုလိုက်ခြင်းက အကောင်းဆုံး လက်တုံ့ပြန်ခြင်းဖြစ်သည်။" },
+        { id: 37, icon: "🎇", color: "bg-pink", title: "Create Compelling Spectacles", mm: "မျက်စိကျစရာ မြင်ကွင်းများ ဖန်တီးပါ", desc: "လူများသည် အမြင်အာရုံဖြင့် ဆုံးဖြတ်တတ်ကြသည်။" },
+        { id: 38, icon: "🧠", color: "bg-blue", title: "Think as You Like, Behave Like Others", mm: "စိတ်ထဲရှိသလိုတွေး၊ အများလိုကျင့်", desc: "လူပုံအလယ်မှာ ဆရာကြီးလုပ်နေရင် အပယ်ခံရမည်။" },
+        { id: 39, icon: "🌊", color: "bg-green", title: "Stir Up Waters to Catch Fish", mm: "ရေကိုနောက်အောင်လုပ်ပြီး ငါးဖမ်းပါ", desc: "ရန်သူ ဒေါသထွက်အောင်လုပ်ပြီး အမှားကိုစောင့်ပါ။" },
+        { id: 40, icon: "💸", color: "bg-yellow", title: "Despise the Free Lunch", mm: "အခမဲ့ ရသောအရာကို သတိထားပါ", desc: "အလကားရလျှင် တန်ဖိုးတစ်ခု ပေးဆပ်ရတတ်သည်။" },
+        { id: 41, icon: "👟", color: "bg-pink", title: "Avoid Stepping into a Great Man's Shoes", mm: "လူတော်ကြီးတွေရဲ့ ခြေရာကို မနင်းပါနှင့်", desc: "လမ်းသစ်ထွင်ပါ။" },
+        { id: 42, icon: "🐺", color: "bg-blue", title: "Strike the Shepherd", mm: "သိုးထိန်းကို ရိုက်ပါ", desc: "ခေါင်းဆောင်ကို ရှင်းထုတ်လိုက်လျှင် ကျန်လူများ ငြိမ်သွားမည်။" },
+        { id: 43, icon: "❤️", color: "bg-green", title: "Work on the Hearts and Minds", mm: "စိတ်နှလုံးကို သိမ်းပိုက်ပါ", desc: "ဖြားယောင်းခြင်းက သစ္စာရှိမှုကို ရစေသည်။" },
+        { id: 44, icon: "🪞", color: "bg-yellow", title: "Disarm with the Mirror Effect", mm: "ရန်သူလုပ်သလို လိုက်လုပ်ပြပါ", desc: "ရန်သူလုပ်သမျှကို မှန်တစ်ချပ်လို လိုက်လုပ်ပြလျှင် သူတို့ စိတ်ရှုပ်ထွေးမည်။" },
+        { id: 45, icon: "🔄", color: "bg-pink", title: "Reform Slowly", mm: "ပြုပြင်ပြောင်းလဲမှုကို ဖြည်းဖြည်းလုပ်ပါ", desc: "ရုတ်တရက် အပြောင်းအလဲကြီး လုပ်လျှင် တော်လှန်ခံရတတ်သည်။" },
+        { id: 46, icon: "😇", color: "bg-blue", title: "Never Appear Too Perfect", mm: "ပြီးပြည့်စုံလွန်းသူဟု မထင်စေပါနှင့်", desc: "မနာလိုဝန်တိုမှုသည် ရန်သူကို ဖန်တီးသည်။" },
+        { id: 47, icon: "🛑", color: "bg-green", title: "Do Not Go Past the Mark", mm: "ရပ်တန့်သင့်သောနေရာကို သိပါ", desc: "အောင်ပွဲရချိန်သည် အန္တရာယ်အရှိဆုံးဖြစ်သည်။" },
+        { id: 48, icon: "💧", color: "bg-yellow", title: "Assume Formlessness", mm: "ရေလိုနေပါ", desc: "ပုံသေနည်းမရှိသောသူကို တိုက်ခိုက်ရန် ခက်ခဲသည်။" }
+    ];
+
+    // --- 2. STATE MANAGEMENT ---
+    const grid = document.getElementById('cardGrid');
+    const searchInput = document.getElementById('searchInput');
+    const completedSet = new Set(JSON.parse(localStorage.getItem('readLaws')) || []);
+
+    // --- 3. RENDER LOGIC ---
+    function renderCards(filter = "") {
+        grid.innerHTML = "";
+        laws.forEach(law => {
+            const searchStr = (law.title + law.mm + law.desc).toLowerCase();
+            if (searchStr.includes(filter.toLowerCase())) {
+                const isRead = completedSet.has(law.id);
+                const card = document.createElement('div');
+                card.className = `law-card ${isRead ? 'completed' : ''}`;
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="icon-box ${law.color}">${law.icon}</div>
+                        <span style="font-weight:900; font-size:2rem; opacity:0.1; line-height:1;">${law.id}</span>
+                    </div>
+                    <h3>${law.title}</h3>
+                    <p style="color:var(--text-main); font-weight:700; margin:5px 0;">${law.mm}</p>
+                    <p style="color:var(--text-sub); font-size:0.95rem;">${law.desc}</p>
+                    
+                    <button class="law-btn" onclick="toggleRead(${law.id})">
+                        ${isRead ? '<i class="ri-check-line"></i> Completed' : 'Mark as Read'}
+                    </button>
+                `;
+                grid.appendChild(card);
+            }
+        });
+        updateProgress();
+    }
+
+    // --- 4. INTERACTION LOGIC ---
+    window.toggleRead = function(id) {
+        if(completedSet.has(id)) {
+            completedSet.delete(id);
+        } else {
+            completedSet.add(id);
+            // Confetti Explosion
+            confetti({
+                particleCount: 150,
+                spread: 60,
+                origin: { y: 0.7 },
+                colors: ['#FF9EAA', '#A2D2FF', '#B0F2B4', '#FFF59E']
+            });
+        }
+        localStorage.setItem('readLaws', JSON.stringify([...completedSet]));
+        renderCards(searchInput.value); // Re-render to update state
+    }
+
+    function updateProgress() {
+        const total = laws.length;
+        const read = completedSet.size;
+        const percent = Math.round((read / total) * 100);
+        
+        document.getElementById('progressBar').style.width = percent + '%';
+        document.getElementById('progressText').innerText = percent + '%';
+    }
+
+    // Modal Logic
+    window.showRandomLaw = function() {
+        // Pick random law
+        const random = laws[Math.floor(Math.random() * laws.length)];
+        document.getElementById('modalTitle').innerText = `${random.id}. ${random.mm}`;
+        document.getElementById('modalDesc').innerText = random.desc;
+        document.getElementById('randomModal').style.display = 'flex';
+        
+        // Confetti for the surprise
+        confetti({ particleCount: 50, spread: 100, origin: { y: 0.5 } });
+    }
+
+    window.closeModal = function() {
+        document.getElementById('randomModal').style.display = 'none';
+    }
+
+    // Theme Toggle
+    const themeBtn = document.getElementById('themeBtn');
+    const html = document.documentElement;
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    themeBtn.querySelector('i').className = savedTheme === 'dark' ? 'ri-sun-line' : 'ri-moon-line';
+
+    themeBtn.addEventListener('click', () => {
+        const current = html.getAttribute('data-theme');
+        const next = current === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        themeBtn.querySelector('i').className = next === 'dark' ? 'ri-sun-line' : 'ri-moon-line';
+    });
+
+    // Search Listener
+    searchInput.addEventListener('keyup', (e) => renderCards(e.target.value));
+
+    // Initial Render
+    renderCards();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="my" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rich Dad Poor Dad - Bold & Cute</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Padauk', 'Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        // Backgrounds
+                        cream: '#FFFDF5', 
+                        // Text Colors (Ultra Dark for Contrast)
+                        ink: '#0f172a', // Almost Black
+                        inkLight: '#334155', // Dark Slate
+                        
+                        // Cute Accents
+                        popYellow: '#FFDE68', // Highlighter Yellow
+                        popPink: '#FFACC7',   // Highlighter Pink
+                        popBlue: '#A0C4FF',
+                        popGreen: '#85E3B3',
+                    },
+                    boxShadow: {
+                        'chunky': '5px 5px 0px 0px #1e293b', // Sharp black shadow
+                        'chunky-hover': '8px 8px 0px 0px #1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFFDF5;
+            /* Subtle Grid Pattern */
+            background-image: linear-gradient(#E5E7EB 1px, transparent 1px),
+            linear-gradient(90deg, #E5E7EB 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Stronger Font Weight for Myanmar Text */
+        p, li, span {
+            font-weight: 600; /* Semi-Bold by default for readability */
+            line-height: 1.8; /* Loose spacing */
+        }
+        
+        h1, h2, h3, h4 {
+            font-weight: 800; /* Extra Bold Headers */
+            color: #0f172a;
+        }
+
+        /* Marker Highlight Effect */
+        .highlight-yellow {
+            background: linear-gradient(120deg, #FFDE68 0%, #FFDE68 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 88%;
+            padding: 0 4px;
+        }
+        
+        .highlight-pink {
+            background: linear-gradient(120deg, #FFACC7 0%, #FFACC7 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 88%;
+            padding: 0 4px;
+        }
+
+        /* Card Hover Animation */
+        .pop-card {
+            transition: all 0.2s ease-in-out;
+            border: 3px solid #1e293b; /* Thick dark border */
+        }
+        .pop-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0px 0px #1e293b;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: #FFFDF5; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 6px; border: 3px solid #FFFDF5; }
+    </style>
+</head>
+<body class="text-ink antialiased pb-24">
+
+    <nav class="sticky top-4 z-50 px-4 mb-16">
+        <div class="mx-auto max-w-4xl bg-white border-4 border-ink rounded-full px-6 py-3 shadow-chunky flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-book-open text-2xl text-indigo-600"></i>
+                <span class="font-black text-xl tracking-tight">BOOK<span class="text-indigo-600">SUMMARY</span></span>
+            </div>
+            <a href="#action" class="bg-popYellow text-ink font-bold px-4 py-2 rounded-full border-2 border-ink hover:bg-yellow-300 transition-colors text-sm">
+                Start Now 🚀
+            </a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 max-w-3xl">
+
+        <header class="text-center mb-16">
+            <span class="inline-block bg-popPink border-2 border-ink px-4 py-1 rounded-full text-xs font-black uppercase mb-4 transform rotate-[-2deg]">Financial Freedom</span>
+            <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+                Rich Dad <br>
+                <span class="text-indigo-600 relative inline-block">
+                    Poor Dad
+                    <svg class="absolute w-full h-3 -bottom-1 left-0 text-yellow-300 z-[-1]" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="8" fill="none" /></svg>
+                </span>
+            </h1>
+            <p class="text-xl md:text-2xl text-inkLight font-bold max-w-2xl mx-auto">
+                "ငွေကြေးအတွက် အလုပ်လုပ်မလား? <br>
+                ငွေကို <span class="highlight-yellow">ကိုယ့်အတွက် အလုပ်ပြန်လုပ်ခိုင်းမလား?</span>"
+            </p>
+        </header>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-black mb-8 border-l-8 border-indigo-600 pl-4">၁။ ဖခင်နှစ်ဦး ကွာခြားချက်</h2>
+            
+            <div class="grid gap-6">
+                <div class="pop-card bg-white rounded-2xl p-6 relative overflow-hidden">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-red-100 p-3 rounded-xl border-2 border-red-200 min-w-[60px] text-center">
+                            <i class="fa-solid fa-graduation-cap text-3xl text-red-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-black text-red-600 mb-2">Poor Dad (ဖေဖေနွမ်းပါ)</h3>
+                            <p class="text-lg text-ink font-bold">
+                                "ငါ့မှာ ပိုက်ဆံမရှိလို့ <span class="bg-red-100 px-1 rounded">ဒါကို မဝယ်နိုင်ဘူး</span>"
+                            </p>
+                            <p class="mt-2 text-gray-600 font-semibold text-sm">
+                                <i class="fa-solid fa-xmark text-red-500 mr-2"></i>Result: ဦးနှောက်က အဖြေရှာတာ ရပ်သွားတယ်။
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pop-card bg-indigo-50 rounded-2xl p-6 relative overflow-hidden">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-green-100 p-3 rounded-xl border-2 border-green-200 min-w-[60px] text-center">
+                            <i class="fa-solid fa-sack-dollar text-3xl text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-black text-green-700 mb-2">Rich Dad (ဖေဖေချမ်းသာ)</h3>
+                            <p class="text-lg text-ink font-bold">
+                                "ဒါကို ဝယ်နိုင်အောင် <span class="highlight-yellow">ငါဘယ်လိုလုပ်ရမလဲ</span>"
+                            </p>
+                            <p class="mt-2 text-gray-600 font-semibold text-sm">
+                                <i class="fa-solid fa-check text-green-500 mr-2"></i>Result: ဦးနှောက်က နည်းလမ်းရှာဖွေတယ်။
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-black mb-8 border-l-8 border-popPink pl-4">၂။ မသိမဖြစ် အချက်များ</h2>
+
+            <div class="bg-white border-4 border-ink rounded-3xl p-6 md:p-8 shadow-chunky mb-10">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-black underline decoration-wavy decoration-indigo-400 underline-offset-4">Rule #1: Asset & Liability</h3>
+                    <p class="text-lg font-bold mt-4 text-gray-700">ချမ်းသာချင်ရင် ဒီနှစ်ခုကို ကွဲပြားဖို့ လိုပါတယ်။</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-green-50 border-2 border-green-200 rounded-2xl p-5 text-center">
+                        <span class="text-4xl block mb-2">📈</span>
+                        <h4 class="text-xl font-black text-green-800 uppercase mb-2">ASSET (ပိုင်ဆိုင်မှု)</h4>
+                        <p class="text-ink font-bold text-lg leading-snug">
+                            သင့်အိတ်ကပ်ထဲကို <br>
+                            <span class="bg-green-200 px-2 rounded">ပိုက်ဆံ ဝင်လာစေတဲ့အရာ</span>
+                        </p>
+                        <ul class="text-left mt-4 space-y-2 text-sm font-bold text-green-900 bg-white/50 p-3 rounded-xl">
+                            <li>✅ အိမ်ငှားခရတဲ့ အိမ်</li>
+                            <li>✅ စီးပွားရေးလုပ်ငန်း</li>
+                            <li>✅ ရှယ်ယာ / Stocks</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-5 text-center">
+                        <span class="text-4xl block mb-2">📉</span>
+                        <h4 class="text-xl font-black text-red-800 uppercase mb-2">LIABILITY (ပေးရန်)</h4>
+                        <p class="text-ink font-bold text-lg leading-snug">
+                            သင့်အိတ်ကပ်ထဲက <br>
+                            <span class="bg-red-200 px-2 rounded">ပိုက်ဆံ ထွက်သွားစေတဲ့အရာ</span>
+                        </p>
+                        <ul class="text-left mt-4 space-y-2 text-sm font-bold text-red-900 bg-white/50 p-3 rounded-xl">
+                            <li>❌ တန်ဖိုးကြီး ကား/ဖုန်း</li>
+                            <li>❌ အကြွေးဝယ်ကတ်</li>
+                            <li>❌ မလိုအပ်သော အသုံးစရိတ်</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-popYellow border-4 border-ink rounded-3xl p-8 shadow-chunky relative transform rotate-1 hover:rotate-0 transition-transform">
+                <h3 class="text-2xl font-black text-ink mb-4">🐭 The Rat Race (ကြွက်ပြေးလမ်း)</h3>
+                <p class="text-xl font-bold text-ink mb-4 leading-relaxed">
+                    သာမန်လူတွေက <span class="bg-white px-2 py-1 border border-ink rounded-md mx-1">အလုပ်လုပ် &rarr; လစာရ &rarr; အကြွေးဆပ်</span> ဆိုတဲ့ သံသရာမှာပဲ လည်နေကြတယ်။
+                </p>
+                <div class="bg-white p-4 rounded-xl border-2 border-ink text-center">
+                    <p class="font-bold text-indigo-700 text-lg">
+                        💡 ထွက်ပေါက်: ကိုယ်ပိုင်စီးပွားရေး (သို့) ရင်းနှီးမြှုပ်နှံမှု လုပ်ပါ။
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="action" class="mb-20">
+            <h2 class="text-3xl font-black mb-8 border-l-8 border-popGreen pl-4">၃။ နေ့စဉ် ဘာလုပ်မလဲ?</h2>
+
+            <div class="space-y-6">
+                <div class="flex flex-col md:flex-row gap-4 items-start bg-white p-6 rounded-2xl border-b-4 border-gray-200 hover:border-indigo-500 transition-colors">
+                    <div class="bg-indigo-600 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black flex-shrink-0 shadow-lg">1</div>
+                    <div>
+                        <h4 class="text-xl font-black text-ink mb-2">Mindset Shift (အတွေးပြောင်းပါ)</h4>
+                        <p class="text-lg font-bold text-gray-800">
+                            "ငါမတတ်နိုင်ဘူး" လို့ ဘယ်တော့မှ မပြောပါနဲ့။ <br>
+                            <span class="highlight-pink">"ဒါကို ရဖို့ ငါဘယ်လို လုပ်ရမလဲ"</span> လို့ မေးခွန်းထုတ်ပါ။
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-4 items-start bg-white p-6 rounded-2xl border-b-4 border-gray-200 hover:border-indigo-500 transition-colors">
+                    <div class="bg-indigo-600 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black flex-shrink-0 shadow-lg">2</div>
+                    <div>
+                        <h4 class="text-xl font-black text-ink mb-2">Pay Yourself First (ကိုယ့်ကိုကိုယ် အရင်ပေးပါ)</h4>
+                        <p class="text-lg font-bold text-gray-800">
+                            လစာရရင် ဘေလ်တွေမဆောင်ခင် <span class="highlight-yellow">စုငွေ/ရင်းနှီးငွေ ကို အရင်ဖယ်ထားပါ</span>။ ကျန်ငွေနဲ့ လောက်အောင်သုံးပါ။
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-4 items-start bg-white p-6 rounded-2xl border-b-4 border-gray-200 hover:border-indigo-500 transition-colors">
+                    <div class="bg-indigo-600 text-white w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black flex-shrink-0 shadow-lg">3</div>
+                    <div>
+                        <h4 class="text-xl font-black text-ink mb-2">Work to Learn (သင်ယူဖို့ အလုပ်လုပ်ပါ)</h4>
+                        <p class="text-lg font-bold text-gray-800">
+                            လစာတစ်ခုတည်းအတွက် အလုပ်မလုပ်ပါနဲ့။ အရောင်းပညာ၊ စီမံခန့်ခွဲမှု ပညာတွေကို သင်ယူဖို့ အလုပ်လုပ်ပါ။
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- <div class="bg-ink rounded-3xl p-10 text-center relative overflow-hidden shadow-chunky">
+            <div class="relative z-10">
+                <h3 class="text-2xl md:text-3xl font-black text-white mb-4">လက်တွေ့ စမ်းသပ်ကြည့်မလား?</h3>
+                <p class="text-gray-300 font-bold mb-8 text-lg">
+                    သင့်ရဲ့ Assets နဲ့ Liabilities စာရင်းကို တွက်ချက်ဖို့ Template လိုချင်ရင် ပြောပေးနော်။
+                </p>
+                <button class="bg-popYellow text-ink font-black py-4 px-10 rounded-full hover:scale-105 transition-transform text-lg shadow-lg border-2 border-white">
+                    Yes, Give me Template! 👇
+                </button>
+            </div> -->
+            
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl"></div>
+        </div>
+
+    </main>
+    
+    <footer class="text-center py-10 mt-10">
+        <p class="font-bold text-gray-500">Designed for Financial Freedom 🚀</p>
+    </footer>
+
+</body>
+</html>

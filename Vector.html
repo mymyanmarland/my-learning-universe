@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector in Physics - Interactive Learning</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- MathJax for LaTeX Rendering -->
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            /* Light Mode Default */
+            --primary-color: #4f46e5; /* Indigo 600 - Slightly darker for better visibility */
+            --primary-dark: #3730a3;
+            --secondary-accent: #0284c7; /* Darker Sky Blue */
+            
+            --bg-body: #f1f5f9; /* Slate 100 - Slightly darker off-white for contrast */
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --bg-code: #0f172a; /* Slate 900 */
+            
+            /* High Contrast Text Colors */
+            --text-main: #020617; /* Slate 950 - Almost Black */
+            --text-body: #1e293b; /* Slate 800 - Very Dark Grey */
+            --text-muted: #475569; /* Slate 600 - Readable Grey */
+            
+            --border-color: #cbd5e1; /* Slate 300 - More visible borders */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+            --highlight-bg: #e0e7ff;
+            --highlight-border: #4f46e5;
+            
+            --diagram-bg: #f8fafc;
+            --diagram-border: #94a3b8;
+            --diagram-text: #0f172a;
+        }
+
+        /* Dark Mode Variables */
+        [data-theme="dark"] {
+            --bg-body: #020617; /* Slate 950 */
+            --bg-sidebar: #0f172a; /* Slate 900 */
+            --bg-card: #1e293b; /* Slate 800 */
+            --bg-code: #000000; /* Pure Black */
+            
+            /* High Contrast Dark Mode Text */
+            --text-main: #ffffff; /* Pure White */
+            --text-body: #f1f5f9; /* Slate 100 - Very Bright Grey */
+            --text-muted: #cbd5e1; /* Slate 300 - Readable Light Grey */
+            
+            --border-color: #334155;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7);
+
+            --highlight-bg: rgba(99, 102, 241, 0.2);
+            --highlight-border: #818cf8;
+            
+            --diagram-bg: #0f172a;
+            --diagram-border: #64748b;
+            --diagram-text: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', 'Padauk', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-body);
+            line-height: 1.8;
+            overflow-x: hidden;
+            display: flex;
+            min-height: 100vh;
+            font-weight: 500; /* Increased global font weight */
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-body);
+            font-weight: 600; /* Bolder nav links */
+            display: block;
+            padding: 0.85rem 1rem;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--bg-body);
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .nav-links a.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            font-weight: 700;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem 4rem;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* Header & Theme Toggle */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color); /* Thicker border */
+            color: var(--text-main);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        h1 {
+            color: var(--text-main);
+            font-size: 2.75rem;
+            font-weight: 900; /* Extra Bold */
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            /* Removed gradient for clearer text reading, kept color strong */
+            background: none;
+            -webkit-text-fill-color: initial;
+            color: var(--text-main);
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        h2 {
+            color: var(--text-main);
+            font-size: 1.75rem;
+            font-weight: 800; /* Bolder headings */
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            bottom: 5px;
+            width: 6px; /* Thicker accent line */
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-accent));
+            border-radius: 4px;
+        }
+
+        h3 {
+            color: var(--text-main);
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem; /* Slightly larger text */
+            color: var(--text-main); /* Use main text color for max contrast */
+            line-height: 1.75;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Subtle top border gradient for cards */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-accent));
+            opacity: 1; /* Increased opacity */
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-color: var(--primary-color);
+        }
+
+        /* Highlights & Lists */
+        .highlight-box {
+            background-color: var(--highlight-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 6px solid var(--highlight-border); /* Thicker border */
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+            font-weight: 700; /* Bold text in highlights */
+            color: var(--text-main);
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 1rem;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-main); /* High contrast list items */
+            font-weight: 500;
+        }
+
+        li::before {
+            content: '•';
+            color: var(--primary-color);
+            font-weight: 900;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        /* Special List Item Styling */
+        .info-item {
+            background-color: var(--bg-body);
+            padding: 1.25rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            transition: transform 0.2s;
+        }
+        
+        .info-item:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-color);
+        }
+        
+        .info-item strong {
+            color: var(--primary-color); /* Highlight keys in list */
+            font-weight: 800;
+        }
+        
+        .info-item::before {
+            display: none;
+        }
+
+        /* Code Blocks (VS Code Style) */
+        .code-container {
+            background-color: var(--bg-code);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 2rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 1rem; /* Larger code font */
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .code-header {
+            background-color: #000000; /* Darker header */
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background-color: #ef4444; }
+        .dot.yellow { background-color: #f59e0b; }
+        .dot.green { background-color: #22c55e; }
+
+        pre {
+            padding: 1.5rem;
+            overflow-x: auto;
+            color: #f8fafc; /* Brighter code text */
+            line-height: 1.6;
+        }
+
+        /* Syntax Highlighting - Brighter Colors */
+        .code-keyword { color: #d8b4fe; font-weight: bold; } /* Brighter Purple */
+        .code-string { color: #86efac; font-weight: 500; } /* Brighter Green */
+        .code-comment { color: #cbd5e1; font-style: italic; } /* Lighter Gray for comments to be readable */
+        .code-func { color: #93c5fd; font-weight: bold; } /* Brighter Blue */
+        .code-num { color: #fca5a5; } /* Red/Pink */
+
+        /* Diagram Area */
+        .diagram-box {
+            background-color: var(--diagram-bg);
+            border: 2px dashed var(--diagram-border);
+            border-radius: 16px;
+            padding: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 900; /* Bold Diagram Text */
+            color: var(--diagram-text);
+            white-space: pre;
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.05);
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                padding: 1rem 1.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                border-bottom: 1px solid var(--border-color);
+                border-right: none;
+            }
+
+            .logo { margin-bottom: 0; font-size: 1.25rem; }
+
+            .nav-links {
+                display: flex;
+                gap: 0.5rem;
+                overflow-x: auto;
+                width: 100%;
+                padding-top: 1rem;
+                padding-bottom: 0.5rem;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            
+            .nav-links::-webkit-scrollbar { display: none; }
+            
+            .nav-links li {
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+            
+            .nav-links a {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 2rem 1.5rem;
+            }
+
+            h1 { font-size: 2rem; }
+            .card { padding: 1.5rem; }
+            .top-bar { flex-direction: column-reverse; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; }
+            .theme-toggle { align-self: flex-end; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar / Navigation -->
+    <nav class="sidebar">
+        <div class="logo">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 22H22L12 2Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <circle cx="12" cy="14" r="3" fill="currentColor"/>
+            </svg>
+            Physics 101
+        </div>
+        <ul class="nav-links">
+            <li><a href="#intro" class="active">မိတ်ဆက်</a></li>
+            <li><a href="#explanation">ရှင်းလင်းချက်</a></li>
+            <li><a href="#analogy">ဥပမာ (Analogy)</a></li>
+            <li><a href="#keynotes">မှတ်သားဖွယ်ရာများ</a></li>
+            <li><a href="#realworld">လက်တွေ့အသုံးပြုပုံ</a></li>
+            <li><a href="#diagram">ပုံကြမ်း</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="top-bar">
+            <header>
+                <p style="color: var(--primary-color); font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.9rem; margin-bottom: 0.5rem;">Physics Module 01</p>
+                <h1>Vector (ဗက်တာ) ဆိုတာဘာလဲ?</h1>
+                <p class="subtitle">ရူပဗေဒ ရှုထောင့်မှ အလွယ်ကူဆုံးနှင့် အပြည့်စုံဆုံး ရှင်းလင်းချက်</p>
+            </header>
+
+            <!-- Dark Mode Toggle Button -->
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle Dark Mode">
+                <!-- Sun Icon -->
+                <svg class="sun-icon" style="display: none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <!-- Moon Icon -->
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+
+        <!-- Section 1: Introduction -->
+        <section id="intro" class="card">
+            <h2>၁။ ရူပဗေဒ ရှုထောင့်မှ တိုက်ရိုက်ရှင်းလင်းချက်</h2>
+            <p>
+                ရူပဗေဒတွင် တိုင်းတာ၍ရသော ပမာဏများကို အုပ်စု (၂) ခု ခွဲခြားထားသည်။ တစ်ခုမှာ <strong>Scalar (စကေလာ)</strong> ဖြစ်ပြီး နောက်တစ်ခုမှာ <strong>Vector (ဗက်တာ)</strong> ဖြစ်သည်။
+            </p>
+            <div class="highlight-box">
+                <p><strong>Vector (ဗက်တာ)</strong> ဆိုသည်မှာ <strong>ပမာဏ (Magnitude)</strong> နှင့် <strong>ဦးတည်ချက်/လားရာ (Direction)</strong> နှစ်မျိုးစလုံး ပါဝင်သော ရူပဗေဒဆိုင်ရာ အရာဝတ္ထု သို့မဟုတ် တိုင်းတာမှု တစ်ခုဖြစ်သည်။</p>
+            </div>
+            <p>
+                ဆိုလိုသည်မှာ ဗက်တာတစ်ခုအကြောင်း ပြောမည်ဆိုလျှင် "ဘယ်လောက်များလဲ/ဘယ်လောက်ပြင်းလဲ" (ပမာဏ) တစ်ခုတည်း ပြောပြ၍မရဘဲ "ဘယ်ဘက်ကို ဦးတည်နေသလဲ" (လားရာ) ဆိုသည်ကိုပါ မဖြစ်မနေ ထည့်သွင်းစဉ်းစားမှ ပြည့်စုံမှန်ကန်သည်။
+            </p>
+            <ul>
+                <li class="info-item"><strong>Scalar:</strong> အပူချိန် ($30^\circ\text{C}$), အလေးချိန် (၅ ပိဿာ)။ (ဘယ်ဘက်ကို ဦးတည်လဲဆိုတာ မလိုပါ၊ ပမာဏဆို ပြည့်စုံသည်)။</li>
+                <li class="info-item"><strong>Vector:</strong> အား ($\text{Force}$), အလျင် ($\text{Velocity}$)। (အားသက်ရောက်သည်ဆိုလျှင် ဘယ်ဘက်ကို တွန်းလိုက်တာလဲ သိမှရမည်၊ ကားမောင်းနေသည်ဆိုလျှင် ဘယ်ဘက်ကို မောင်းနေတာလဲ သိမှရမည်)။</li>
+            </ul>
+        </section>
+
+        <!-- Section 2: Simple Explanation -->
+        <section id="explanation" class="card">
+            <h2>၂။ ရိုးရှင်းသော ရှင်းလင်းချက် (What, Why, When)</h2>
+            <p>
+                <strong>Vector (ဗက်တာ)</strong> ဆိုသည်မှာ အရာဝတ္ထုတစ်ခု၏ "တန်ဖိုးပမာဏ" နှင့် "သွားနေသည့် လမ်းကြောင်း" နှစ်ခုစလုံးကို ပေါင်းစပ်ထားသော အရာဖြစ်ပြီး၊ ကမ္ဘာကြီးပေါ်ရှိ ရွေ့လျားမှုများနှင့် အားသက်ရောက်မှုများကို တိကျစွာ တွက်ချက်နိုင်ရန်အတွက် အသုံးပြုရခြင်း ဖြစ်သည်။ 
+            </p>
+            <p>
+                အကွာအဝေး သို့မဟုတ် တန်ဖိုးတစ်ခုတည်း သိရုံဖြင့် မလုံလောက်ဘဲ ထိုအရာက ဘယ်ဘက်ကို ဦးတည်ရွေ့လျားနေသလဲ၊ ဘယ်ဘက်ကို အားသက်ရောက်နေသလဲ ဆိုသည့် ဦးတည်ချက်ကပါ အဖြေရလဒ်ကို ပြောင်းလဲသွားစေနိုင်သည့် အချိန်မျိုး (ဥပမာ - လေယာဉ်လမ်းကြောင်း တွက်ချက်ခြင်း၊ တံတားဆောက်လုပ်ရာတွင် ဝန်ပိမှု တွက်ချက်ခြင်း) များတွင် မဖြစ်မနေ အသုံးပြုရသည်။
+            </p>
+        </section>
+
+        <!-- Section 3: Analogy -->
+        <section id="analogy" class="card">
+            <h2>၃။ ဥပမာ (Analogy)</h2>
+            <div class="highlight-box" style="background-color: rgba(225, 29, 72, 0.15); border-left-color: #e11d48;">
+                <p style="margin-bottom: 0; color: #be123c; font-weight: 800;"><strong>"ကားဒိုင်ခွက်က ပြနေတဲ့ အမြန်နှုန်း (Speed) ဟာ Scalar ဖြစ်ပြီး၊ GPS မြေပုံက ပြနေတဲ့ လမ်းကြောင်း (Navigation) ဟာ Vector ဖြစ်သည်။"</strong></p>
+            </div>
+            <ul style="margin-top: 1.5rem;">
+                <li><strong>Scalar:</strong> "ကားက တစ်နာရီ မိုင် ၆၀ နဲ့ မောင်းနေတယ်" လို့ ပြောရင် ဒါက Scalar ပါ။ (ဘယ်ရောက်မလဲ မသိရပါ၊ မြန်တာပဲ သိရသည်)။</li>
+                <li><strong>Vector:</strong> "ကားက ရန်ကုန်ဘက်ကို ဦးတည်ပြီး တစ်နာရီ မိုင် ၆၀ နဲ့ မောင်းနေတယ်" လို့ ပြောမှ ဒါက Vector ပါ။ (ဘယ်လောက်မြန်သလဲ ဆိုတာရော၊ ဘယ်ရောက်မလဲ ဆိုတာပါ သိရသည်)။</li>
+            </ul>
+        </section>
+
+        <!-- Section 4: Key Notes -->
+        <section id="keynotes" class="card">
+            <h2>၄။ အဓိက မှတ်သားရမည့် အချက်များ</h2>
+            <p>ဤအချက်များသည် ဗက်တာအကြောင်း လေ့လာရာတွင် လုံးဝ မေ့မထားသင့်သော အချက်များဖြစ်သည်။</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                <div class="info-item">
+                    <strong>📌 Magnitude (ပမာဏ):</strong> <br>အရွယ်အစား၊ အရှည် သို့မဟုတ် ပြင်းအား။
+                </div>
+                <div class="info-item">
+                    <strong>🧭 Direction (လားရာ):</strong> <br>ဦးတည်နေသော ဘက် (ဥပမာ - မြောက်ဘက်၊ ညာဘက်)။
+                </div>
+                <div class="info-item">
+                    <strong>📏 Representation:</strong> <br>မြှားခေါင်းပါသော မျဉ်းဖြောင့် ($\rightarrow$)။
+                </div>
+                <div class="info-item">
+                    <strong>✍️ Notation:</strong> <br>$\vec{F}$ (အား)၊ $\vec{v}$ (အလျင်)။
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Real World -->
+        <section id="realworld" class="card">
+            <h2>၅။ လက်တွေ့ အသုံးပြုပုံများ (Real World Applications)</h2>
+            <p>လက်တွေ့ကမ္ဘာတွင် ဗက်တာကို မည်သို့အသုံးပြုနေကြသည်ကို နားလည်လွယ်သော VS Code ပုံစံ ဥပမာများဖြင့် ဖော်ပြထားပါသည်။</p>
+
+            <h3>(က) Game Development (ဂိမ်းဖန်တီးခြင်း)</h3>
+            <p>ဂိမ်းထဲတွင် ကစားသူ (Player) တစ်ယောက် ရှေ့သို့ ပြေးသွားရန်အတွက် ဗက်တာကို သုံးရသည်။ "X ဝင်ရိုးအတိုင်း ဘယ်လောက်၊ Y ဝင်ရိုးအတိုင်း ဘယ်လောက် တိုးသွားပါ" ဟု ဗက်တာဖြင့် ခိုင်းမှ ရသည်။</p>
+            
+            <div class="code-container">
+                <div class="code-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    <span style="color: #cbd5e1; margin-left: 10px; font-size: 13px; font-family: sans-serif; font-weight: 600;">playerMovement.js</span>
+                </div>
+                <pre><code><span class="code-comment">/* VS Code Style: Game Character Movement Logic */</span>
+
+<span class="code-comment">// ၁။ လက်ရှိနေရာ (Current Position)</span>
+<span class="code-keyword">let</span> currentPosition = { <span class="code-string">x</span>: <span class="code-num">10</span>, <span class="code-string">y</span>: <span class="code-num">5</span> };
+
+<span class="code-comment">// ၂။ ရွေ့လျားမည့် ဗက်တာ (Movement Vector)</span>
+<span class="code-comment">// (x: 1 ဆိုတာ ညာဘက်ကို ၁ ယူနစ်သွားမယ်)</span>
+<span class="code-keyword">let</span> velocityVector = { <span class="code-string">x</span>: <span class="code-num">1</span>, <span class="code-string">y</span>: <span class="code-num">0</span> }; 
+
+<span class="code-comment">// ၃။ နေရာအသစ် တွက်ချက်ခြင်း (New Position Calculation)</span>
+<span class="code-comment">// Vector Addition: (10+1, 5+0)</span>
+<span class="code-keyword">let</span> newPosition = { 
+    <span class="code-string">x</span>: currentPosition.x + velocityVector.x, 
+    <span class="code-string">y</span>: currentPosition.y + velocityVector.y 
+};
+
+<span class="code-comment">// Result: ကစားသူသည် ညာဘက်သို့ တစ်လှမ်း ရွေ့သွားသည်။</span></code></pre>
+            </div>
+
+            <h3>(ခ) လေကြောင်းပျံသန်းမှု (Aviation & Wind)</h3>
+            <p>လေယာဉ်ပျံသန်းရာတွင် လေယာဉ်၏ အင်ဂျင်အရှိန် (Vector A) နှင့် လေတိုက်ခတ်မှု အရှိန် (Vector B) ပေါင်းစပ်သွားသည်။ လေယာဉ်မှူးများသည် လေတိုက်သည့် ဗက်တာကို ထည့်တွက်ပြီး လမ်းကြောင်း ပြင်မောင်းရသည်။</p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    <span style="color: #cbd5e1; margin-left: 10px; font-size: 13px; font-family: sans-serif; font-weight: 600;">flightPath.py</span>
+                </div>
+                <pre><code><span class="code-comment"># VS Code Style: Flight Path Calculation</span>
+
+<span class="code-keyword">class</span> <span class="code-func">Vector</span>:
+    <span class="code-keyword">def</span> <span class="code-func">__init__</span>(<span class="code-num">self</span>, speed, angle):
+        <span class="code-num">self</span>.speed = speed
+        <span class="code-num">self</span>.angle = angle
+
+<span class="code-comment"># လေယာဉ်၏ အလျင် (မြောက်ဘက်သို့ 500 km/h)</span>
+plane_velocity = <span class="code-func">Vector</span>(speed=<span class="code-num">500</span>, angle=<span class="code-string">"North"</span>)
+
+<span class="code-comment"># လေတိုက်နှုန်း (အရှေ့ဘက်သို့ 50 km/h)</span>
+wind_velocity = <span class="code-func">Vector</span>(speed=<span class="code-num">50</span>, angle=<span class="code-string">"East"</span>)
+
+<span class="code-comment"># တကယ်သွားမည့် လမ်းကြောင်း (Resultant Vector)</span>
+<span class="code-comment"># အရှေ့မြောက်ဘက်သို့ အနည်းငယ် ယိမ်းသွားမည်။</span>
+real_path = calculate_resultant(plane_velocity, wind_velocity)</code></pre>
+            </div>
+        </section>
+
+        <!-- Section 6: Diagram -->
+        <section id="diagram" class="card">
+            <h2>၆။ ပုံကြမ်း သဘောတရား (Visual Diagram)</h2>
+            <p>ဗက်တာတစ်ခုကို မြင်သာစေရန် အောက်ပါ Diagram ဖြင့် မှတ်သားနိုင်ပါသည်။</p>
+            
+            <h3>ပုံစံ (၁) - ဗက်တာ၏ အစိတ်အပိုင်းများ</h3>
+            <div class="diagram-box">
+      (ဦးတည်ချက်/Direction)
+             ↗
+           /
+          /  &lt;--- (အရှည်က ပမာဏ/Magnitude)
+         /
+        /
+       ● 
+    (စမှတ်/Tail)
+            </div>
+
+            <h3>ပုံစံ (၂) - ဗက်တာ ပေါင်းခြင်း (Vector Addition)</h3>
+            <p>ဥပမာ - လေယာဉ်လမ်းကြောင်းတွင် လေတိုက်ခတ်မှု ပေါင်းစပ်သွားပုံ။</p>
+            <div class="diagram-box">
+    Vector A (လေယာဉ်သွားချင်တာ)
+       ↑
+       |
+       |
+       |
+       +--------->  Vector B (လေတိုက်လိုက်တာ)
+      
+    ရလဒ် (Resultant Vector)
+       ↗
+      /
+     /
+    /
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Theme Toggle Logic
+        const toggleButton = document.getElementById('themeToggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        const htmlElement = document.documentElement;
+
+        // Check local storage or system preference
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            htmlElement.setAttribute('data-theme', 'dark');
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        } else {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        }
+
+        toggleButton.addEventListener('click', () => {
+            if (htmlElement.getAttribute('data-theme') === 'dark') {
+                htmlElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                htmlElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        });
+
+        // Simple active link highlighter
+        const sections = document.querySelectorAll("section");
+        const navLi = document.querySelectorAll(".nav-links a");
+
+        window.addEventListener('scroll', () => {
+            let current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navLi.forEach((a) => {
+                a.classList.remove("active");
+                if (a.getAttribute("href").includes(current)) {
+                    a.classList.add("active");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
