@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E=mc² - The Ultimate Guide</title>
+    
+    <!-- Google Fonts: Quicksand for English, Padauk for Burmese -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Quicksand:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            /* --- LIGHT MODE VARIABLES (Default) --- */
+            
+            /* Backgrounds */
+            --bg-color: #FFF5F7;
+            --bg-gradient-1: rgb(255, 241, 242);
+            --bg-gradient-2: rgb(240, 253, 250);
+            --sidebar-bg: #FFFFFF;
+            --sidebar-border: rgba(0,0,0,0.08);
+            
+            /* Text - Increased Contrast */
+            --text-main: #050505; /* Pure Black for maximum contrast */
+            --text-secondary: #2d2d2d; /* Very Dark Gray */
+            --text-muted: #4b5563;
+            
+            /* Accents (Backgrounds are light, text is dark) */
+            --primary-pink: #FFB7B2;
+            --primary-pink-dark: #d94646; /* Darker for better visibility */
+            --soft-mint: #B5EAD7;
+            --mint-dark: #1a7f5a;
+            --pastel-purple: #C7CEEA;
+            --purple-dark: #5846c2;
+            --soft-blue: #BBE1FA;
+            --blue-dark: #093857;
+            --soft-yellow: #FFF2CC;
+            --yellow-dark: #b8860b;
+
+            /* Card Styling */
+            --card-bg: #ffffff;
+            --card-radius: 24px;
+            --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+            --card-border: 2px solid #e5e7eb;
+            --card-hover-shadow: 0 20px 50px -10px rgba(0,0,0,0.15);
+            
+            /* Highlight Box */
+            --highlight-bg: linear-gradient(135deg, var(--soft-blue), #e0f2fe);
+            --highlight-border: 2px solid white;
+            
+            /* Code Theme (Tokyo Night inspired) */
+            --code-bg: #1a1b26;
+            --code-text: #a9b1d6;
+            --code-header: #1f202e;
+            --code-border: #2e303e;
+
+            /* Diagram */
+            --diagram-bg: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+            --flow-box-bg: white;
+            --flow-arrow-color: var(--text-main);
+        }
+
+        /* --- DARK MODE VARIABLES --- */
+        body.dark-mode {
+            /* Backgrounds */
+            --bg-color: #020617; /* Slate 950 - Darker background */
+            --bg-gradient-1: #0f172a;
+            --bg-gradient-2: #020617;
+            --sidebar-bg: #0f172a; /* Slate 900 */
+            --sidebar-border: rgba(255,255,255,0.1);
+
+            /* Text - Increased Brightness */
+            --text-main: #ffffff; /* Pure White */
+            --text-secondary: #e2e8f0; /* Slate 200 - Very bright gray */
+            --text-muted: #cbd5e1;
+
+            /* Accents (Backgrounds become transparent/darker, text becomes bright pastel) */
+            --primary-pink: rgba(251, 113, 133, 0.2);
+            --primary-pink-dark: #fda4af;
+            --soft-mint: rgba(52, 211, 153, 0.2);
+            --mint-dark: #6ee7b7;
+            --pastel-purple: rgba(167, 139, 250, 0.2);
+            --purple-dark: #c4b5fd;
+            --soft-blue: rgba(56, 189, 248, 0.2);
+            --blue-dark: #7dd3fc;
+            --soft-yellow: rgba(250, 204, 21, 0.2);
+            --yellow-dark: #fde047;
+
+            /* Card Styling */
+            --card-bg: #1e293b;
+            --card-radius: 24px;
+            --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+            --card-border: 2px solid #334155;
+            --card-hover-shadow: 0 20px 50px -10px rgba(0,0,0,0.7);
+
+            /* Highlight Box */
+            --highlight-bg: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(56, 189, 248, 0.1));
+            --highlight-border: 2px solid #475569;
+
+            /* Diagram */
+            --diagram-bg: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            --flow-box-bg: #334155;
+            --flow-arrow-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Quicksand', 'Padauk', 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, var(--bg-gradient-1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, var(--bg-gradient-2) 0%, transparent 20%);
+            color: var(--text-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 500; /* Increased base font weight */
+        }
+
+        /* Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            padding: 2rem 1.5rem;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: linear-gradient(135deg, var(--purple-dark), var(--primary-pink-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            font-size: 1rem;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            background-color: var(--bg-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transform: translateX(5px);
+            color: var(--purple-dark);
+            border-color: var(--sidebar-border);
+        }
+
+        .nav-link.active {
+            background-color: var(--pastel-purple);
+            color: var(--purple-dark);
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.15);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 16px;
+            background: var(--bg-color);
+            color: var(--text-main);
+            border: 2px solid var(--sidebar-border);
+            cursor: pointer;
+            font-weight: 800;
+            gap: 0.5rem;
+            font-family: inherit;
+        }
+        
+        .theme-toggle-btn:hover {
+            border-color: var(--purple-dark);
+            color: var(--purple-dark);
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 4rem;
+            max-width: 1100px;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: none;
+            padding: 1rem 1.5rem;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        .menu-toggle {
+            background: var(--pastel-purple);
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--purple-dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            border: var(--card-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: var(--purple-dark);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1.2rem;
+        }
+
+        /* Icons */
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .card:hover .icon-box {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .icon-blue { background: var(--soft-blue); color: var(--blue-dark); }
+        .icon-purple { background: var(--pastel-purple); color: var(--purple-dark); }
+        .icon-green { background: var(--soft-mint); color: var(--mint-dark); }
+        .icon-orange { background: var(--primary-pink); color: var(--primary-pink-dark); }
+
+        /* Typography - Sharper and Bolder */
+        h1 { 
+            font-size: 3.2rem; 
+            margin-bottom: 1rem; 
+            color: var(--text-main); 
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.2;
+        }
+        
+        h2 { 
+            font-size: 2rem; 
+            font-weight: 800; 
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+        
+        h3 { 
+            font-size: 1.4rem; 
+            margin-bottom: 0.8rem; 
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        
+        p { 
+            margin-bottom: 1.2rem; 
+            color: var(--text-secondary); 
+            font-size: 1.2rem; 
+            font-weight: 600; /* Increased from 500 */
+        }
+
+        /* Highlights */
+        .highlight-box {
+            background: var(--highlight-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 1.5rem;
+            border: var(--highlight-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            color: var(--blue-dark);
+        }
+        
+        .highlight-box p {
+            color: var(--blue-dark);
+            font-weight: 700;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.6rem 1.4rem;
+            border-radius: 99px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .badge-purple { 
+            background: var(--pastel-purple); 
+            color: var(--purple-dark); 
+        }
+
+        /* Concept Comparison (Analogy) */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: center;
+            background: var(--bg-color);
+            padding: 2.5rem;
+            border-radius: 24px;
+            margin: 2rem 0;
+            border: 2px dashed var(--sidebar-border);
+        }
+
+        .concept-box {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid var(--sidebar-border);
+            transition: transform 0.3s;
+        }
+        
+        .concept-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .concept-emoji { 
+            font-size: 4rem; 
+            margin-bottom: 1rem; 
+            display: block; 
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+        
+        .multiplier { 
+            background: var(--soft-yellow);
+            color: var(--yellow-dark);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Key Notes Grid */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .note-item {
+            background: var(--card-bg);
+            padding: 1.8rem;
+            border-radius: 20px;
+            border: 2px solid var(--pastel-purple);
+            box-shadow: 0 4px 0 var(--pastel-purple);
+            transition: transform 0.2s;
+        }
+
+        .note-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 var(--pastel-purple);
+        }
+
+        .note-item h3 {
+            color: var(--purple-dark);
+            border-bottom: 2px dashed var(--sidebar-border);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .note-item p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+        }
+
+        /* Visual Diagram (CSS Flow) */
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            background: var(--diagram-bg);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--sidebar-border);
+        }
+
+        /* Fun background shapes for diagram */
+        .flow-diagram::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--soft-mint);
+            border-radius: 50%;
+            top: -50px;
+            left: -50px;
+            opacity: 0.5;
+            filter: blur(40px);
+        }
+
+        .flow-box {
+            background: var(--flow-box-bg);
+            padding: 1.5rem 2.5rem;
+            border-radius: 16px;
+            font-weight: 800;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: 3px solid var(--text-main);
+            z-index: 2;
+            text-align: center;
+            color: var(--text-main);
+            font-size: 1.1rem;
+        }
+
+        .flow-arrow {
+            font-size: 2.8rem;
+            color: var(--flow-arrow-color);
+            margin: 0.8rem 0;
+            z-index: 2;
+            animation: bounce 2s infinite;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .flow-process {
+            background: var(--text-main);
+            color: var(--bg-color); /* Inverted text for high contrast */
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            z-index: 2;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+
+        .flow-explosion {
+            font-size: 5rem;
+            animation: pulse 1.5s infinite;
+            z-index: 2;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        /* Code Blocks (Mac Window Style) */
+        .code-window {
+            background: var(--code-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 2.5rem 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            border: 1px solid var(--code-border);
+        }
+
+        .code-header {
+            background: var(--code-header);
+            padding: 1rem 1.2rem;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid var(--code-border);
+        }
+
+        .dot { width: 14px; height: 14px; border-radius: 50%; transition: opacity 0.2s; }
+        .dot:hover { opacity: 0.8; }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
+
+        pre {
+            padding: 1.8rem;
+            color: var(--code-text);
+            overflow-x: auto;
+            font-size: 1rem;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        /* Syntax highlighting simulation */
+        .kwd { color: #bb9af7; font-weight: bold; } /* Purple */
+        .str { color: #9ece6a; font-weight: 600; } /* Green */
+        .fn { color: #7aa2f7; font-weight: bold; } /* Blue */
+        .cmt { color: #565f89; font-style: italic; } /* Greyish Blue */
+        .num { color: #ff9e64; font-weight: bold; } /* Orange */
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .app-container { grid-template-columns: 1fr; }
+            .sidebar {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                width: 100%;
+                top: 70px;
+                height: auto;
+                max-height: calc(100vh - 70px);
+                border-bottom: 1px solid var(--sidebar-border);
+                background: var(--sidebar-bg);
+            }
+            .sidebar.active { display: block; animation: slideDown 0.3s ease; }
+            .mobile-header { display: flex; }
+            main { padding: 1.5rem; }
+            h1 { font-size: 2.2rem; }
+            .comparison-container { grid-template-columns: 1fr; gap: 1rem; padding: 1.5rem; }
+            .multiplier { margin: 15px auto; width: 50px; height: 50px; font-size: 1.4rem; }
+            .card { padding: 1.8rem; }
+            .flow-explosion { font-size: 3.5rem; }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo"><span>⚡</span> Physics<span style="color:var(--text-main)">Ed</span></div>
+        <!-- Mobile Theme Toggle -->
+        <button class="menu-toggle" onclick="toggleTheme()" style="margin-left: auto; margin-right: 10px; background: var(--bg-color); font-size: 1.2rem;">
+            <span id="mobile-theme-icon">🌙</span>
+        </button>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    </header>
+
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="logo"><span>⚡</span> Physics<span style="color:#6C5CE7">Ed</span></div>
+            <ul class="nav-links">
+                <li><a href="#intro" class="nav-link active" onclick="setActive(this)">၁။ တိုက်ရိုက်ရှင်းလင်းချက်</a></li>
+                <li><a href="#summary" class="nav-link" onclick="setActive(this)">၂။ ရိုးရှင်းသော အနှစ်ချုပ်</a></li>
+                <li><a href="#analogy" class="nav-link" onclick="setActive(this)">၃။ နှိုင်းယှဉ်ဥပမာ</a></li>
+                <li><a href="#keynotes" class="nav-link" onclick="setActive(this)">၄။ အဓိက မှတ်စုများ</a></li>
+                <li><a href="#realworld" class="nav-link" onclick="setActive(this)">၅။ လက်တွေ့အသုံးပြုပုံ</a></li>
+                <li><a href="#diagram" class="nav-link" onclick="setActive(this)">၆။ ပုံကြမ်း (Diagram)</a></li>
+            </ul>
+
+            <!-- Desktop Theme Toggle -->
+            <button class="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="desktop-theme-icon">🌙</span>
+                <span id="theme-text">Dark Mode</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            
+            <!-- Hero Section -->
+            <div style="margin-bottom: 3.5rem; text-align: left;">
+                <span class="badge badge-purple">Physics Concept</span>
+                <h1>$E=mc^2$ ရှင်းလင်းချက်</h1>
+                <p style="font-size: 1.35rem; color: var(--text-secondary); max-width: 700px; font-weight: 600;">
+                    အိုင်းစတိုင်း၏ ကမ္ဘာကျော်ညီမျှခြင်းအား အလွယ်ကူဆုံးနှင့် အပြည့်စုံဆုံး လေ့လာခြင်း။
+                </p>
+            </div>
+
+            <!-- 1. Direct Explanation -->
+            <section id="intro" class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-blue">💡</div>
+                    <h2>၁။ တိုက်ရိုက်ရှင်းလင်းချက်</h2>
+                </div>
+                <p>ဤညီမျှခြင်း၏ အဓိက အနှစ်သာရမှာ <strong>"ဒြပ်ထု (Mass) နှင့် စွမ်းအင် (Energy) ဆိုသည်မှာ တခြားစီ မဟုတ်ဘဲ အတူတူပင် ဖြစ်သည်"</strong> ဟူသော အချက်ဖြစ်သည်။</p>
+                <p>ပုံမှန်အားဖြင့် အရာဝတ္ထုတစ်ခု (ဥပမာ- ကျောက်တုံးတစ်တုံး) တွင် ဒြပ်ထုရှိသည်ဟု သိထားကြသော်လည်း အိုင်းစတိုင်းက ထိုဒြပ်ထုသည် စွမ်းအင်အဖြစ်သို့ ပြောင်းလဲနိုင်ကြောင်း တွေ့ရှိခဲ့သည်။</p>
+                <div class="highlight-box">
+                    <p style="margin-bottom: 0; font-weight: 700;">ညီမျှခြင်းရှိ $c^2$ (အလင်းအလျင်၏ နှစ်ထပ်ကိန်း) သည် အလွန်ကြီးမားသော ကိန်းဂဏန်းတစ်ခု ဖြစ်သည်။ ထို့ကြောင့် အလွန်သေးငယ်သော ဒြပ်ထု ($m$) ပမာဏလေး တစ်ခုသည်ပင်လျှင် $c^2$ နှင့် မြှောက်လိုက်သောအခါ အလွန်ကြီးမားလှသော စွမ်းအင် ($E$) ပမာဏကို ထုတ်ပေးနိုင်သည်ဟု ဆိုလိုခြင်း ဖြစ်သည်။</p>
+                </div>
+            </section>
+
+            <!-- 2. Simple Summary -->
+            <section id="summary" class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-purple">📝</div>
+                    <h2>၂။ ရိုးရှင်းသော အနှစ်ချုပ်</h2>
+                </div>
+                <p><strong>$E=mc^2$ ဆိုသည်မှာ</strong> ဒြပ်ထုနှင့် စွမ်းအင်တို့သည် ပုံသဏ္ဌာန်ကွဲပြားနေသော အရာတစ်ခုတည်းဖြစ်ကြောင်း သက်သေပြသည့် ဖော်မြူလာဖြစ်သည်။</p>
+                <p>အက်တမ်ကဲ့သို့သော အရာဝတ္ထုများ ဖြိုခွဲခံရချိန် သို့မဟုတ် ပေါင်းစပ်ချိန်တွင် ဒြပ်ထုအနည်းငယ် ပျောက်ဆုံးသွားရာမှ ကြီးမားသော စွမ်းအင်ထွက်ပေါ်လာပုံကို တွက်ချက်ရန်အတွက် <strong>နူကလီးယားစွမ်းအင်ထုတ်လုပ်ခြင်း</strong> နှင့် <strong>ကြယ်များလောင်ကျွမ်းခြင်း</strong> ကဲ့သို့သော ဖြစ်စဉ်များတွင် အသုံးပြုသည်။</p>
+            </section>
+
+            <!-- 3. Analogy -->
+            <section id="analogy" class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-green">⚖️</div>
+                    <h2>၃။ နှိုင်းယှဉ်ဥပမာ (Analogy)</h2>
+                </div>
+                <p>"အရာဝတ္ထုတစ်ခုရဲ့ ဒြပ်ထု ($m$) ဆိုတာ သိပ်သည်းနေတဲ့ စွမ်းအင် ($E$) အခဲလိုက်ကြီး ဖြစ်ပြီး၊ ရေခဲတုံး (ဒြပ်ထု) ကနေ အရည်ပျော်ပြီး ရေနွေးငွေ့ (စွမ်းအင်) ဖြစ်သွားတာနဲ့ တူပါတယ်။"</p>
+                
+                <h3 style="margin-top: 1.5rem; text-align: center; color: var(--text-secondary);">ငွေကြေးဥပမာ</h3>
+                
+                <div class="comparison-container">
+                    <div class="concept-box">
+                        <span class="concept-emoji">🧱</span>
+                        <h3>ရွှေတုံး</h3>
+                        <p style="font-size: 1rem; font-weight: bold; color: var(--text-muted);">Mass ($m$)</p>
+                        <small style="color: var(--text-muted); font-weight: 600;">သိပ်သည်းနေသော အရာ</small>
+                    </div>
+                    
+                    <div class="multiplier">
+                        x
+                    </div>
+
+                    <div class="concept-box">
+                        <span class="concept-emoji">📈</span>
+                        <h3>ပေါက်ဈေး ($c^2$)</h3>
+                        <small style="color: var(--text-muted); font-weight: 600;">အဆမတန်များသော</small>
+                    </div>
+
+                    <div class="multiplier">
+                        =
+                    </div>
+
+                    <div class="concept-box">
+                        <span class="concept-emoji">💵</span>
+                        <h3>ငွေစက္ကူအများကြီး</h3>
+                        <p style="font-size: 1rem; font-weight: bold; color: var(--text-muted);">Energy ($E$)</p>
+                        <small style="color: var(--text-muted); font-weight: 600;">သုံးစွဲနိုင်သော စွမ်းအင်</small>
+                    </div>
+                </div>
+                <p style="text-align: center; font-style: italic; color: var(--text-secondary); background: var(--bg-color); padding: 15px; border-radius: 12px; font-weight: 600;">ရွှေတစ်တုံးသည် သေးငယ်သော်လည်း ပေါက်ဈေး ($c^2$) ဖြင့် မြှောက်လိုက်သောအခါ တန်ဖိုးအလွန်ကြီးမားသွားသည်။</p>
+            </section>
+
+            <!-- 4. Key Notes -->
+            <section id="keynotes" class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-orange">📌</div>
+                    <h2>၄။ အဓိက မှတ်ရမယ့် အချက်များ</h2>
+                </div>
+                <div class="notes-grid">
+                    <div class="note-item">
+                        <h3>$E$ (Energy)</h3>
+                        <p>စွမ်းအင် (အတိုင်းအတာ ယူနစ်မှာ Joules ဖြစ်သည်)။</p>
+                    </div>
+                    <div class="note-item">
+                        <h3>$m$ (Mass)</h3>
+                        <p>ဒြပ်ထု (ကီလိုဂရမ်ဖြင့် တိုင်းတာသည်)။</p>
+                    </div>
+                    <div class="note-item">
+                        <h3>$c$ (Speed of Light)</h3>
+                        <p>အလင်းအလျင် (တစ်စက္ကန့်လျှင် မိုင်ပေါင်း ၁၈၆,၀၀၀ သို့မဟုတ် မီတာ သန်း ၃၀၀ ခန့်)။</p>
+                    </div>
+                    <div class="note-item">
+                        <h3>Conservation</h3>
+                        <p>ဒြပ်ထု ပျောက်သွားခြင်း မဟုတ်ဘဲ စွမ်းအင်အဖြစ်သို့ ပုံစံပြောင်းသွားခြင်းသာ ဖြစ်သည်။</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Real World Examples -->
+            <section id="realworld" class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-blue">🌍</div>
+                    <h2>၅။ လက်တွေ့ကမ္ဘာတွင် အသုံးပြုပုံ</h2>
+                </div>
+
+                <!-- Example 1 -->
+                <h3 style="color: var(--blue-dark); background: var(--soft-blue); padding: 0.6rem 1.2rem; border-radius: 10px; display: inline-block;">(က) နေနှင့် ကြယ်များ (Solar Fusion)</h3>
+                <p style="margin-top: 1rem;">နေမင်းကြီးသည် ဟိုက်ဒရိုဂျင် အက်တမ်များ ပေါင်းစပ်ပြီး ဟီလီယမ် ဖြစ်သွားသည်။ ထိုဖြစ်စဉ်တွင် ဒြပ်ထု အနည်းငယ် ပျောက်သွားပြီး ကြီးမားသော အပူစွမ်းအင် ($E$) အဖြစ် ပြောင်းလဲသည်။</p>
+                
+                <div class="code-window">
+                    <div class="code-header">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                        <span style="color: #a9b1d6; font-size: 13px; margin-left: 10px; font-weight: bold;">solar_fusion.js</span>
+                    </div>
+                    <pre>
+<span class="kwd">function</span> <span class="fn">solarFusion</span>(hydrogenMass) {
+    <span class="cmt">// နေမင်းကြီးထဲတွင် ဖြစ်ပျက်ပုံ</span>
+    <span class="kwd">const</span> speedOfLight = <span class="num">300000000</span>; <span class="cmt">// m/s</span>
+    
+    <span class="cmt">// Fusion: 0.7% mass becomes energy</span>
+    <span class="kwd">let</span> convertedMass = hydrogenMass * <span class="num">0.007</span>; 
+
+    <span class="cmt">// E = mc^2 Calculation</span>
+    <span class="kwd">let</span> energyReleased = convertedMass * (speedOfLight ** <span class="num">2</span>);
+
+    <span class="kwd">return</span> {
+        process: <span class="str">"Nuclear Fusion"</span>,
+        energyOutput: energyReleased + <span class="str">" Joules"</span>,
+        effect: <span class="str">"Sunlight and Heat"</span>
+    };
+}</pre>
+                </div>
+
+                <hr style="border: 0; border-top: 2px dashed var(--sidebar-border); margin: 3rem 0;">
+
+                <!-- Example 2 -->
+                <h3 style="color: var(--purple-dark); background: var(--pastel-purple); padding: 0.6rem 1.2rem; border-radius: 10px; display: inline-block;">(ခ) နူကလီးယား ဓာတ်အားပေးစက်ရုံများ</h3>
+                <p style="margin-top: 1rem;">ယူရေနီယမ် (Uranium) အက်တမ်များကို ဖြိုခွဲလိုက်သောအခါ (Fission) ဒြပ်ထုအနည်းငယ် ပျောက်ဆုံးပြီး အပူစွမ်းအင် ထွက်လာကာ လျှပ်စစ်တာဘိုင်များကို လည်ပတ်စေသည်။</p>
+
+                <div class="code-window">
+                    <div class="code-header">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                        <span style="color: #a9b1d6; font-size: 13px; margin-left: 10px; font-weight: bold;">nuclear_reactor.py</span>
+                    </div>
+                    <pre>
+<span class="kwd">class</span> <span class="fn">NuclearReactor</span>:
+    <span class="kwd">def</span> <span class="fn">generate_electricity</span>(self, uranium_mass):
+        <span class="cmt"># c (Speed of Light)</span>
+        c = <span class="num">3</span> * (<span class="num">10</span> ** <span class="num">8</span>)
+        
+        <span class="cmt"># Mass lost during fission</span>
+        mass_converted = uranium_mass * <span class="num">0.001</span> 
+        
+        <span class="cmt"># E = mc^2</span>
+        energy = mass_converted * (c ** <span class="num">2</span>)
+        
+        <span class="kwd">print</span>(f<span class="str">"Energy Output: {energy} Joules"</span>)
+        <span class="kwd">print</span>(<span class="str">"Use: Boils water to turn turbines"</span>)</pre>
+                </div>
+            </section>
+
+            <!-- 6. Visual Diagram -->
+            <section id="diagram" class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-green">📊</div>
+                    <h2>၆။ မျက်စိထဲမြင်သာသော ပုံကြမ်း</h2>
+                </div>
+                
+                <div class="flow-diagram">
+                    <div class="flow-box" style="border-color: var(--text-secondary);">
+                        သေးငယ်သော ဒြပ်ထု ($m$)
+                    </div>
+                    
+                    <div class="flow-arrow">⬇️</div>
+                    
+                    <div class="flow-process">
+                        Transformation Box<br>
+                        ( $ \times c^2 $ )
+                    </div>
+                    <small style="color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 700;">အလင်းအလျင် (၃၀၀,၀၀၀ km/s)²</small>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <div class="flow-explosion">💥</div>
+                    <div class="flow-box" style="border-color: #FF6B6B; background: #FF6B6B; color: white; border: none;">
+                        ကြီးမားသော စွမ်းအင် ($E$)<br>
+                        <span style="font-weight: normal; font-size: 1rem; opacity: 0.95;">(အပူ၊ အလင်း၊ လျှပ်စစ်)</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            
+            updateThemeIcons(isDark);
+        }
+
+        function updateThemeIcons(isDark) {
+            const desktopIcon = document.getElementById('desktop-theme-icon');
+            const mobileIcon = document.getElementById('mobile-theme-icon');
+            const text = document.getElementById('theme-text');
+            
+            if (isDark) {
+                desktopIcon.textContent = '☀️';
+                mobileIcon.textContent = '☀️';
+                text.textContent = 'Light Mode';
+            } else {
+                desktopIcon.textContent = '🌙';
+                mobileIcon.textContent = '🌙';
+                text.textContent = 'Dark Mode';
+            }
+        }
+
+        // Initialize Theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                updateThemeIcons(true);
+            }
+        });
+
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Active Link Highlighter
+        function setActive(element) {
+            // Remove active class from all links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            // Add active class to clicked link
+            element.classList.add('active');
+
+            // Close mobile menu if open
+            if(window.innerWidth <= 900) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="my" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heisenberg Principle | Extra Large & Vivid</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&family=Padauk:wght@400;700;800&family=Fira+Code:wght@600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                        burmese: ['Padauk', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        cream: '#FFFBF2', // Slightly warmer cream
+                        darkBg: '#020617', // Almost black
+                        vivid: {
+                            purple: '#6B21A8', // Deep Purple (800)
+                            blue: '#1E40AF',   // Deep Blue (800)
+                            teal: '#115E59',   // Deep Teal (800)
+                            pink: '#9D174D',   // Deep Pink (800)
+                            orange: '#9A3412', // Deep Orange (800)
+                            red: '#991B1B'     // Deep Red (800)
+                        },
+                        pastel: {
+                            bgPurple: '#F3E8FF',
+                            bgBlue: '#DBEAFE',
+                            bgTeal: '#CCFBF1',
+                            bgPink: '#FCE7F3',
+                            bgOrange: '#FFEDD5',
+                            bgRed: '#FEE2E2'
+                        }
+                    },
+                    borderRadius: { '3xl': '28px' },
+                    boxShadow: {
+                        'pop': '8px 8px 0px 0px rgba(0,0,0,0.9)',
+                        'soft': '0 10px 50px -10px rgba(0,0,0,0.15)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- MathJax -->
+    <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global', scale: 1.2 }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        /* Responsive Base Text Size */
+        html { font-size: 16px; } 
+        @media (min-width: 768px) { html { font-size: 18px; } }
+        @media (min-width: 1024px) { html { font-size: 20px; } }
+
+        /* Sidebar */
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #64748B; border-radius: 10px; }
+
+        /* Card Effects */
+        .pop-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 3px solid rgba(0,0,0,0.1);
+        }
+        .dark .pop-card { border: 2px solid rgba(255,255,255,0.2); }
+        .pop-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.2);
+            border-color: #6B21A8; 
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes seesaw-motion {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+        .animate-seesaw-large { animation: seesaw-motion 5s ease-in-out infinite; }
+
+        @keyframes shake-crazy {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(5px, -5px); }
+            50% { transform: translate(-5px, 5px); }
+            75% { transform: translate(-5px, -5px); }
+            100% { transform: translate(5px, 5px); }
+        }
+        .animate-shake-crazy { animation: shake-crazy 0.2s linear infinite; }
+
+        @keyframes float-gentle {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
+        }
+        .animate-float-gentle { animation: float-gentle 4s ease-in-out infinite; }
+        
+        /* Nav Active */
+        .nav-link.active {
+            background-color: #F3E8FF; color: #6B21A8; font-weight: 900; border-right: 6px solid #6B21A8;
+        }
+        .dark .nav-link.active {
+            background-color: #3B0764; color: #E9D5FF; border-right: 6px solid #D8B4FE;
+        }
+        
+        /* Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 28px;
+            width: 28px;
+            border-radius: 50%;
+            background: #6B21A8;
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            border: 4px solid white;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-cream dark:bg-darkBg text-black dark:text-white transition-colors duration-300 font-sans leading-relaxed">
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden fixed top-0 w-full bg-white/95 dark:bg-darkBg/95 backdrop-blur-md z-50 border-b border-slate-400 dark:border-slate-600 px-4 py-4 flex justify-between items-center shadow-lg">
+        <span class="font-bold text-xl font-burmese text-vivid-purple truncate mr-2">Heisenberg Visuals</span>
+        <div class="flex items-center gap-3 flex-shrink-0">
+            <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+                <span class="dark:hidden text-xl">☀️</span><span class="hidden dark:block text-xl">🌙</span>
+            </button>
+            <button onclick="toggleMenu()" class="p-2 text-black dark:text-white">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="flex min-h-screen pt-20 lg:pt-0">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 lg:w-80 bg-white dark:bg-[#020617] border-r border-slate-400 dark:border-slate-700 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40 sidebar-scroll overflow-y-auto shadow-2xl lg:shadow-none">
+            <div class="p-6 lg:p-8">
+                <div class="flex items-center gap-3 lg:gap-4 mb-8 lg:mb-12 text-vivid-purple">
+                    <span class="text-4xl lg:text-5xl">⚛️</span>
+                    <h1 class="font-bold text-xl lg:text-2xl leading-none tracking-tight">Quantum<br><span class="text-slate-700 dark:text-slate-400 text-base lg:text-lg">Interactive</span></h1>
+                </div>
+                <nav class="space-y-2 lg:space-y-3 font-burmese text-base lg:text-lg font-bold">
+                    <p class="px-4 text-xs lg:text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2 lg:mb-4">Lesson</p>
+                    <a href="#intro" class="nav-link block px-4 lg:px-5 py-3 lg:py-4 rounded-2xl text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">🏠 မိတ်ဆက် (Intro)</a>
+                    <a href="#equation" class="nav-link block px-4 lg:px-5 py-3 lg:py-4 rounded-2xl text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">📐 ညီမျှခြင်း (Math)</a>
+                    <a href="#simple-expl" class="nav-link block px-4 lg:px-5 py-3 lg:py-4 rounded-2xl text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">🤔 ရှင်းလင်းချက်</a>
+                    
+                    <p class="px-4 text-xs lg:text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2 lg:mb-4 mt-6 lg:mt-10">Visuals</p>
+                    <a href="#analogy" class="nav-link block px-4 lg:px-5 py-3 lg:py-4 rounded-2xl text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">🏎️ ကားမောင်း ဥပမာ</a>
+                    <a href="#visual-seesaw" class="nav-link block px-4 lg:px-5 py-3 lg:py-4 rounded-2xl text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-vivid-pink">⚖️ Diagram 1: Seesaw</a>
+                    <a href="#visual-cloud" class="nav-link block px-4 lg:px-5 py-3 lg:py-4 rounded-2xl text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-vivid-blue">☁️ Diagram 2: Cloud</a>
+                    
+                    <p class="px-4 text-xs lg:text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2 lg:mb-4 mt-6 lg:mt-10">Deep Dive</p>
+                    <a href="#key-notes" class="nav-link block px-4 lg:px-5 py-3 lg:py-4 rounded-2xl text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">📌 အဓိက မှတ်ချက်များ</a>
+                    <a href="#real-world" class="nav-link block px-4 lg:px-5 py-3 lg:py-4 rounded-2xl text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">🌍 လက်တွေ့ အသုံးချပုံ</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Overlay -->
+        <div id="overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/70 z-30 hidden lg:hidden backdrop-blur-md"></div>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-80 px-4 md:px-10 lg:px-16 py-8 md:py-16 max-w-[1600px] mx-auto w-full overflow-hidden">
+            
+            <!-- Intro & Math Section -->
+            <section id="intro" class="mb-16 lg:mb-24 text-center lg:text-left">
+                <span class="text-vivid-purple font-black tracking-widest text-xs md:text-sm uppercase bg-purple-100 dark:bg-purple-900/50 px-4 py-1.5 rounded-full border-2 border-purple-200 dark:border-purple-800 inline-block mb-4">Interactive Lesson</span>
+                <h1 class="text-4xl md:text-5xl lg:text-7xl font-black mb-4 md:mb-6 text-black dark:text-white font-burmese leading-tight">
+                    Heisenberg's Principle
+                </h1>
+                <p class="text-2xl md:text-3xl lg:text-4xl font-burmese font-black text-slate-700 dark:text-slate-200">ဟိုင်းဆင်ဘတ် မရေရာမှု နိယာမ</p>
+            </section>
+
+            <section id="equation" class="mb-20 lg:mb-28 scroll-mt-24 lg:scroll-mt-32">
+                <div class="bg-white dark:bg-[#1e293b] rounded-[32px] md:rounded-[40px] p-6 md:p-12 border-l-8 md:border-l-[16px] border-vivid-blue shadow-soft pop-card">
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold font-burmese mb-6 md:mb-10 text-black dark:text-white">📐 ညီမျှခြင်း (The Equation)</h2>
+                    <div class="flex justify-center bg-slate-100 dark:bg-[#020617] p-6 md:p-10 rounded-[20px] md:rounded-[30px] border-2 md:border-4 border-slate-300 dark:border-slate-600 overflow-x-auto">
+                        <div class="text-3xl md:text-5xl lg:text-6xl text-black dark:text-white font-black min-w-max">$$ \Delta x \Delta p \gtrsim \frac{\hbar}{2} $$</div>
+                    </div>
+                    <p class="mt-6 md:mt-8 font-burmese text-slate-900 dark:text-slate-100 leading-relaxed text-lg md:text-xl lg:text-2xl font-bold">
+                        <span class="font-black text-vivid-blue bg-blue-100 dark:bg-blue-900/50 px-2 md:px-3 py-1 rounded inline-block mb-1">Position ($\Delta x$)</span> နှင့် <span class="font-black text-vivid-purple bg-purple-100 dark:bg-purple-900/50 px-2 md:px-3 py-1 rounded inline-block mb-1">Momentum ($\Delta p$)</span> နှစ်ခုလုံးကို တပြိုင်နက်တည်း တိတိကျကျ သိရှိနိုင်ခြင်း မရှိပါ။
+                    </p>
+                </div>
+            </section>
+            
+            <section id="simple-expl" class="mb-20 lg:mb-28 scroll-mt-24 lg:scroll-mt-32">
+                 <div class="bg-pastel-bgTeal dark:bg-teal-900/30 p-6 md:p-12 rounded-[32px] md:rounded-[40px] border-4 border-teal-300 dark:border-teal-700 pop-card">
+                    <h3 class="text-2xl md:text-3xl lg:text-4xl font-black text-vivid-teal mb-4 md:mb-6">🤔 ရိုးရှင်းသော ရှင်းလင်းချက်</h3>
+                    <p class="font-burmese text-black dark:text-white leading-loose text-lg md:text-xl lg:text-2xl font-bold">
+                         အမှုန်တစ်ခုကို <span class="underline decoration-vivid-teal decoration-4 underline-offset-8">"ဘယ်နားမှာလဲ"</span> လို့ သေချာကြည့်လိုက်ရင်၊ သူ့ရဲ့ <span class="underline decoration-vivid-teal decoration-4 underline-offset-8">"အမြန်နှုန်း"</span> က ပြောင်းလဲသွားပါတယ်။ သဘာဝတရားကိုက အဲ့ဒီနှစ်ခုကို တပြိုင်နက် ပေးမသိပါဘူး။
+                    </p>
+                </div>
+            </section>
+
+            <section id="analogy" class="mb-20 lg:mb-28 scroll-mt-24 lg:scroll-mt-32">
+                <div class="bg-white dark:bg-[#1e293b] rounded-[32px] md:rounded-[40px] p-6 md:p-12 border-l-8 md:border-l-[16px] border-vivid-orange shadow-soft pop-card">
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold font-burmese mb-6 md:mb-8 text-vivid-orange">🏎️ ကားမောင်း ဥပမာ</h2>
+                    <p class="font-burmese text-slate-900 dark:text-white mb-6 md:mb-10 text-lg md:text-xl lg:text-2xl font-bold italic">"ကားတစ်စီးကို ဓာတ်ပုံရိုက်ခြင်းနှင့် တူပါသည်။"</p>
+                    <div class="grid md:grid-cols-2 gap-6 md:gap-8 font-burmese text-base md:text-lg lg:text-xl">
+                        <div class="bg-orange-50 dark:bg-orange-900/30 p-6 md:p-8 rounded-3xl border-4 border-orange-200 dark:border-orange-800">
+                            <strong class="text-vivid-orange text-lg md:text-xl lg:text-2xl block mb-3 md:mb-4 font-black">📸 Shutter Speed မြန်:</strong>
+                            <span class="text-black dark:text-white font-bold leading-relaxed">ပုံငြိမ် → တည်နေရာသိ ✅၊ အမြန်နှုန်းမသိ ❌</span>
+                        </div>
+                        <div class="bg-blue-50 dark:bg-blue-900/30 p-6 md:p-8 rounded-3xl border-4 border-blue-200 dark:border-blue-800">
+                            <strong class="text-vivid-blue text-lg md:text-xl lg:text-2xl block mb-3 md:mb-4 font-black">🌫️ Shutter Speed နှေး:</strong>
+                            <span class="text-black dark:text-white font-bold leading-relaxed">ပုံဝါး → အမြန်နှုန်းသိ ✅၊ တည်နေရာမသိ ❌</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- VISUAL DIAGRAM 1: THE MASSIVE SEESAW (UPDATED INTERACTIVE) -->
+            <!-- ============================================ -->
+            <section id="visual-seesaw" class="mb-24 lg:mb-32 scroll-mt-24 lg:scroll-mt-32">
+                <div class="flex items-center gap-4 md:gap-6 mb-8 md:mb-12">
+                     <span class="bg-vivid-pink text-white w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center font-black text-xl md:text-3xl shadow-xl">1</span>
+                     <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold font-burmese text-black dark:text-white">The Seesaw Diagram</h2>
+                </div>
+
+                <div class="bg-gradient-to-b from-purple-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-[32px] md:rounded-[60px] p-6 md:p-10 lg:p-16 border-4 md:border-[6px] border-purple-200 dark:border-slate-600 shadow-2xl relative overflow-hidden">
+                    
+                    <!-- Background Decor -->
+                    <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" 
+                         style="background-image: radial-gradient(#6B21A8 3px, transparent 3px); background-size: 50px 50px;">
+                    </div>
+
+                    <!-- Interactive Title -->
+                    <div class="text-center mb-6 md:mb-8 relative z-10">
+                        <span class="bg-white dark:bg-slate-700 text-vivid-purple dark:text-white px-4 md:px-6 py-2 rounded-full font-bold font-burmese shadow-md border-2 border-purple-200 dark:border-slate-500 text-sm md:text-base inline-block">
+                            👇 Slider ကို ရွှေ့ပြီး ကစားကြည့်ပါ 👇
+                        </span>
+                    </div>
+
+                    <div class="relative w-full max-w-4xl mx-auto h-72 md:h-80 lg:h-96 flex flex-col justify-end items-center mb-6 md:mb-10">
+                        
+                        <!-- The Plank (Interactive) -->
+                        <div id="seesaw-plank" class="w-full h-6 md:h-10 bg-slate-800 dark:bg-slate-400 rounded-full transition-transform duration-300 ease-out relative shadow-2xl z-10 flex justify-between items-center px-4 md:px-10 origin-center">
+                            
+                            <!-- Left Weight (Position) -->
+                            <div id="left-side" class="relative group transform -translate-y-16 md:-translate-y-24 lg:-translate-y-28 transition-transform duration-300 flex flex-col items-center">
+                                <div class="bg-white dark:bg-slate-800 px-3 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl shadow-xl border-4 md:border-[5px] border-vivid-pink text-center mb-2 md:mb-4 min-w-[120px] md:min-w-[200px] transition-all duration-300" id="left-label">
+                                    <span id="left-text-top" class="block text-xs md:text-base font-black text-slate-500 uppercase tracking-widest">Uncertainty</span>
+                                    <span class="block text-lg md:text-3xl font-black text-vivid-pink">Position</span>
+                                    <span id="left-status" class="block text-xs md:text-lg font-black text-slate-800 dark:text-white mt-1">Balanced</span>
+                                </div>
+                                <div id="left-icon" class="w-16 h-16 md:w-28 md:h-28 mx-auto bg-gradient-to-br from-pink-600 to-pink-800 rounded-full shadow-inner border-2 md:border-4 border-white dark:border-slate-600 flex items-center justify-center transition-all duration-300">
+                                    <span class="text-2xl md:text-5xl text-white font-bold">📍</span>
+                                </div>
+                            </div>
+
+                            <!-- Right Weight (Momentum) -->
+                            <div id="right-side" class="relative group transform -translate-y-16 md:-translate-y-24 lg:-translate-y-28 transition-transform duration-300 flex flex-col items-center">
+                                <div class="bg-white dark:bg-slate-800 px-3 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl shadow-xl border-4 md:border-[5px] border-vivid-blue text-center mb-2 md:mb-4 min-w-[120px] md:min-w-[200px] transition-all duration-300" id="right-label">
+                                    <span id="right-text-top" class="block text-xs md:text-base font-black text-slate-500 uppercase tracking-widest">Uncertainty</span>
+                                    <span class="block text-lg md:text-3xl font-black text-vivid-blue">Momentum</span>
+                                    <span id="right-status" class="block text-xs md:text-lg font-black text-slate-800 dark:text-white mt-1">Balanced</span>
+                                </div>
+                                <div id="right-icon" class="w-16 h-16 md:w-28 md:h-28 mx-auto bg-gradient-to-br from-blue-500 to-blue-700 rounded-full shadow-inner border-2 md:border-4 border-white dark:border-slate-600 flex items-center justify-center transition-all duration-300">
+                                    <span class="text-2xl md:text-5xl text-white font-bold">💨</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Fulcrum -->
+                        <div class="w-0 h-0 border-l-[30px] md:border-l-[60px] border-l-transparent border-b-[45px] md:border-b-[90px] border-b-slate-600 dark:border-slate-500 border-r-[30px] md:border-r-[60px] border-r-transparent z-0 mt-[-2px] md:mt-[-5px]"></div>
+                        <!-- Base -->
+                        <div class="w-48 md:w-80 h-3 md:h-4 bg-slate-500 dark:bg-slate-600 rounded-full mt-1 md:mt-2"></div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="relative z-30 w-full max-w-2xl mx-auto px-4 md:px-8 bg-white/50 dark:bg-black/20 backdrop-blur-sm p-4 md:p-6 rounded-3xl border-2 border-white/50 dark:border-white/10">
+                        <input type="range" min="0" max="100" value="50" class="w-full h-3 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-vivid-purple" id="uncertainty-slider">
+                        <div class="flex justify-between mt-3 md:mt-4 text-xs md:text-base font-bold font-burmese text-slate-700 dark:text-slate-200">
+                            <span class="flex items-center gap-1 md:gap-2">⬅️ Position တိကျစေရန်</span>
+                            <span class="flex items-center gap-1 md:gap-2">Momentum တိကျစေရန် ➡️</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- VISUAL DIAGRAM 2: THE ELECTRON CLOUD -->
+            <!-- ============================================ -->
+            <section id="visual-cloud" class="mb-24 lg:mb-32 scroll-mt-24 lg:scroll-mt-32">
+                <div class="flex items-center gap-4 md:gap-6 mb-8 md:mb-12">
+                     <span class="bg-vivid-blue text-white w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center font-black text-xl md:text-3xl shadow-xl">2</span>
+                     <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold font-burmese text-black dark:text-white">The "Squeeze" Effect</h2>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
+                    <!-- Scenario A: Confined (High Energy) -->
+                    <div class="bg-white dark:bg-[#1e293b] rounded-[32px] md:rounded-[50px] p-6 md:p-10 border-4 md:border-[8px] border-vivid-pink shadow-2xl pop-card relative overflow-hidden">
+                        <div class="absolute top-4 right-4 md:top-8 md:right-8 bg-pink-100 text-vivid-pink font-black px-3 py-1 md:px-5 md:py-2 rounded-full text-xs md:text-base uppercase border-2 border-pink-300">Scenario A</div>
+                        <h3 class="font-black text-xl md:text-3xl text-black dark:text-white mb-2 md:mb-4">High Precision Position ($\Delta x \downarrow$)</h3>
+                        <p class="text-base md:text-xl text-slate-700 dark:text-slate-200 mb-6 md:mb-10 font-burmese font-bold">နေရာကျဉ်းကျဉ်းလေးမှာ အမှုန်ကို ချုပ်ထားလိုက်တဲ့အခါ...</p>
+                        <!-- Visual Container -->
+                        <div class="h-48 md:h-64 bg-slate-100 dark:bg-[#020617] rounded-[24px] md:rounded-[30px] flex items-center justify-center relative border-4 border-dashed border-slate-400 dark:border-slate-600">
+                            <div class="w-16 h-16 md:w-24 md:h-24 border-4 md:border-[8px] border-vivid-pink bg-pink-50/20 rounded-xl md:rounded-2xl flex items-center justify-center relative">
+                                <div class="w-4 h-4 md:w-6 md:h-6 bg-vivid-pink rounded-full animate-shake-crazy shadow-[0_0_25px_rgba(157,23,77,1)]"></div>
+                            </div>
+                            <div class="absolute left-4 md:left-10 text-slate-400 dark:text-slate-500 text-3xl md:text-5xl font-black">➡</div>
+                            <div class="absolute right-4 md:right-10 text-slate-400 dark:text-slate-500 text-3xl md:text-5xl font-black">⬅</div>
+                        </div>
+                        <div class="mt-6 md:mt-10 bg-pink-50 dark:bg-pink-900/40 p-4 md:p-6 rounded-2xl md:rounded-3xl border-2 border-pink-200 dark:border-pink-800">
+                            <p class="font-black text-vivid-pink text-lg md:text-2xl">Result: High Uncertainty Momentum ($\Delta p \uparrow$)</p>
+                        </div>
+                    </div>
+                    <!-- Scenario B: Relaxed (Low Energy) -->
+                    <div class="bg-white dark:bg-[#1e293b] rounded-[32px] md:rounded-[50px] p-6 md:p-10 border-4 md:border-[8px] border-vivid-blue shadow-2xl pop-card relative overflow-hidden">
+                        <div class="absolute top-4 right-4 md:top-8 md:right-8 bg-blue-100 text-vivid-blue font-black px-3 py-1 md:px-5 md:py-2 rounded-full text-xs md:text-base uppercase border-2 border-blue-300">Scenario B</div>
+                        <h3 class="font-black text-xl md:text-3xl text-black dark:text-white mb-2 md:mb-4">Low Precision Position ($\Delta x \uparrow$)</h3>
+                        <p class="text-base md:text-xl text-slate-700 dark:text-slate-200 mb-6 md:mb-10 font-burmese font-bold">နေရာအကျယ်ကြီး ပေးထားလိုက်တဲ့အခါ...</p>
+                        <!-- Visual Container -->
+                        <div class="h-48 md:h-64 bg-slate-100 dark:bg-[#020617] rounded-[24px] md:rounded-[30px] flex items-center justify-center relative border-4 border-dashed border-slate-400 dark:border-slate-600">
+                            <div class="w-48 h-24 md:w-80 md:h-40 border-4 md:border-[8px] border-vivid-blue bg-blue-50/20 rounded-2xl md:rounded-3xl flex items-center justify-center relative">
+                                <div class="w-6 h-6 md:w-10 md:h-10 bg-vivid-blue rounded-full animate-float-gentle shadow-xl opacity-90"></div>
+                            </div>
+                        </div>
+                        <div class="mt-6 md:mt-10 bg-blue-50 dark:bg-blue-900/40 p-4 md:p-6 rounded-2xl md:rounded-3xl border-2 border-blue-200 dark:border-blue-800">
+                            <p class="font-black text-vivid-blue text-lg md:text-2xl">Result: Low Uncertainty Momentum ($\Delta p \downarrow$)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- EXPANDED CONTENT: KEY NOTES & REAL WORLD -->
+            <!-- ============================================ -->
+
+            <section id="key-notes" class="mb-20 lg:mb-24 scroll-mt-24 lg:scroll-mt-32">
+                 <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold font-burmese mb-8 md:mb-10 text-black dark:text-white border-l-8 md:border-l-[16px] border-vivid-purple pl-4 md:pl-8">📌 အဓိက မှတ်ရမယ့် အချက်များ</h2>
+                 
+                 <div class="grid gap-6 md:gap-8">
+                     <!-- Note 1 -->
+                     <div class="bg-white dark:bg-[#1e293b] p-6 md:p-10 rounded-[32px] md:rounded-[40px] shadow-sm border-2 md:border-[4px] border-pastel-bgPurple hover:border-vivid-purple transition-colors flex gap-4 md:gap-8 items-start">
+                         <div class="w-10 h-10 md:w-16 md:h-16 rounded-full bg-vivid-purple text-white flex items-center justify-center flex-shrink-0 font-black text-xl md:text-4xl shadow-xl">!</div>
+                         <div>
+                             <h4 class="font-bold text-lg md:text-3xl text-black dark:text-white mb-2 md:mb-4">Fundamental Property</h4>
+                             <p class="font-burmese text-slate-800 dark:text-slate-100 leading-loose text-base md:text-2xl font-bold">
+                                 ဤမရေရာမှုသည် တိုင်းတာသည့် ကိရိယာ ညံ့ဖျင်းမှုကြောင့် ဖြစ်ပေါ်လာခြင်း မဟုတ်ပါ။ နည်းပညာ မည်မျှပင် တိုးတက်ပါစေ၊ သဘာဝတရား၏ မူလပိုင်ဆိုင်သော ဂုဏ်သတ္တိဖြစ်သည့်အတွက် ဤစည်းမျဉ်းကို ကျော်လွန်၍မရနိုင်ပါ။
+                             </p>
+                         </div>
+                     </div>
+
+                     <!-- Note 2 -->
+                     <div class="bg-white dark:bg-[#1e293b] p-6 md:p-10 rounded-[32px] md:rounded-[40px] shadow-sm border-2 md:border-[4px] border-pastel-bgBlue hover:border-vivid-blue transition-colors flex gap-4 md:gap-8 items-start">
+                         <div class="w-10 h-10 md:w-16 md:h-16 rounded-full bg-vivid-blue text-white flex items-center justify-center flex-shrink-0 font-black text-xl md:text-4xl shadow-xl">⇄</div>
+                         <div>
+                             <h4 class="font-bold text-lg md:text-3xl text-black dark:text-white mb-2 md:mb-4">Inverse Relationship</h4>
+                             <p class="font-burmese text-slate-800 dark:text-slate-100 leading-loose text-base md:text-2xl font-bold">
+                                 တည်နေရာ ($\Delta x$) နှင့် အဟုန် ($\Delta p$) သည် ပြောင်းပြန် အချိုးကျသည်။ တစ်ခုကို ပိုတိကျအောင် လုပ်လေ၊ ကျန်တစ်ခုက ပိုမရေရာလေ ဖြစ်သည်။ နှစ်ခုစလုံးကို တပြိုင်နက် တိကျအောင် လုပ်၍ မရပါ။
+                             </p>
+                         </div>
+                     </div>
+
+                     <!-- Note 3 -->
+                     <div class="bg-white dark:bg-[#1e293b] p-6 md:p-10 rounded-[32px] md:rounded-[40px] shadow-sm border-2 md:border-[4px] border-pastel-bgPink hover:border-vivid-pink transition-colors flex gap-4 md:gap-8 items-start">
+                         <div class="w-10 h-10 md:w-16 md:h-16 rounded-full bg-vivid-pink text-white flex items-center justify-center flex-shrink-0 font-black text-xl md:text-4xl shadow-xl">🔬</div>
+                         <div>
+                             <h4 class="font-bold text-lg md:text-3xl text-black dark:text-white mb-2 md:mb-4">Microscopic Scale</h4>
+                             <p class="font-burmese text-slate-800 dark:text-slate-100 leading-loose text-base md:text-2xl font-bold">
+                                 ဤနိယာမသည် လူ၊ ကား၊ ဘောလုံး စသည့် ကြီးမားသော အရာဝတ္ထုများတွင် သိသာထင်ရှားခြင်း မရှိပါ။ အီလက်ထရွန်၊ ဖိုတွန် စသည့် အလွန်သေးငယ်သော ကွမ်တမ်အမှုန်များတွင်သာ သက်ရောက်မှု ကြီးမားပါသည်။
+                             </p>
+                         </div>
+                     </div>
+                 </div>
+            </section>
+
+            <section id="real-world" class="mb-24 lg:mb-32 scroll-mt-24 lg:scroll-mt-32">
+                 <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold font-burmese mb-8 md:mb-10 text-black dark:text-white border-l-8 md:border-l-[16px] border-vivid-teal pl-4 md:pl-8">🌍 Real World Application</h2>
+                 <p class="text-slate-800 dark:text-slate-200 font-burmese mb-8 md:mb-12 text-lg md:text-2xl font-bold">ကမ္ဘာ့အပြင်ဘက် လက်တွေ့နယ်ပယ်တွင် ဤသဘောတရားကို အောက်ပါအတိုင်း အသုံးပြုကြသည် -</p>
+
+                 <div class="grid md:grid-cols-3 gap-6 md:gap-10">
+                     <!-- App 1 -->
+                     <div class="bg-white dark:bg-[#1e293b] p-6 md:p-10 rounded-[32px] md:rounded-[40px] border-t-[8px] md:border-t-[12px] border-vivid-blue shadow-soft pop-card flex flex-col h-full">
+                         <div class="text-4xl md:text-6xl mb-4 md:mb-8">🔬</div>
+                         <h3 class="font-bold text-lg md:text-2xl mb-3 md:mb-6 text-black dark:text-white">Electron Microscopes</h3>
+                         <p class="text-base md:text-xl font-burmese text-slate-800 dark:text-slate-200 leading-relaxed flex-grow font-bold">
+                             သာမန် အလင်းသုံး မှန်ပြောင်းများထက် ပိုမို ပြတ်သားသော ပုံရိပ်များကို ရရှိရန် အီလက်ထရွန်များကို အသုံးပြုသည်။ တည်နေရာသိရန် ကြိုးစားသောအခါ စွမ်းအင်ပြောင်းလဲနိုင်သဖြင့် ဤနိယာမကို ထည့်သွင်းတွက်ချက်ပြီးမှ ပုံရိပ်များကို ဖမ်းယူရသည်။
+                         </p>
+                     </div>
+
+                     <!-- App 2 -->
+                     <div class="bg-white dark:bg-[#1e293b] p-6 md:p-10 rounded-[32px] md:rounded-[40px] border-t-[8px] md:border-t-[12px] border-vivid-teal shadow-soft pop-card flex flex-col h-full">
+                         <div class="text-4xl md:text-6xl mb-4 md:mb-8">💻</div>
+                         <h3 class="font-bold text-lg md:text-2xl mb-3 md:mb-6 text-black dark:text-white">Computer Chips</h3>
+                         <p class="text-base md:text-xl font-burmese text-slate-800 dark:text-slate-200 leading-relaxed flex-grow font-bold">
+                             ခေတ်မီ CPU များရှိ Transistor များသည် အလွန်သေးငယ်လာသောအခါ "Quantum Tunneling" ဖြစ်စဉ် ဖြစ်ပေါ်သည်။ အီလက်ထရွန်များသည် အတားအဆီးကို ဖောက်ထွက်သွားတတ်သဖြင့် Chip ဒီဇိုင်းပညာရှင်များသည် ဤမရေရာမှုကို ထည့်သွင်းစဉ်းစားမှသာ အလုပ်လုပ်သော Chip များကို တည်ဆောက်နိုင်သည်။
+                         </p>
+                     </div>
+
+                     <!-- App 3 -->
+                     <div class="bg-white dark:bg-[#1e293b] p-6 md:p-10 rounded-[32px] md:rounded-[40px] border-t-[8px] md:border-t-[12px] border-vivid-pink shadow-soft pop-card flex flex-col h-full">
+                         <div class="text-4xl md:text-6xl mb-4 md:mb-8">🏥</div>
+                         <h3 class="font-bold text-lg md:text-2xl mb-3 md:mb-6 text-black dark:text-white">MRI Machines</h3>
+                         <p class="text-base md:text-xl font-burmese text-slate-800 dark:text-slate-200 leading-relaxed flex-grow font-bold">
+                             ဆေးရုံများတွင် သုံးသော MRI (Magnetic Resonance Imaging) စက်များသည် ခန္ဓာကိုယ်တွင်းရှိ အက်တမ်များ၏ လည်ပတ်မှု (Spin) ကို တိုင်းတာရာတွင် ဤကွမ်တမ်သဘောတရားများကို အခြေခံ၍ ပုံရိပ်ဖော်ခြင်း ဖြစ်သည်။
+                         </p>
+                     </div>
+                 </div>
+            </section>
+
+            <footer class="text-center text-slate-600 text-sm md:text-lg font-burmese pb-8 md:pb-12 border-t border-slate-400 dark:border-slate-600 pt-8 md:pt-12 font-black">
+                Created with ❤️ for Quantum Lovers
+            </footer>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark'); localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark'); localStorage.setItem('theme', 'dark');
+            }
+        }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+        
+        // Scroll Active Link Logic
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                if (pageYOffset >= (section.offsetTop - 300)) current = section.getAttribute('id');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) link.classList.add('active');
+            });
+        });
+
+        // Seesaw Interactive Logic
+        const slider = document.getElementById('uncertainty-slider');
+        const plank = document.getElementById('seesaw-plank');
+        
+        const leftSide = document.getElementById('left-side');
+        const leftIcon = document.getElementById('left-icon');
+        const leftStatus = document.getElementById('left-status');
+        const leftLabel = document.getElementById('left-label');
+
+        const rightSide = document.getElementById('right-side');
+        const rightIcon = document.getElementById('right-icon');
+        const rightStatus = document.getElementById('right-status');
+        const rightLabel = document.getElementById('right-label');
+
+        slider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            
+            // 1. Rotate Plank (-15deg to +15deg)
+            // Map 0 -> -15, 100 -> +15
+            const rotation = ((val - 50) / 50) * 15;
+            plank.style.transform = `rotate(${rotation}deg)`;
+
+            // 2. Handle Left Side (Position)
+            // If val < 50 (Leaning Left), Position is Precise
+            if (val < 45) {
+                // Precise State
+                leftStatus.textContent = "တိကျသည် (Precise) ✅";
+                leftStatus.className = "block text-xs md:text-lg font-black text-green-600 mt-1";
+                leftIcon.style.filter = "blur(0px)";
+                leftIcon.style.transform = "scale(1.2)";
+                leftLabel.style.borderColor = "#16A34A"; // Green
+                leftSide.style.transform = "translateY(0px)"; // Down
+            } else if (val > 55) {
+                // Uncertain State
+                leftStatus.textContent = "မရေရာပါ (Blurry) ❓";
+                leftStatus.className = "block text-xs md:text-lg font-black text-red-500 mt-1";
+                // Map blur amount: 55 -> 0px, 100 -> 8px
+                const blurAmount = ((val - 55) / 45) * 8;
+                leftIcon.style.filter = `blur(${blurAmount}px)`;
+                leftIcon.style.transform = "scale(0.9)";
+                leftLabel.style.borderColor = "#EF4444"; // Red
+                // Move up relative to rotation
+                leftSide.style.transform = "translateY(-20px) md:translateY(-40px)"; 
+            } else {
+                // Balanced
+                leftStatus.textContent = "Balanced";
+                leftStatus.className = "block text-xs md:text-lg font-black text-slate-500 mt-1";
+                leftIcon.style.filter = "blur(0px)";
+                leftIcon.style.transform = "scale(1)";
+                leftLabel.style.borderColor = "#DB2777"; // Pink
+                leftSide.style.transform = "translateY(-10px) md:translateY(-20px)";
+            }
+
+            // 3. Handle Right Side (Momentum)
+            // If val > 55 (Leaning Right), Momentum is Precise
+            if (val > 55) {
+                // Precise State
+                rightStatus.textContent = "တိကျသည် (Precise) ✅";
+                rightStatus.className = "block text-xs md:text-lg font-black text-green-600 mt-1";
+                rightIcon.style.filter = "blur(0px)";
+                rightIcon.style.transform = "scale(1.2)";
+                rightLabel.style.borderColor = "#16A34A"; // Green
+                rightSide.style.transform = "translateY(0px)"; // Down
+            } else if (val < 45) {
+                // Uncertain State
+                rightStatus.textContent = "မရေရာပါ (Blurry) ❓";
+                rightStatus.className = "block text-xs md:text-lg font-black text-red-500 mt-1";
+                // Map blur amount: 45 -> 0px, 0 -> 8px
+                const blurAmount = ((45 - val) / 45) * 8;
+                rightIcon.style.filter = `blur(${blurAmount}px)`;
+                rightIcon.style.transform = "scale(0.9)";
+                rightLabel.style.borderColor = "#EF4444"; // Red
+                rightSide.style.transform = "translateY(-20px) md:translateY(-40px)";
+            } else {
+                // Balanced
+                rightStatus.textContent = "Balanced";
+                rightStatus.className = "block text-xs md:text-lg font-black text-slate-500 mt-1";
+                rightIcon.style.filter = "blur(0px)";
+                rightIcon.style.transform = "scale(1)";
+                rightLabel.style.borderColor = "#1E40AF"; // Blue
+                rightSide.style.transform = "translateY(-10px) md:translateY(-20px)";
+            }
+        });
+    </script>
+</body>
+</html>

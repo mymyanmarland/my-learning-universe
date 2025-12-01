@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Learning Hub ✨</title>
+    <!-- Importing Cute Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Pastel Color Palette */
+            --bg-color: #FDF6F6; /* Soft Pinkish White */
+            --card-bg: #FFFFFF;
+            --text-main: #4A4A4A;
+            --text-light: #7A7A7A;
+            --accent-pink: #FFB7B2;
+            --accent-green: #B5EAD7;
+            --accent-blue: #C7CEEA;
+            --accent-purple: #E2F0CB;
+            --hover-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            --card-border-radius: 24px;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+            background-image: radial-gradient(#E0E0E0 1px, transparent 1px);
+            background-size: 20px 20px; /* Dotted Pattern */
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
+            border-radius: 30px;
+            box-shadow: 0 8px 15px rgba(255, 154, 158, 0.3);
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-top: 10px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* Section Styling */
+        .category-section {
+            margin-bottom: 50px;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 10px;
+            border-left: 5px solid;
+        }
+
+        /* Color Themes for Sections */
+        .physics-title { border-color: #FF9AA2; color: #E85A66; }
+        .code-title { border-color: #88D8B0; color: #2E8B57; }
+        .book-title { border-color: #A0C4FF; color: #4A90E2; }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--card-border-radius);
+            padding: 25px;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 2px solid transparent;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(0,0,0,0.05);
+        }
+
+        /* Decorative blobs on cards */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        .physics-card::before { background-color: #FF9AA2; }
+        .code-card::before { background-color: #88D8B0; }
+        .book-card::before { background-color: #A0C4FF; }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .card span {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+        }
+
+        .icon-box {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <header>
+        <h1>My Learning Universe 🚀</h1>
+        <p>A collection of Physics notes, Code snippets, and Book summaries.</p>
+    </header>
+
+    <!-- PHYSICS SECTION -->
+    <div class="category-section">
+        <h2 class="category-title physics-title">⚛️ Physics & Science</h2>
+        <div class="grid">
+            <a href="emc2-learn.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">⚡</div>
+                    <h3>E=mc² Learning</h3>
+                    <span>Relativity & Energy</span>
+                </div>
+            </a>
+            <a href="day-9-operators-and-observables.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">🔭</div>
+                    <h3>Operators & Observables</h3>
+                    <span>Quantum Mechanics</span>
+                </div>
+            </a>
+            <a href="nuclear-fission-simulation.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">☢️</div>
+                    <h3>Nuclear Fission Simulation</h3>
+                    <span>Interactive Demo</span>
+                </div>
+            </a>
+            <a href="heisenberg-principle-of-uncertainty.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">❓</div>
+                    <h3>Heisenberg Principle</h3>
+                    <span>Uncertainty Principle</span>
+                </div>
+            </a>
+            <a href="Quantum States & Wavefunctions.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">🌊</div>
+                    <h3>States & Wavefunctions</h3>
+                    <span>Quantum Theory</span>
+                </div>
+            </a>
+            <a href="particle-physics-1.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">🧩</div>
+                    <h3>Particle Physics I</h3>
+                    <span>Standard Model</span>
+                </div>
+            </a>
+            <a href="Particle Physics II.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">⚛️</div>
+                    <h3>Particle Physics II</h3>
+                    <span>Advanced Concepts</span>
+                </div>
+            </a>
+             <a href="uranium-235-encrichment.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">⚗️</div>
+                    <h3>Uranium-235</h3>
+                    <span>Enrichment Process</span>
+                </div>
+            </a>
+            <a href="Hilbert Space.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">🌌</div>
+                    <h3>Hilbert Space</h3>
+                    <span>Mathematical Physics</span>
+                </div>
+            </a>
+             <a href="Vector.html" class="card physics-card">
+                <div class="card-content">
+                    <div class="icon-box">↗️</div>
+                    <h3>Vectors</h3>
+                    <span>Physics Math</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- PROGRAMMING SECTION -->
+    <div class="category-section">
+        <h2 class="category-title code-title">💻 Programming & Logic</h2>
+        <div class="grid">
+            <a href="python-nested-function.html" class="card code-card">
+                <div class="card-content">
+                    <div class="icon-box">🐍</div>
+                    <h3>Python Nested Func</h3>
+                    <span>Advanced Python</span>
+                </div>
+            </a>
+            <a href="python-returning-value-from-function.html" class="card code-card">
+                <div class="card-content">
+                    <div class="icon-box">🔙</div>
+                    <h3>Return Values</h3>
+                    <span>Python Basics</span>
+                </div>
+            </a>
+            <a href="python-scoping-and-legb-rule.html" class="card code-card">
+                <div class="card-content">
+                    <div class="icon-box">🔍</div>
+                    <h3>Scope & LEGB Rule</h3>
+                    <span>Variable Scope</span>
+                </div>
+            </a>
+            <a href="JS Keyboard Events.html" class="card code-card">
+                <div class="card-content">
+                    <div class="icon-box">⌨️</div>
+                    <h3>JS Keyboard Events</h3>
+                    <span>DOM Manipulation</span>
+                </div>
+            </a>
+            <a href="Text Magic Tool.html" class="card code-card">
+                <div class="card-content">
+                    <div class="icon-box">✨</div>
+                    <h3>Text Magic Tool</h3>
+                    <span>Utility Tool</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- BOOKS SECTION -->
+    <div class="category-section">
+        <h2 class="category-title book-title">📚 Books & Wisdom</h2>
+        <div class="grid">
+             <a href="rich-dad-poor-dad-short-note.html" class="card book-card">
+                <div class="card-content">
+                    <div class="icon-box">💰</div>
+                    <h3>Rich Dad Poor Dad</h3>
+                    <span>Financial Literacy</span>
+                </div>
+            </a>
+            <a href="The 48 Laws.html" class="card book-card">
+                <div class="card-content">
+                    <div class="icon-box">👑</div>
+                    <h3>The 48 Laws of Power</h3>
+                    <span>Strategy & Psychology</span>
+                </div>
+            </a>
+            <a href="the-subtle-art-of-not-giving-a-fuck.html" class="card book-card">
+                <div class="card-content">
+                    <div class="icon-box">🧘</div>
+                    <h3>The Subtle Art...</h3>
+                    <span>Self Improvement</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        Made with ❤️ • Hosted on GitHub Pages
+    </footer>
+
+</div>
+
+</body>
+</html>
