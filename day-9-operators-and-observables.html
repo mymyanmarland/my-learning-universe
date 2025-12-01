@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="my" class="scroll-smooth" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 9 – Operators & Observables</title>
+    
+    <!-- Fonts: Quicksand (English - Very Rounded/Cute) and Padauk (Myanmar) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- MathJax for Equations -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Configuration & Styles -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable manual dark mode toggle
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'Padauk', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                    },
+                    colors: {
+                        // Cute Pastel Palette
+                        cream: '#FFFDF9',
+                        dark: {
+                            bg: '#111827', // Gray 900
+                            card: '#1F2937', // Gray 800
+                            border: '#374151', // Gray 700
+                        },
+                        pastel: {
+                            pink: '#FFD1DC',
+                            pinkDark: '#FF9EB5',
+                            blue: '#BFEAF5',
+                            blueDark: '#85D2E6',
+                            purple: '#E0BBE4',
+                            purpleDark: '#C48CB3',
+                            mint: '#D3F8E2',
+                            mintDark: '#99E2B4',
+                            yellow: '#FEF8DD',
+                        },
+                        text: {
+                            main: '#111827', // Darker Black for high contrast
+                            muted: '#374151', // Darker Gray
+                            accent: '#D53F8C' // Deep Pink Accent
+                        }
+                    },
+                    borderRadius: {
+                        '3xl': '1.5rem',
+                        '4xl': '2rem',
+                    },
+                    boxShadow: {
+                        'cute': '4px 4px 0px 0px rgba(0,0,0,0.1)', // Hard shadow for pop
+                        'cute-hover': '6px 6px 0px 0px rgba(0,0,0,0.15)',
+                        'cute-dark': '4px 4px 0px 0px rgba(0,0,0,0.5)', 
+                        'glow': '0 0 20px rgba(224, 187, 228, 0.4)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Overrides */
+        body {
+            background-color: #FFFDF9; /* Creamy White */
+            background-image: radial-gradient(#E0BBE4 1px, transparent 1px);
+            background-size: 24px 24px; /* Dotted background */
+            color: #111827;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Dark Mode Body Override */
+        .dark body {
+            background-color: #111827; /* Dark BG */
+            background-image: radial-gradient(#374151 1px, transparent 1px);
+            color: #F3F4F6;
+        }
+
+        /* Typography Tweaks */
+        p, li {
+            line-height: 1.9;
+            font-size: 1.15rem; 
+            font-weight: 700; 
+        }
+
+        .dark p, .dark li {
+            color: #E5E7EB; /* Lighter text in dark mode */
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Quicksand', 'Padauk', sans-serif;
+            color: #000000;
+            font-weight: 800 !important;
+        }
+
+        .dark h1, .dark h2, .dark h3, .dark h4 {
+            color: #F9FAFB; /* Almost White */
+        }
+
+        /* Cute Card Interactions */
+        .cute-card {
+            background: white;
+            border: 2px solid #F3F4F6;
+            border-radius: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .dark .cute-card {
+            background: #1F2937; /* Dark Card */
+            border-color: #374151;
+            color: #F3F4F6;
+        }
+
+        .cute-card:hover {
+            transform: translateY(-4px);
+            border-color: #E0BBE4;
+            box-shadow: 6px 6px 0px 0px #E0BBE4; 
+        }
+
+        .dark .cute-card:hover {
+            border-color: #D53F8C;
+            box-shadow: 6px 6px 0px 0px #D53F8C;
+        }
+
+        /* Code Window "Mac" Style */
+        .mac-window {
+            background-color: #282A36; 
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 4px solid #E0BBE4; 
+            box-shadow: 4px 4px 0px 0px #C48CB3;
+        }
+        
+        .dark .mac-window {
+            border-color: #4B5563;
+            box-shadow: 4px 4px 0px 0px #111827;
+        }
+
+        .mac-header {
+            background-color: #44475A;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .mac-dot { width: 12px; height: 12px; border-radius: 50%; }
+        
+        /* Syntax Highlighting */
+        .c-keyword { color: #FF79C6; font-weight: bold; } 
+        .c-class { color: #8BE9FD; font-style: italic; } 
+        .c-func { color: #50FA7B; } 
+        .c-var { color: #F8F8F2; } 
+        .c-string { color: #F1FA8C; } 
+        .c-comment { color: #6272A4; } 
+
+        /* TOC Active State */
+        .toc-link {
+            transition: all 0.2s ease;
+            border-radius: 0.75rem;
+            font-weight: 700 !important; 
+        }
+        .toc-link:hover {
+            background-color: #E0BBE4;
+            color: white;
+        }
+        .dark .toc-link:hover {
+            background-color: #374151;
+            color: #F3F4F6;
+        }
+        .toc-link.active {
+            background-color: #D53F8C;
+            color: white;
+            font-weight: 800;
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.1);
+        }
+
+        /* Flow Diagram Styling */
+        .flow-step {
+            position: relative;
+            background: white;
+            border: 3px solid;
+            border-radius: 20px;
+            padding: 1rem;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .dark .flow-step {
+            background: #374151;
+            border-color: #4B5563;
+            color: white;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFFDF9; 
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #111827; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E0BBE4; 
+            border-radius: 6px;
+            border: 3px solid #FFFDF9;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4B5563; 
+            border-color: #111827;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C48CB3; 
+        }
+    </style>
+</head>
+<body class="selection:bg-pastel-pink selection:text-text-accent dark:selection:bg-text-accent dark:selection:text-white transition-colors duration-300">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md sticky top-0 z-50 border-b-2 border-gray-100 dark:border-gray-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <div class="bg-gradient-to-tr from-pastel-pink to-pastel-purple text-white p-3 rounded-2xl shadow-sm rotate-3 hover:rotate-0 transition-transform">
+                        <i class="fa-solid fa-atom fa-xl"></i>
+                    </div>
+                    <span class="font-extrabold text-2xl tracking-tight text-text-main dark:text-white">
+                        Quantum<span class="text-text-accent">Bites</span>
+                    </span>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <!-- Theme Toggle Button -->
+                    <button id="theme-toggle" class="p-3 rounded-xl bg-pastel-yellow dark:bg-gray-700 text-yellow-600 dark:text-yellow-300 hover:scale-105 transition-transform shadow-cute dark:shadow-none border-2 border-transparent dark:border-gray-600">
+                        <i class="fa-solid fa-sun hidden dark:inline-block"></i>
+                        <i class="fa-solid fa-moon inline-block dark:hidden"></i>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="flex items-center md:hidden">
+                        <button id="mobile-menu-btn" class="text-text-main dark:text-white hover:text-text-accent bg-pastel-yellow dark:bg-gray-800 p-3 rounded-xl transition-colors">
+                            <i class="fa-solid fa-bars fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden bg-white dark:bg-gray-900 border-b-2 border-gray-100 dark:border-gray-800 px-4 pb-4">
+            <a href="#intro" class="block p-3 rounded-xl hover:bg-pastel-blue dark:hover:bg-gray-800 text-text-main dark:text-gray-300 font-bold">Introduction</a>
+            <a href="#simple" class="block p-3 rounded-xl hover:bg-pastel-purple dark:hover:bg-gray-800 text-text-main dark:text-gray-300 font-bold">Simple Explanation</a>
+            <a href="#analogy" class="block p-3 rounded-xl hover:bg-pastel-pink dark:hover:bg-gray-800 text-text-main dark:text-gray-300 font-bold">Analogy</a>
+            <a href="#realworld" class="block p-3 rounded-xl hover:bg-pastel-mint dark:hover:bg-gray-800 text-text-main dark:text-gray-300 font-bold">Real World</a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="flex flex-col md:flex-row gap-10">
+            
+            <!-- LEFT SIDEBAR (TOC) - Sticky & Cute -->
+            <aside class="hidden md:block md:w-1/4">
+                <div class="sticky top-28 bg-white dark:bg-gray-800 p-6 rounded-3xl border-2 border-gray-100 dark:border-gray-700 shadow-cute dark:shadow-none transition-colors duration-300">
+                    <h5 class="uppercase text-xs font-extrabold text-text-accent tracking-widest mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ul"></i> Contents
+                    </h5>
+                    <nav class="flex flex-col space-y-2" id="toc">
+                        <a href="#intro" class="toc-link block px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                            👓 Direct Explanation
+                        </a>
+                        <a href="#simple" class="toc-link block px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                            💡 Why we use it?
+                        </a>
+                        <a href="#analogy" class="toc-link block px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                            🍊 The Juicer Analogy
+                        </a>
+                        <a href="#notes" class="toc-link block px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                            📌 Key Notes
+                        </a>
+                        <a href="#realworld" class="toc-link block px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                            🌎 Real World & Code
+                        </a>
+                        <a href="#diagram" class="toc-link block px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                            🧩 Process Flow
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="w-full md:w-3/4 max-w-4xl mx-auto space-y-16 pb-24">
+
+                <!-- Hero Section -->
+                <header class="text-center md:text-left">
+                    <div class="inline-block px-4 py-1.5 rounded-full bg-pastel-blue border-2 border-pastel-blueDark text-slate-800 text-sm font-bold uppercase tracking-wide mb-4 shadow-sm">
+                        Day 9 Curriculum
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-black dark:text-white mb-6 leading-tight">
+                        Operators & <br>
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-pastel-purpleDark to-text-accent">Observables</span>
+                    </h1>
+                    <p class="text-2xl text-gray-700 dark:text-gray-300 font-bold font-sans flex items-center justify-center md:justify-start gap-2">
+                         Quantum Mechanics <span class="text-base bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-lg text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600">ကွမ်တမ်ရူပဗေဒ</span>
+                    </p>
+                </header>
+
+                <!-- 1. Direct Explanation -->
+                <section id="intro" class="scroll-mt-32">
+                    <div class="cute-card p-8 border-t-8 border-t-pastel-blueDark relative overflow-hidden">
+                        <!-- Decorative Blob -->
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-pastel-blue dark:bg-blue-900 rounded-full opacity-50 blur-xl"></div>
+
+                        <h2 class="text-3xl font-extrabold text-black dark:text-white mb-6 flex items-center gap-3 relative z-10">
+                            <span class="bg-pastel-blue p-2 rounded-xl text-slate-900 border border-pastel-blueDark"><i class="fa-solid fa-glasses"></i></span>
+                            တိုက်ရိုက် ရှင်းလင်းချက်
+                        </h2>
+                        
+                        <div class="prose prose-lg text-black dark:text-gray-200 relative z-10 font-bold">
+                            <p class="mb-4">
+                                ကွမ်တမ်ရူပဗေဒတွင် အမှုန်တစ်ခု (ဥပမာ - အီလက်ထရွန်) ၏ 
+                                <span class="bg-yellow-200 dark:bg-yellow-700 px-1 rounded border-b-2 border-yellow-400 dark:border-yellow-600 font-extrabold text-black dark:text-white">Position (တည်နေရာ)</span>၊ 
+                                <span class="bg-yellow-200 dark:bg-yellow-700 px-1 rounded border-b-2 border-yellow-400 dark:border-yellow-600 font-extrabold text-black dark:text-white">Momentum (အဟုန်)</span> နှင့် 
+                                <span class="bg-yellow-200 dark:bg-yellow-700 px-1 rounded border-b-2 border-yellow-400 dark:border-yellow-600 font-extrabold text-black dark:text-white">Energy (စွမ်းအင်)</span> 
+                                ကဲ့သို့သော တိုင်းတာ၍ရနိုင်သည့် ရူပဂုဏ်သတ္တိများကို <span class="text-text-accent font-extrabold underline decoration-2 decoration-wavy">Observables</span> ဟု ခေါ်သည်။
+                            </p>
+                            <p class="mb-6">
+                                သို့သော် ကွမ်တမ်ကမ္ဘာတွင် ထိုတန်ဖိုးများကို သာမန်ပစ္စည်းတွေကို ပေတံနဲ့ တိုင်းသလိုမျိုး ကွမ်တမ်အမှုန်တွေကို တိုင်းလို့မရပါဘူး။ သူတို့ဆီက အဖြေ (ဥပမာ - တည်နေရာ၊ စွမ်းအင်) ကိုလိုချင်ရင် 'သင်္ချာနည်းနဲ့ ဖန်တီးထားတဲ့ စက်' တစ်ခုထဲကို အရင်ထည့်ပြီး တွက်ထုတ်ယူရပါတယ်။ အဲဒီလို အဖြေထွက်လာအောင် တွက်ချက်လုပ်ဆောင်ပေးတဲ့ သင်္ချာနည်းလမ်းတွေကို Operators လို့ ခေါ်တာပါ။<span class="text-text-accent font-extrabold underline decoration-2 decoration-wavy">Operators</span> ဟုခေါ်သည်။
+                            </p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6 mt-8 relative z-10">
+                            <div class="bg-pastel-pink/30 dark:bg-gray-700 p-6 rounded-3xl border-2 border-pastel-pinkDark dark:border-gray-600 shadow-sm">
+                                <h4 class="font-extrabold text-black dark:text-white text-xl mb-2">🎈 Eigenvalue</h4>
+                                <p class="text-gray-900 dark:text-gray-200 font-bold">
+                                    Operator တစ်ခုသည် အမှုန်၏ အခြေအနေ (Wavefunction) ပေါ်သို့ သက်ရောက်လိုက်သောအခါ ရရှိလာမည့် ကိန်းဂဏန်းအဖြေ (Possible outcome)။
+                                </p>
+                            </div>
+                            <div class="bg-pastel-mint/40 dark:bg-gray-700 p-6 rounded-3xl border-2 border-pastel-mintDark dark:border-gray-600 shadow-sm">
+                                <h4 class="font-extrabold text-black dark:text-white text-xl mb-2">📊 Expectation Value</h4>
+                                <p class="text-gray-900 dark:text-gray-200 font-bold">
+                                    အကြိမ်များစွာ တိုင်းတာပြီးနောက် ရလာမည့် ပျမ်းမျှတန်ဖိုး (Average outcome over many trials)။
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Simple Explanation -->
+                <section id="simple" class="scroll-mt-32">
+                    <div class="cute-card p-8 border-t-8 border-t-pastel-purpleDark bg-gradient-to-b from-white to-purple-50/50 dark:from-gray-800 dark:to-gray-900">
+                        <h2 class="text-3xl font-extrabold text-black dark:text-white mb-8 flex items-center gap-3">
+                            <span class="bg-pastel-purple p-2 rounded-xl text-purple-900 border border-purple-300"><i class="fa-regular fa-lightbulb"></i></span>
+                            ရိုးရှင်းသော ရှင်းလင်းချက်
+                        </h2>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-white dark:bg-gray-700 p-5 rounded-2xl shadow-sm border-2 border-purple-100 dark:border-gray-600 hover:border-purple-300 transition-colors">
+                                <h3 class="font-extrabold text-purple-900 dark:text-purple-300 text-lg mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-question-circle"></i> ဒါဘာလဲ?
+                                </h3>
+                                <p class="text-black dark:text-gray-200 font-bold">
+                                    ဒါဟာ ကွမ်တမ်ရူပဗေဒတွင် အရာဝတ္ထုအသေးစားလေးများ၏ ဂုဏ်သတ္တိများကို တွက်ချက်တိုင်းတာရာတွင် အသုံးပြုသော အခြေခံသဘောတရား ဖြစ်သည်။
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-gray-700 p-5 rounded-2xl shadow-sm border-2 border-purple-100 dark:border-gray-600 hover:border-purple-300 transition-colors">
+                                <h3 class="font-extrabold text-purple-900 dark:text-purple-300 text-lg mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-clock"></i> ဘယ်လိုအချိန်မှာသုံးသလဲ?
+                                </h3>
+                                <p class="text-black dark:text-gray-200 font-bold">
+                                    သာမန်မျက်စိနဲ့ ထင်ထင်ရှားရှား မြင်နိုင်အောင် တိုင်းတာ၍ မရနိုင်သော အက်တမ်အဆင့် အမှုန်များ၏ တည်နေရာနှင့် စွမ်းအင်ကို တိကျစွာ သိရှိလိုသောအခါတွင် သုံးရသည်။
+                                </p>
+                            </div>
+
+                            <div class="bg-white dark:bg-gray-700 p-5 rounded-2xl shadow-sm border-2 border-purple-100 dark:border-gray-600 hover:border-purple-300 transition-colors">
+                                <h3 class="font-extrabold text-purple-900 dark:text-purple-300 text-lg mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-rocket"></i> ဘာကြောင့်သုံးရသလဲ?
+                                </h3>
+                                <p class="text-black dark:text-gray-200 font-bold">
+                                    ဂန္ထဝင်ရူပဗေဒ (Classical Physics) နည်းလမ်းများဖြင့် တွက်ချက်၍ မရသောကြောင့် ဤ Operator များကို အသုံးပြုကာ သင်္ချာနည်းဖြင့် တွက်ချက်မှသာ အဖြေမှန်ကို ရရှိနိုင်သောကြောင့် ဖြစ်သည်။
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Analogy -->
+                <section id="analogy" class="scroll-mt-32">
+                    <div class="bg-pastel-yellow dark:bg-yellow-900/40 p-8 rounded-[2.5rem] border-4 border-white dark:border-gray-700 shadow-cute dark:shadow-none relative overflow-hidden transition-colors duration-300">
+                        <!-- Decorative Circles -->
+                        <div class="absolute top-0 right-0 bg-yellow-300 dark:bg-yellow-600 w-24 h-24 rounded-full -mr-10 -mt-10 opacity-50"></div>
+                        <div class="absolute bottom-0 left-0 bg-orange-200 dark:bg-orange-800 w-32 h-32 rounded-full -ml-10 -mb-10 opacity-50"></div>
+
+                        <div class="relative z-10 text-center mb-10">
+                            <span class="text-6xl block mb-2">🍊</span>
+                            <h2 class="text-3xl font-extrabold text-orange-900 dark:text-orange-200 mb-4">The Juicer Analogy</h2>
+                            <p class="text-orange-900 dark:text-orange-100 font-extrabold text-xl bg-white/80 dark:bg-gray-800/80 inline-block px-6 py-3 rounded-full backdrop-blur-sm border-2 border-orange-200 dark:border-orange-900 shadow-sm">
+                                "Operator ဆိုတာ အသီးဖျော်စက် (Juicer) နဲ့ တူပါတယ်"
+                            </p>
+                        </div>
+
+                        <div class="grid gap-6 md:grid-cols-4 relative z-10">
+                            <!-- Card 1 -->
+                            <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm text-center border-2 border-orange-100 dark:border-gray-700 hover:scale-105 transition-transform duration-300">
+                                <div class="text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Properties</div>
+                                <div class="text-4xl mb-3">👅</div>
+                                <div class="font-extrabold text-black dark:text-white text-lg">Observable</div>
+                                <div class="text-sm font-extrabold text-orange-500">အရသာ</div>
+                            </div>
+                            <!-- Card 2 -->
+                            <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm text-center border-2 border-orange-100 dark:border-gray-700 hover:scale-105 transition-transform duration-300">
+                                <div class="text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">System</div>
+                                <div class="text-4xl mb-3">🍊</div>
+                                <div class="font-extrabold text-black dark:text-white text-lg">Wavefunction</div>
+                                <div class="text-sm font-extrabold text-orange-500">အသီး</div>
+                            </div>
+                            <!-- Card 3 -->
+                            <div class="bg-orange-400 p-5 rounded-3xl shadow-lg text-center border-4 border-white dark:border-gray-600 transform -translate-y-4 hover:scale-105 transition-transform duration-300">
+                                <div class="text-xs font-black text-white uppercase tracking-wider mb-2">Action</div>
+                                <div class="text-4xl mb-3">⚙️</div>
+                                <div class="font-extrabold text-white text-lg">Operator</div>
+                                <div class="text-sm font-extrabold text-orange-100">ဖျော်စက်</div>
+                            </div>
+                            <!-- Card 4 -->
+                            <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm text-center border-2 border-orange-100 dark:border-gray-700 hover:scale-105 transition-transform duration-300">
+                                <div class="text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Outcome</div>
+                                <div class="text-4xl mb-3">🥤</div>
+                                <div class="font-extrabold text-black dark:text-white text-lg">Eigenvalue</div>
+                                <div class="text-sm font-extrabold text-orange-500">ဖျော်ရည်</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Key Notes -->
+                <section id="notes" class="scroll-mt-32">
+                    <div class="cute-card p-8 border-t-8 border-t-text-accent">
+                        <h2 class="text-3xl font-extrabold text-black dark:text-white mb-8 flex items-center gap-3">
+                            <span class="bg-pink-100 p-2 rounded-xl text-text-accent border border-pink-200"><i class="fa-solid fa-thumbtack"></i></span>
+                            အဓိက မှတ်ရမည့် အချက်များ
+                        </h2>
+                        <div class="grid gap-4">
+                            <!-- Note Item -->
+                            <div class="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-700 border-2 border-transparent hover:border-text-accent transition-colors">
+                                <span class="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center shrink-0 mt-1 font-bold shadow-sm border border-green-200"><i class="fa-solid fa-check"></i></span>
+                                <div>
+                                    <span class="font-extrabold text-xl text-black dark:text-white block mb-1">Operators match Observables</span>
+                                    <span class="text-gray-800 dark:text-gray-200 block font-bold">တိုင်းတာချင်သည့် ဂုဏ်သတ္တိတစ်ခုစီအတွက် သီးသန့် Operator ရှိသည်။ (ဥပမာ - တည်နေရာတွက်ချင်ရင် $\hat{x}$၊ အဟုန်တွက်ချင်ရင် $\hat{p}$)။</span>
+                                </div>
+                            </div>
+                            <!-- Note Item -->
+                            <div class="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-700 border-2 border-transparent hover:border-text-accent transition-colors">
+                                <span class="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center shrink-0 mt-1 font-bold shadow-sm border border-green-200"><i class="fa-solid fa-check"></i></span>
+                                <div>
+                                    <span class="font-extrabold text-xl text-black dark:text-white block mb-1">Eigenvalues are Outcomes</span>
+                                    <span class="text-gray-800 dark:text-gray-200 block font-bold">စမ်းသပ်မှုတစ်ခု လုပ်လိုက်တိုင်း ရလာမည့် အဖြေသည် Eigenvalue တစ်ခုခု ဖြစ်သည်။</span>
+                                </div>
+                            </div>
+                            <!-- Note Item -->
+                            <div class="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-700 border-2 border-transparent hover:border-text-accent transition-colors">
+                                <span class="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center shrink-0 mt-1 font-bold shadow-sm border border-green-200"><i class="fa-solid fa-check"></i></span>
+                                <div>
+                                    <span class="font-extrabold text-xl text-black dark:text-white block mb-1">Expectation Value is Average</span>
+                                    <span class="text-gray-800 dark:text-gray-200 block font-bold">အကြိမ်များစွာ တိုင်းတာပြီး ရလာသော ပျမ်းမျှတန်ဖိုးသည် လက်တွေ့တွင် အသုံးအဝင်ဆုံး ဖြစ်သည်။</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Real World Application & Code -->
+                <section id="realworld" class="scroll-mt-32">
+                    <h2 class="text-3xl font-extrabold text-black dark:text-white mb-8 flex items-center gap-2">
+                        <span class="text-4xl">🌍</span> Real World & Code
+                    </h2>
+                    
+                    <!-- Example 1 -->
+                    <div class="cute-card mb-10 overflow-hidden">
+                        <div class="bg-pastel-blue/30 dark:bg-gray-700 px-8 py-5 border-b-2 border-pastel-blueDark dark:border-gray-600 flex items-center justify-between">
+                            <h3 class="font-extrabold text-xl text-black dark:text-white"><i class="fa-solid fa-hospital-user mr-2 text-blue-600 dark:text-blue-400"></i> MRI Machines</h3>
+                            <span class="bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border-2 border-blue-200 dark:border-gray-600">Case Study</span>
+                        </div>
+                        <div class="p-8 grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h4 class="font-extrabold text-black dark:text-white text-xl mb-3">Operators & Observables in Action</h4>
+                                <p class="text-gray-900 dark:text-gray-200 font-bold leading-relaxed mb-4">
+                                    ဆေးရုံသုံး MRI စက်များတွင် ခန္ဓာကိုယ်ထဲရှိ ဟိုက်ဒရိုဂျင် အက်တမ်များ၏ "Spin" (လည်ပတ်မှု) ဟူသော Observable ကို တိုင်းတာသည်။ သံလိုက်စက်ကွင်း (Magnetic Field) က Operator အနေဖြင့် လုပ်ဆောင်သည်။
+                                </p>
+                            </div>
+                            
+                            <!-- Cute Mac Window -->
+                            <div class="mac-window transform rotate-1 hover:rotate-0 transition-transform duration-300">
+                                <div class="mac-header">
+                                    <div class="mac-dot bg-red-400"></div>
+                                    <div class="mac-dot bg-yellow-400"></div>
+                                    <div class="mac-dot bg-green-400"></div>
+                                    <span class="text-gray-400 text-xs font-bold ml-auto font-mono">mri_simulation.py</span>
+                                </div>
+                                <div class="p-4 font-mono text-sm overflow-x-auto text-gray-200 font-bold">
+<span class="c-keyword">class</span> <span class="c-class">QuantumOperator</span>:
+    <span class="c-keyword">def</span> <span class="c-func">__init__</span>(<span class="c-var">self</span>, <span class="c-var">type</span>):
+        <span class="c-var">self</span>.type = <span class="c-var">type</span> <span class="c-comment"># 'Position'</span>
+
+    <span class="c-keyword">def</span> <span class="c-func">apply</span>(<span class="c-var">self</span>, <span class="c-var">state</span>):
+        <span class="c-comment"># Operator acts on state</span>
+        <span class="c-keyword">return</span> calculated_result
+
+<span class="c-var">op</span> = <span class="c-class">QuantumOperator</span>(<span class="c-string">'x_hat'</span>)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example 2 -->
+                    <div class="cute-card overflow-hidden">
+                        <div class="bg-pastel-mint/30 dark:bg-gray-700 px-8 py-5 border-b-2 border-pastel-mintDark dark:border-gray-600 flex items-center justify-between">
+                            <h3 class="font-extrabold text-xl text-black dark:text-white"><i class="fa-solid fa-fire mr-2 text-green-600 dark:text-green-400"></i> Smoke Detectors</h3>
+                            <span class="bg-white dark:bg-gray-800 text-green-600 dark:text-green-400 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border-2 border-green-200 dark:border-gray-600">Case Study</span>
+                        </div>
+                        <div class="p-8 grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h4 class="font-extrabold text-black dark:text-white text-xl mb-3">Eigenvalues (Discrete Outcomes)</h4>
+                                <p class="text-gray-900 dark:text-gray-200 font-bold leading-relaxed mb-4">
+                                    အီလက်ထရွန်များ စွမ်းအင်အဆင့် တစ်ခုမှ တစ်ခုသို့ ကူးပြောင်းရာတွင် ထွက်လာသော စွမ်းအင် (Eigenvalues) အပေါ် မူတည်၍ LED မီးလုံး အရောင်ကွဲပြားခြင်း (အနီ၊ အစိမ်း၊ အပြာ) ဖြစ်ပေါ်လာသည်။
+                                </p>
+                            </div>
+                            
+                            <!-- Cute Mac Window -->
+                            <div class="mac-window transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+                                <div class="mac-header">
+                                    <div class="mac-dot bg-red-400"></div>
+                                    <div class="mac-dot bg-yellow-400"></div>
+                                    <div class="mac-dot bg-green-400"></div>
+                                    <span class="text-gray-400 text-xs font-bold ml-auto font-mono">led_energy.js</span>
+                                </div>
+                                <div class="p-4 font-mono text-sm overflow-x-auto text-gray-200 font-bold">
+<span class="c-keyword">const</span> <span class="c-func">measureEnergy</span> = (<span class="c-var">state</span>, <span class="c-var">hamiltonian</span>) => {
+    <span class="c-comment">// Returns discrete value</span>
+    <span class="c-comment">// e.g. E1, E2 only</span>
+    <span class="c-keyword">return</span> <span class="c-var">hamiltonian</span>.<span class="c-func">getEigenvalue</span>(<span class="c-var">state</span>);
+}</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. Visual Diagram -->
+                <section id="diagram" class="scroll-mt-32">
+                    <div class="bg-white dark:bg-gray-800 rounded-[3rem] p-8 md:p-12 border-4 border-dashed border-gray-300 dark:border-gray-600 relative transition-colors duration-300">
+                        <h2 class="text-3xl font-extrabold text-black dark:text-white mb-12 text-center">🧩 Process Flow</h2>
+                        
+                        <!-- Flowchart Container -->
+                        <div class="flex flex-col md:flex-row items-stretch justify-between gap-4 relative z-10">
+                            
+                            <!-- Step 1 -->
+                            <div class="flow-step border-gray-900 bg-gray-900 text-white w-full md:w-1/4 flex flex-col justify-center shadow-lg transform hover:-translate-y-2 transition-transform">
+                                <div class="text-xs font-black text-gray-400 uppercase mb-2">Input</div>
+                                <div class="font-extrabold text-2xl mb-1">Wavefunction</div>
+                                <div class="text-3xl font-serif italic text-pastel-blue font-bold">$\Psi$</div>
+                            </div>
+
+                            <!-- Arrow -->
+                            <div class="flex items-center justify-center text-gray-400">
+                                <i class="fa-solid fa-arrow-right fa-2xl hidden md:block"></i>
+                                <i class="fa-solid fa-arrow-down fa-2xl md:hidden py-4"></i>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="flow-step border-text-accent bg-text-accent text-white w-full md:w-1/4 flex flex-col justify-center shadow-lg transform hover:-translate-y-2 transition-transform">
+                                <div class="text-xs font-black text-pink-200 uppercase mb-2">Process</div>
+                                <div class="font-extrabold text-2xl mb-1">Operator</div>
+                                <div class="text-3xl font-serif italic text-white font-bold">$\hat{x}, \hat{p}$</div>
+                            </div>
+
+                            <!-- Arrow -->
+                            <div class="flex items-center justify-center text-gray-400">
+                                <i class="fa-solid fa-arrow-right fa-2xl hidden md:block"></i>
+                                <i class="fa-solid fa-arrow-down fa-2xl md:hidden py-4"></i>
+                            </div>
+
+                            <!-- Step 3 (Branching Outcome) -->
+                            <div class="w-full md:w-1/3 flex flex-col gap-4">
+                                <!-- Outcome A -->
+                                <div class="bg-pastel-mint border-2 border-pastel-mintDark p-4 rounded-2xl shadow-sm text-center transform hover:scale-105 transition-transform">
+                                    <div class="text-xs text-green-900 font-black uppercase mb-1">Single Trial</div>
+                                    <div class="text-xl text-black font-extrabold">Eigenvalue</div>
+                                </div>
+                                <!-- Outcome B -->
+                                <div class="bg-pastel-yellow border-2 border-orange-200 p-4 rounded-2xl shadow-sm text-center transform hover:scale-105 transition-transform">
+                                    <div class="text-xs text-orange-900 font-black uppercase mb-1">Many Trials</div>
+                                    <div class="text-xl text-black font-extrabold">Expectation Value</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <footer class="pt-10 pb-16 text-center">
+                    <p class="text-gray-600 dark:text-gray-400 font-extrabold mb-6 text-xl">နောက်ထပ်သင်ခန်းစာကို လေ့လာချင်ပါသလား?</p>
+                    <button class="bg-gray-900 dark:bg-gray-700 text-white px-8 py-4 rounded-full font-extrabold hover:bg-text-accent transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg flex items-center justify-center gap-3 mx-auto border-2 border-gray-700 dark:border-gray-500">
+                        Heisenberg's Principle <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </footer>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts for Interactions -->
+    <script>
+        // --- 1. Mobile Menu Toggle ---
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        if(btn && menu){
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+        }
+
+        // --- 2. Dark Mode Logic ---
+        const toggleBtn = document.getElementById('theme-toggle');
+        const htmlRoot = document.getElementById('html-root');
+        
+        // Check saved preference or system preference on load
+        const savedTheme = localStorage.getItem('theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+            htmlRoot.classList.add('dark');
+        } else {
+            htmlRoot.classList.remove('dark');
+        }
+
+        // Toggle function
+        toggleBtn.addEventListener('click', () => {
+            htmlRoot.classList.toggle('dark');
+            
+            // Save preference
+            if (htmlRoot.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // --- 3. Sticky TOC Active State Logic ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Remove active class from all links
+                    document.querySelectorAll('.toc-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    // Add active class to current link
+                    const id = entry.target.getAttribute('id');
+                    const activeLink = document.querySelector(`.toc-link[href="#${id}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        }, {
+            rootMargin: '-20% 0px -60% 0px' 
+        });
+
+        // Track all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
