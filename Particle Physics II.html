@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Particle Physics II – 60-Day Advanced Course</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(","\\)"], ["$","$"]],
+        displayMath: [["\\[","\\]"], ["$$","$$"]]
+      },
+      svg: { fontCache: "global" }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+  <style>
+    :root {
+      --bg-main: #f5f7fb;
+      --bg-card: #ffffff;
+      --text-main: #1f2933;
+      --text-muted: #6b7280;
+      --accent: #4f46e5;
+      --accent-soft: #e0e7ff;
+      --border-subtle: #e5e7eb;
+      --sidebar-bg: #111827;
+      --sidebar-text: #e5e7eb;
+      --sidebar-active: #4f46e5;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 270px;
+      background: radial-gradient(circle at top left, #1f2937 0, #020617 55%, #020617 100%);
+      color: var(--sidebar-text);
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+    }
+
+    .sidebar-header {
+      margin-bottom: 24px;
+      padding: 10px 10px 18px 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+
+    .sidebar-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(79, 70, 229, 0.1);
+      color: #c7d2fe;
+      font-size: 0.7rem;
+      margin-top: 10px;
+    }
+
+    .sidebar-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #4ade80;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-top: 8px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6b7280;
+      margin: 14px 4px 4px;
+    }
+
+    .sidebar-section-title:first-of-type {
+      margin-top: 4px;
+    }
+
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .toc-item {
+      margin: 3px 0;
+    }
+
+    .toc-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: #9ca3af;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      border: 1px solid transparent;
+    }
+
+    .toc-link:hover {
+      color: #e5e7eb;
+      background: rgba(55, 65, 81, 0.7);
+      border-color: rgba(156, 163, 175, 0.4);
+      transform: translateX(2px);
+    }
+
+    .toc-link span.bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(156, 163, 175, 0.7);
+      flex-shrink: 0;
+    }
+
+    .toc-link.module-link {
+      padding-left: 12px;
+    }
+
+    .toc-link.module-link span.bullet {
+      background: rgba(129, 140, 248, 0.9);
+    }
+
+    .toc-link.active {
+      background: rgba(79, 70, 229, 0.18);
+      color: #e5e7eb;
+      border-color: rgba(129, 140, 248, 0.8);
+      box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.6);
+    }
+
+    .sidebar-footer {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      color: #6b7280;
+      border-top: 1px dashed rgba(55, 65, 81, 0.8);
+      padding-top: 8px;
+    }
+
+    /* Main content layout */
+    .main {
+      margin-left: 270px;
+      width: calc(100% - 270px);
+      padding: 28px 26px 40px;
+    }
+
+    .main-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-kicker {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin: 0 0 8px;
+      color: #111827;
+      letter-spacing: -0.02em;
+    }
+
+    .page-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 22px 22px 20px;
+      margin-bottom: 26px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      margin: 0;
+      color: #111827;
+      letter-spacing: -0.01em;
+    }
+
+    .card-tag {
+      font-size: 0.75rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .card-subtitle {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    hr.card-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, rgba(79,70,229,0.18), transparent);
+      margin: 12px 0 14px;
+    }
+
+    h3 {
+      font-size: 1rem;
+      margin: 16px 0 6px;
+      color: #111827;
+    }
+
+    p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin: 4px 0 10px;
+    }
+
+    ul {
+      margin: 4px 0 10px 20px;
+      padding: 0;
+      font-size: 0.9rem;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    .task-box {
+      border-radius: var(--radius-lg);
+      padding: 10px 12px;
+      background: #f5f3ff;
+      border: 1px dashed rgba(129, 140, 248, 0.6);
+      margin: 4px 0 10px;
+      font-size: 0.88rem;
+    }
+
+    .task-label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #4f46e5;
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    code {
+      font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.8rem;
+      background: #f9fafb;
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    .summary-list {
+      columns: 2;
+      column-gap: 22px;
+    }
+
+    .summary-list h3 {
+      break-inside: avoid;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        position: fixed;
+        width: 220px;
+      }
+      .main {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+        padding: 20px 18px 30px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        display: block;
+      }
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-bottom: 1px solid rgba(31, 41, 55, 0.7);
+        padding: 10px 12px 8px;
+      }
+      .sidebar-header {
+        margin-bottom: 6px;
+        padding-bottom: 10px;
+      }
+      .sidebar-nav {
+        max-height: 150px;
+        border-radius: 10px;
+        border: 1px solid rgba(31, 41, 55, 0.7);
+        padding: 6px 6px;
+        background: radial-gradient(circle at top left, #020617 0, #020617 100%);
+      }
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 16px 14px 26px;
+      }
+      .page-header {
+        margin-top: 4px;
+      }
+      .summary-list {
+        columns: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar / TOC -->
+  <aside class="sidebar" id="toc">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Particle Physics II</div>
+      <div class="sidebar-subtitle">60-Day Advanced Course Outline</div>
+      <div class="sidebar-badge">
+        <span class="sidebar-badge-dot"></span>
+        <span>QFT&nbsp;•&nbsp;SM&nbsp;•&nbsp;Phenomenology</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-title">Overview</div>
+      <ul class="toc-list">
+        <li class="toc-item">
+          <a class="toc-link" href="#overview">
+            <span class="bullet"></span>
+            <span>Course Overview</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link" href="#week-plan">
+            <span class="bullet"></span>
+            <span>Week-by-Week Plan</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-section-title">Modules</div>
+      <ul class="toc-list">
+        <li class="toc-item">
+          <a class="toc-link module-link" href="#module1">
+            <span class="bullet"></span>
+            <span>Module 1 – Relativistic QM</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link module-link" href="#module2">
+            <span class="bullet"></span>
+            <span>Module 2 – Fields & Lagrangians</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link module-link" href="#module3">
+            <span class="bullet"></span>
+            <span>Module 3 – Fields → Feynman Rules</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link module-link" href="#module4">
+            <span class="bullet"></span>
+            <span>Module 4 – Gauge Theories & QED</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link module-link" href="#module5">
+            <span class="bullet"></span>
+            <span>Module 5 – Electroweak & Higgs</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link module-link" href="#module6">
+            <span class="bullet"></span>
+            <span>Module 6 – QCD & Yang–Mills</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link module-link" href="#module7">
+            <span class="bullet"></span>
+            <span>Module 7 – Neutrinos & Flavor</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link module-link" href="#module8">
+            <span class="bullet"></span>
+            <span>Module 8 – Collider Phenomenology</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link module-link" href="#module9">
+            <span class="bullet"></span>
+            <span>Module 9 – BSM & Wrap-Up</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-section-title">Summary</div>
+      <ul class="toc-list">
+        <li class="toc-item">
+          <a class="toc-link" href="#summary">
+            <span class="bullet"></span>
+            <span>End-of-Course Summary</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      Designed as a structured self-study track.<br />
+      Use the tasks at the end of each day to actively engage with the material.
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- Header -->
+      <header class="page-header" id="overview">
+        <div class="page-kicker">Advanced Particle Physics</div>
+        <h1>Particle Physics II – 60-Day Course</h1>
+        <div class="page-meta">
+          <span class="meta-pill">
+            <span class="dot"></span>
+            60 Days • Self-paced
+          </span>
+          <span>Focus: QFT basics, gauge theories, Standard Model structure, neutrinos & collider phenomenology.</span>
+        </div>
+      </header>
+
+      <!-- Overview Card -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Course Overview</h2>
+          <span class="card-tag">Big Picture</span>
+        </div>
+        <p>
+          <strong>Goal:</strong> Take you from a strong conceptual understanding of particle physics (Particle Physics I) to a level where you can
+          comfortably navigate the language of relativistic quantum fields, gauge theories, and basic collider phenomenology.
+        </p>
+        <p>
+          You will:
+        </p>
+        <ul>
+          <li>Understand how relativistic wave equations (Klein–Gordon, Dirac) motivate quantum field theory (QFT).</li>
+          <li>See how fields, Lagrangians, and symmetries generate Feynman rules and scattering amplitudes.</li>
+          <li>Learn how the Standard Model emerges as a gauge theory of SU(3)×SU(2)×U(1).</li>
+          <li>Explore neutrino mixing and oscillations with real formulas.</li>
+          <li>Connect theory to experiment via collider kinematics, jets, and statistics.</li>
+          <li>Get a first look at Beyond-Standard-Model (BSM) ideas and effective field theory (EFT).</li>
+        </ul>
+      </section>
+
+      <!-- Week-by-week card -->
+      <section class="card" id="week-plan">
+        <div class="card-header">
+          <h2>Week-by-Week Breakdown</h2>
+          <span class="card-tag">Roadmap</span>
+        </div>
+        <p class="card-subtitle">
+          Use this as your high-level map. Each week corresponds to ~7 daily lessons with concrete tasks.
+        </p>
+        <hr class="card-divider" />
+        <ul>
+          <li><strong>Week 1 (Days 1–7): Relativistic Quantum Mechanics Refresher</strong> – Klein–Gordon, Dirac, spinors, interpretation issues.</li>
+          <li><strong>Week 2 (Days 8–14): Quantum Fields & Lagrangians</strong> – Action principle, free scalar field, quantization, interactions.</li>
+          <li><strong>Week 3 (Days 15–21): From Fields to Feynman Rules</strong> – Propagators, vertices, tree-level 2→2 scattering.</li>
+          <li><strong>Week 4 (Days 22–28): Gauge Theories & QED</strong> – U(1) gauge invariance, QED Lagrangian, Ward identities, renormalization idea.</li>
+          <li><strong>Week 5 (Days 29–35): Electroweak Theory & Higgs Mechanism</strong> – SU(2)×U(1), SSB, W/Z/γ mixing, Yukawa couplings, CKM/PMNS.</li>
+          <li><strong>Week 6 (Days 36–42): QCD & Running Couplings</strong> – Yang–Mills, non-Abelian features, running coupling, confinement, partons, jets.</li>
+          <li><strong>Week 7 (Days 43–49): Neutrino Physics & Flavor</strong> – Flavor vs mass states, oscillations, PMNS, CP violation, absolute mass.</li>
+          <li><strong>Week 8 (Days 50–56): Collider Phenomenology & Data Analysis</strong> – PDFs, hadron collider kinematics, jets, statistics, discovery strategies.</li>
+          <li><strong>Days 57–60: BSM & Wrap-Up</strong> – EFT, SUSY/BSM sketches, global review, roadmap.</li>
+        </ul>
+      </section>
+
+      <!-- MODULE 1 -->
+      <section class="card" id="module1">
+        <div class="card-header">
+          <h2>Module 1 – Relativistic Quantum Mechanics Refresher</h2>
+          <span class="card-tag">Days 1–7</span>
+        </div>
+        <p class="card-subtitle">
+          From non-relativistic Schrödinger to Klein–Gordon and Dirac equations. Understand why QFT is needed.
+        </p>
+        <hr class="card-divider" />
+
+        <!-- Day 1 -->
+        <h3>Day 1 – Why Relativistic QM & QFT?</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>The non-relativistic Schrödinger equation is not Lorentz invariant and breaks down at high energies.</li>
+          <li>A consistent high-energy theory must respect special relativity, motivating relativistic wave equations.</li>
+          <li>Relativistic quantum mechanics alone faces issues (e.g., negative energies, multi-particle processes), pointing to quantum field theory.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write a short paragraph explaining why we cannot just use the Schrödinger equation for high-energy particles.
+            Include at least one argument based on special relativity (e.g., finite propagation speed, Lorentz invariance).
+          </p>
+        </div>
+
+        <!-- Day 2 -->
+        <h3>Day 2 – Klein–Gordon Equation</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Start from the relativistic dispersion relation: \[ E^2 = p^2 c^2 + m^2 c^4. \]</li>
+          <li>Promote energy and momentum to operators: \(E \to i\hbar \partial_t\), \(\vec{p} \to -i\hbar \nabla\).</li>
+          <li>Obtain the Klein–Gordon (KG) equation (in natural units): \[ (\Box + m^2)\,\phi = 0, \] whose plane-wave solutions satisfy the relativistic relation.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write down the KG equation and identify which term corresponds to the mass. Explain briefly what it means
+            for a plane-wave solution to satisfy the relativistic energy–momentum relation.
+          </p>
+        </div>
+
+        <!-- Day 3 -->
+        <h3>Day 3 – Problems with Klein–Gordon as a Single-Particle Equation</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>The KG equation’s natural current and “probability” density are not positive definite.</li>
+          <li>Negative energy solutions appear and cannot be simply ignored.</li>
+          <li>These issues suggest that KG is better interpreted as a field equation, allowing for particle creation/annihilation.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Explain why a “probability density” that can be negative is unacceptable. Conclude why the KG equation is
+            better used as a field equation rather than a single-particle wave equation.
+          </p>
+        </div>
+
+        <!-- Day 4 -->
+        <h3>Day 4 – Dirac Equation (Conceptual Form)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Dirac sought a relativistic equation linear in both time and spatial derivatives: \[ (i\gamma^\mu \partial_\mu - m)\,\psi = 0. \]</li>
+          <li>Spinor fields \( \psi \) naturally describe spin-½ particles.</li>
+          <li>The Dirac equation predicts antiparticles and resolves some probabilistic issues of KG for fermions.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write the symbolic Dirac equation and briefly describe the role of \( \psi \), \( \gamma^\mu \), and \( m \).
+            In one paragraph, explain what is new here compared to the KG equation (e.g., spin, antiparticles).
+          </p>
+        </div>
+
+        <!-- Day 5 -->
+        <h3>Day 5 – Spinors & Probability Current</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Spinors are multi-component objects encoding spin and particle/antiparticle degrees of freedom.</li>
+          <li>The conserved current \( j^\mu = \bar{\psi}\gamma^\mu \psi \) has a positive time component \( j^0 \) that can be interpreted as a probability density.</li>
+          <li>The Dirac equation thus provides a consistent probabilistic interpretation for spin-½ particles.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Explain why having a conserved current with positive \( j^0 \) solves the negative-probability problem of the KG equation.
+          </p>
+        </div>
+
+        <!-- Day 6 -->
+        <h3>Day 6 – Plane-Wave Solutions of the Dirac Equation</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Dirac solutions: \( \psi \sim u_s(p)\,e^{-ip\cdot x} \) for particles and \( \psi \sim v_s(p)\,e^{+ip\cdot x} \) for antiparticles.</li>
+          <li>Index \( s \) labels spin projections (e.g., ↑, ↓).</li>
+          <li>Normalization and spin sums are important for practical calculations, but conceptually these represent particle/antiparticle states with given momentum and spin.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Draw a simple diagram: a momentum vector \( \vec{p} \) and two possible spin states.
+            Write bullet points summarizing “particle” vs “antiparticle” solutions.
+          </p>
+        </div>
+
+        <!-- Day 7 -->
+        <h3>Day 7 – Module 1 Review</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Klein–Gordon and Dirac equations are relativistic wave equations derived from the energy–momentum relation.</li>
+          <li>KG as a single-particle equation has serious probabilistic problems; Dirac fixes this for spin-½ fermions.</li>
+          <li>The problems with relativistic single-particle QM motivate treating fields as fundamental → QFT.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Create a one-page summary comparing KG and Dirac:
+            equation form, spin, probability interpretation, and role in QFT.
+          </p>
+        </div>
+      </section>
+
+      <!-- MODULE 2 -->
+      <section class="card" id="module2">
+        <div class="card-header">
+          <h2>Module 2 – Quantum Fields & Lagrangians</h2>
+          <span class="card-tag">Days 8–14</span>
+        </div>
+        <p class="card-subtitle">
+          Fields, actions, and the Lagrangian formulation. Free scalar field theory, quantization, and interaction terms.
+        </p>
+        <hr class="card-divider" />
+
+        <!-- Day 8 -->
+        <h3>Day 8 – Classical Field Lagrangians</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Action: \[ S = \int d^4x\,\mathcal{L}. \]</li>
+          <li>Euler–Lagrange equation for fields: \[ \frac{\partial \mathcal{L}}{\partial \phi} - \partial_\mu \left( \frac{\partial \mathcal{L}}{\partial (\partial_\mu \phi)} \right) = 0. \]</li>
+          <li>Free scalar field Lagrangian: \[ \mathcal{L} = \frac{1}{2} \partial_\mu \phi\,\partial^\mu \phi - \frac{1}{2} m^2 \phi^2. \]</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            For the free scalar Lagrangian, identify the kinetic term and the mass term, and explain in one paragraph why the action principle is natural in relativistic theories.
+          </p>
+        </div>
+
+        <!-- Day 9 -->
+        <h3>Day 9 – Deriving KG from the Lagrangian</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Applying the Euler–Lagrange equation to the scalar Lagrangian yields the KG equation.</li>
+          <li>This shows how equations of motion emerge from a symmetry-friendly Lagrangian.</li>
+          <li>Symmetries of the action lead to conservation laws (via Noether’s theorem later).</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Perform a partial derivation: vary \( \phi \) in the action, integrate by parts, and show the structure that leads to
+            \( (\Box + m^2)\phi = 0 \). Focus on the logical steps more than algebraic detail.
+          </p>
+        </div>
+
+        <!-- Day 10 -->
+        <h3>Day 10 – Quantizing the Scalar Field</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Promote $\phi$ and its conjugate momentum $\pi$ to operators: \( \hat{\phi}(x), \hat{\pi}(x) \).</li>
+          <li>Canonical commutation relations: \[ [\hat{\phi}(t,\mathbf{x}), \hat{\pi}(t,\mathbf{y})] = i \delta^{(3)}(\mathbf{x} - \mathbf{y}). \]</li>
+          <li>Mode expansion introduces creation/annihilation operators \( a_{\mathbf{p}}^\dagger, a_{\mathbf{p}} \).</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write the conceptual mode expansion:
+            \[
+              \hat{\phi}(x) \sim \int d^3p \left[ a_{\mathbf{p}}\,e^{-ip\cdot x} + a_{\mathbf{p}}^\dagger\,e^{ip\cdot x} \right]
+            \]
+            and indicate which term creates particles and which annihilates them.
+          </p>
+        </div>
+
+        <!-- Day 11 -->
+        <h3>Day 11 – Particle Interpretation in QFT</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>One-particle states: \( |\mathbf{p}\rangle = a_{\mathbf{p}}^\dagger |0\rangle \).</li>
+          <li>Multi-particle states built by applying multiple creation operators to the vacuum.</li>
+          <li>Vacuum \(|0\rangle\) is non-trivial but has no particles; particles are excitations of the field.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            In your own words, explain how “particles are excitations of the field” using the creation/annihilation operator picture.
+            Use an analogy such as an ocean and waves.
+          </p>
+        </div>
+
+        <!-- Day 12 -->
+        <h3>Day 12 – Interactions in the Lagrangian</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Interactions appear as additional terms in the Lagrangian, e.g. \(\mathcal{L}_{\text{int}} = -\frac{\lambda}{4!}\phi^4.\)</li>
+          <li>Coupling constants (like λ) control interaction strength.</li>
+          <li>Interaction terms determine vertex structure in Feynman diagrams.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            For \(\mathcal{L}_{\text{int}} = -\frac{\lambda}{4!}\phi^4\), count how many field lines meet at a vertex.
+            Explain why a larger λ corresponds to a stronger interaction.
+          </p>
+        </div>
+
+        <!-- Day 13 -->
+        <h3>Day 13 – Path Integral Picture (Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>The path integral formulation sums over all field configurations (histories) weighted by \( e^{iS} \).</li>
+          <li>The generating functional \( Z[J] \) encodes correlation functions and thus observables.</li>
+          <li>This viewpoint is often convenient for dealing with symmetries and gauge fixing.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write an intuitive explanation (no equations required) of what it means to “sum over all possible field configurations.”
+          </p>
+        </div>
+
+        <!-- Day 14 -->
+        <h3>Day 14 – Module 2 Review</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Fields and Lagrangians provide a compact and symmetry-friendly way to encode dynamics.</li>
+          <li>Quantization turns fields into operators with creation and annihilation operators that generate particle states.</li>
+          <li>Interaction terms in the Lagrangian determine how particles scatter and decay.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Create a mini “dictionary”:
+            for each type of term in a Lagrangian (kinetic, mass, interaction, source),
+            write what it means physically.
+          </p>
+        </div>
+      </section>
+
+      <!-- MODULE 3 -->
+      <section class="card" id="module3">
+        <div class="card-header">
+          <h2>Module 3 – From Fields to Feynman Rules</h2>
+          <span class="card-tag">Days 15–21</span>
+        </div>
+        <p class="card-subtitle">
+          Correlation functions, propagators, and how Lagrangians generate Feynman rules and amplitudes.
+        </p>
+        <hr class="card-divider" />
+
+        <!-- Day 15 -->
+        <h3>Day 15 – Correlation Functions & Propagators (Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>The two-point time-ordered correlation function \(\langle 0| T\{\phi(x)\phi(y)\} |0\rangle\) is the propagator.</li>
+          <li>Propagators encode how disturbances of the field propagate from point to point.</li>
+          <li>In momentum space, scalar propagator is of form \[ \Delta_F(p) \sim \frac{1}{p^2 - m^2 + i\epsilon}. \]</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write the symbolic form of the scalar propagator in momentum space and explain why the pole at \( p^2 = m^2 \)
+            is related to the physical mass of the particle.
+          </p>
+        </div>
+
+        <!-- Day 16 -->
+        <h3>Day 16 – Reading Feynman Rules from the Lagrangian</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>The free part of the Lagrangian determines propagators.</li>
+          <li>The interaction part determines vertex factors (how fields meet at a point).</li>
+          <li>Each type of term in \(\mathcal{L}_{\text{int}}\) maps to a particular vertex rule.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            For \(\mathcal{L}_{\text{int}} = -\frac{\lambda}{4!}\phi^4\), write the propagator rule and the vertex factor (symbolically, e.g. \(-i\lambda\)).
+            Focus on the structure even if you ignore numerical prefactors.
+          </p>
+        </div>
+
+        <!-- Day 17 -->
+        <h3>Day 17 – Tree-Level Diagrams in φ⁴ Theory</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Tree diagrams contain no loops and provide leading-order contributions to scattering amplitudes.</li>
+          <li>In φ⁴ theory, the simplest 2→2 process involves a single four-point vertex.</li>
+          <li>External legs represent incoming and outgoing particles, internal lines represent propagators.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Draw the tree-level diagram for \( \phi\phi \to \phi\phi \) with one 4-point vertex.
+            Label the external momenta \( p_1, p_2, p_3, p_4 \).
+          </p>
+        </div>
+
+        <!-- Day 18 -->
+        <h3>Day 18 – s, t, u Channels (Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Different topologies of diagrams correspond to different channels (s, t, u) in 2→2 scattering.</li>
+          <li>Mandelstam variables \( s, t, u \) encode invariant combinations of the external momenta.</li>
+          <li>Identical particles imply symmetry relations among these channels.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Sketch the three channels (s, t, and u) for a scalar exchange process.
+            In one sentence, explain what “channel” means in this context.
+          </p>
+        </div>
+
+        <!-- Day 19 -->
+        <h3>Day 19 – Simple Amplitude Structure</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>In φ⁴ theory, the tree-level amplitude for 2→2 scattering is approximately a constant \(-i\lambda\).</li>
+          <li>In theories with exchange, amplitudes often look like \( \mathcal{M} \sim \dfrac{g^2}{s - m^2} \) (for s-channel) or similar.</li>
+          <li>Resonances appear when the denominator approaches zero (\( s \approx m^2 \)).</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write the schematic amplitude \( \mathcal{M} \sim \dfrac{g^2}{s - m^2} \) for s-channel exchange and describe what happens when \( s \approx m^2 \).
+          </p>
+        </div>
+
+        <!-- Day 20 -->
+        <h3>Day 20 – Cross Section from Amplitude (Very Light)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>The squared amplitude \(|\mathcal{M}|^2\) enters the formula for differential cross sections.</li>
+          <li>Cross sections also include phase-space factors and flux factors.</li>
+          <li>Conceptually: larger \(|\mathcal{M}|^2\) → larger probability of scattering.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write a symbolic relation:
+            “Cross section ≈ (phase space factor) × \(|\mathcal{M}|^2\) / (flux).”
+            Explain in words what each factor means.
+          </p>
+        </div>
+
+        <!-- Day 21 -->
+        <h3>Day 21 – Module 3 Review</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Lagrangians produce Feynman rules, which produce diagrams, which yield amplitudes and ultimately cross sections.</li>
+          <li>Propagators and vertices are the basic building blocks of diagrams.</li>
+          <li>Resonances and channel structure are reflected in the analytic form of amplitudes.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Choose a toy theory (φ⁴ or scalar+Yukawa).
+            Write out the free and interaction parts of the Lagrangian, and describe in words the corresponding propagators and vertices.
+          </p>
+        </div>
+      </section>
+
+      <!-- MODULE 4 -->
+      <section class="card" id="module4">
+        <div class="card-header">
+          <h2>Module 4 – Gauge Theories & QED</h2>
+          <span class="card-tag">Days 22–28</span>
+        </div>
+        <p class="card-subtitle">
+          From global to local symmetries, U(1) gauge invariance, QED Lagrangian, and the idea of renormalization.
+        </p>
+        <hr class="card-divider" />
+
+        <!-- Day 22 -->
+        <h3>Day 22 – Global vs Local Symmetries</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Global U(1) transformation: \( \psi \to e^{i\alpha}\psi \) with constant \(\alpha\).</li>
+          <li>Local U(1): \( \psi(x) \to e^{i\alpha(x)}\psi(x) \), with \(\alpha\) depending on spacetime.</li>
+          <li>Requiring local symmetry forces the introduction of a gauge field \( A_\mu \).</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write the transformation laws for global and local U(1) symmetry and explain why local symmetry “demands” a gauge field.
+          </p>
+        </div>
+
+        <!-- Day 23 -->
+        <h3>Day 23 – Covariant Derivative & Minimal Coupling</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Introduce covariant derivative: \( D_\mu = \partial_\mu + ie A_\mu \).</li>
+          <li>QED Lagrangian: \[
+            \mathcal{L} = \bar{\psi}(i\gamma^\mu D_\mu - m)\psi - \frac{1}{4}F_{\mu\nu}F^{\mu\nu}.
+          \]</li>
+          <li>Interaction term emerges as \( e\bar{\psi}\gamma^\mu\psi A_\mu \): electron–photon coupling.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Identify in the QED Lagrangian:
+            free fermion term, free photon term, and interaction term.
+            Write them as a 3-row table with short descriptions.
+          </p>
+        </div>
+
+        <!-- Day 24 -->
+        <h3>Day 24 – QED Feynman Rules (Qualitative)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Fermion propagator, photon propagator, and the vertex factor \(-ie\gamma^\mu\) arise from the Lagrangian.</li>
+          <li>Charged fermions couple to photons with strength \( e \).</li>
+          <li>Processes like \( e^- e^+ \to \mu^- \mu^+ \) are described by a photon exchange diagram.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Sketch the diagram for \( e^- e^+ \to \mu^- \mu^+ \) via photon exchange and write a symbolic form of the amplitude, highlighting its overall structure (spinor currents and propagator).
+          </p>
+        </div>
+
+        <!-- Day 25 -->
+        <h3>Day 25 – Ward Identity & Gauge Invariance (Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Gauge symmetry implies charge conservation in QED.</li>
+          <li>Ward identities relate amplitudes with external photon lines and encode gauge invariance at the amplitude level.</li>
+          <li>Gauge redundancy means some components of \( A_\mu \) are unphysical; physical predictions are gauge independent.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Explain in a short paragraph how gauge symmetry in QED is connected to charge conservation.
+          </p>
+        </div>
+
+        <!-- Day 26 -->
+        <h3>Day 26 – Renormalization Idea (Very Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Loop diagrams produce UV divergences in naive perturbation theory.</li>
+          <li>Renormalization redefines parameters (mass, charge) in terms of physical observables, absorbing infinities.</li>
+          <li>Couplings become scale dependent (running coupling constants).</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            In your own words, describe what renormalization is trying to accomplish and why it is necessary in QFT.
+          </p>
+        </div>
+
+        <!-- Day 27 -->
+        <h3>Day 27 – Infrared & Collinear Radiation (Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Low-energy (soft) and collinear photon emissions lead to infrared divergences.</li>
+          <li>Inclusive observables require summing over real and virtual photon emission, yielding finite results.</li>
+          <li>Physical detectors have finite resolution, naturally enforcing inclusivity.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write a 3–4 sentence explanation of why both real and virtual photon emissions must be included to obtain finite, physical cross sections.
+          </p>
+        </div>
+
+        <!-- Day 28 -->
+        <h3>Day 28 – Module 4 Review</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Local U(1) symmetry leads uniquely to QED with a photon as the gauge boson.</li>
+          <li>QED Feynman rules describe interactions between charged fermions and photons.</li>
+          <li>Renormalization and gauge invariance ensure finite, physically meaningful predictions.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write a half-page summary titled “From U(1) Symmetry to QED,” covering the covariant derivative, the gauge field, and the form of the QED Lagrangian.
+          </p>
+        </div>
+      </section>
+
+      <!-- MODULE 5 -->
+      <section class="card" id="module5">
+        <div class="card-header">
+          <h2>Module 5 – Electroweak Theory & Higgs Mechanism</h2>
+          <span class="card-tag">Days 29–35</span>
+        </div>
+        <p class="card-subtitle">
+          SU(2)×U(1) structure, spontaneous symmetry breaking, W/Z/γ mixing, fermion masses & mixing matrices.
+        </p>
+        <hr class="card-divider" />
+
+        <!-- Day 29 -->
+        <h3>Day 29 – SU(2)×U(1) Structure</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Electroweak gauge group: SU(2)\(_L\) × U(1)\(_Y\).</li>
+          <li>Left-handed fermions form SU(2) doublets; right-handed fermions are SU(2) singlets.</li>
+          <li>Gauge fields: W\(^a_\mu\) (a = 1,2,3) for SU(2), B\(_\mu\) for U(1)\(_Y\).</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write one left-handed lepton doublet \((\nu_e, e)_L\) and one right-handed singlet \( e_R \), and note their SU(2) transformation properties.
+          </p>
+        </div>
+
+        <!-- Day 30 -->
+        <h3>Day 30 – Electroweak Lagrangian Skeleton</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>The full electroweak Lagrangian includes gauge, Higgs, fermion, and Yukawa parts.</li>
+          <li>Gauge kinetic terms for W and B fields; Higgs kinetic & potential terms.</li>
+          <li>Fermions couple to gauge fields via covariant derivatives; Yukawa terms couple Higgs to fermions.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Symbolically write:
+            \[
+            \mathcal{L} = \mathcal{L}_{\text{gauge}} + \mathcal{L}_{\text{Higgs}} + \mathcal{L}_{\text{fermion}} + \mathcal{L}_{\text{Yukawa}}
+            \]
+            and give a one-line description of what each part does.
+          </p>
+        </div>
+
+        <!-- Day 31 -->
+        <h3>Day 31 – Spontaneous Symmetry Breaking (SSB)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Higgs potential: \[ V(\Phi) = \mu^2 |\Phi|^2 + \lambda |\Phi|^4, \] with \(\mu^2 &lt; 0\) for SSB.</li>
+          <li>Non-zero vacuum expectation value (VEV) \( v \) minimizes the potential.</li>
+          <li>Gauge symmetry is spontaneously broken; physical spectrum reorganizes into massive and massless fields.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Sketch the “Mexican hat” potential and mark the circle of minima.
+            Explain what is meant by “choosing a vacuum” direction.
+          </p>
+        </div>
+
+        <!-- Day 32 -->
+        <h3>Day 32 – W, Z, and Photon Mixing</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Charged W bosons: \( W^\pm = (W^1 \mp iW^2)/\sqrt{2}. \)</li>
+          <li>Neutral fields \( W^3_\mu \) and \( B_\mu \) mix to form the Z boson and the photon:
+            \[
+            A_\mu = \sin\theta_W\,W^3_\mu + \cos\theta_W\,B_\mu,
+            \]
+            \[
+            Z_\mu = \cos\theta_W\,W^3_\mu - \sin\theta_W\,B_\mu.
+            \]</li>
+          <li>Weak mixing angle \( \theta_W \) encodes the mixture of weak and hypercharge interactions in EM and Z interactions.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write the above mixing relations and explain which fields correspond to the physical photon and Z boson.
+          </p>
+        </div>
+
+        <!-- Day 33 -->
+        <h3>Day 33 – Higgs Mechanism & Mass Terms</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>After SSB, gauge bosons acquire mass terms from the Higgs kinetic term with non-zero VEV.</li>
+          <li>Gauge boson masses are proportional to the gauge couplings and the Higgs VEV.</li>
+          <li>Gauge invariance remains a symmetry of the underlying theory, even though the vacuum state is not symmetric.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Explain in a short paragraph how gauge bosons can acquire mass without explicitly breaking gauge invariance in the Lagrangian.
+          </p>
+        </div>
+
+        <!-- Day 34 -->
+        <h3>Day 34 – Yukawa Couplings & Fermion Masses</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Yukawa interactions couple fermion fields to the Higgs field, e.g. \( y_e \bar{L}\Phi e_R + h.c. \).</li>
+          <li>When the Higgs gets a VEV, these terms generate fermion mass terms \( m_e \bar{e}e \) with \( m_e \propto y_e v \).</li>
+          <li>Differences in Yukawa couplings explain the diversity of fermion masses (though not their exact values).</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write the Yukawa term for the electron and show (symbolically) how it becomes a mass term after the Higgs field acquires a VEV.
+          </p>
+        </div>
+
+        <!-- Day 35 -->
+        <h3>Day 35 – CKM & PMNS Matrices (Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>In the quark sector, mismatch between mass eigenstates and weak interaction eigenstates leads to the CKM matrix.</li>
+          <li>In the lepton sector, a similar mechanism yields the PMNS matrix for neutrinos.</li>
+          <li>These matrices encode flavor mixing and CP violation in charged-current interactions.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Draw a 3×3 box to represent the CKM matrix and label the rows and columns with quark flavors.
+            Explain in words what the CKM matrix does physically.
+          </p>
+        </div>
+      </section>
+
+      <!-- MODULE 6 -->
+      <section class="card" id="module6">
+        <div class="card-header">
+          <h2>Module 6 – QCD & Yang–Mills</h2>
+          <span class="card-tag">Days 36–42</span>
+        </div>
+        <p class="card-subtitle">
+          Non-Abelian gauge theories, SU(3) color, running coupling, confinement, parton picture and jets.
+        </p>
+        <hr class="card-divider" />
+
+        <!-- Day 36 -->
+        <h3>Day 36 – Non-Abelian Gauge Fields</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>QCD is based on SU(3) color with eight generators and eight gluon fields.</li>
+          <li>Non-Abelian gauge fields self-interact due to the structure constants \( f^{abc} \).</li>
+          <li>Field strength tensor includes a term quadratic in \( A^a_\mu \):
+            \[
+            F^a_{\mu\nu} \sim \partial_\mu A^a_\nu - \partial_\nu A^a_\mu + g f^{abc} A^b_\mu A^c_\nu.
+            \]</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Make a table comparing QED (U(1)) and QCD (SU(3)) in terms of gauge group, number of gauge bosons, and presence/absence of self-interactions among gauge bosons.
+          </p>
+        </div>
+
+        <!-- Day 37 -->
+        <h3>Day 37 – QCD Lagrangian Skeleton</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>QCD Lagrangian includes:
+            \[
+            \mathcal{L}_{\text{QCD}} = -\frac{1}{4}F^a_{\mu\nu}F^{a\mu\nu} + \bar{q}\left(i\gamma^\mu D_\mu - m_q\right)q.
+            \]</li>
+          <li>Covariant derivative \( D_\mu = \partial_\mu + ig_s T^a A^a_\mu \) couples quarks to gluons.</li>
+          <li>Gauge structure dictates both gluon self-interactions and quark–gluon interactions.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write down the gauge and quark parts of the QCD Lagrangian symbolically and explain in one sentence what each part describes.
+          </p>
+        </div>
+
+        <!-- Day 38 -->
+        <h3>Day 38 – Running Coupling & β-Function (Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>The strong coupling \( \alpha_s(Q) \) depends on the energy scale \( Q \).</li>
+          <li>QCD’s β-function is negative, so coupling decreases at high energies (asymptotic freedom).</li>
+          <li>At low energies, coupling grows large and perturbation theory breaks down.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Sketch a graph of \( \alpha_s(Q) \) vs \( Q \) (on a log scale), showing asymptotic freedom at high Q and strong coupling at low Q.
+          </p>
+        </div>
+
+        <!-- Day 39 -->
+        <h3>Day 39 – Confinement & Flux Tubes</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Static quark–antiquark potential grows roughly linearly with distance at large separations.</li>
+          <li>Color flux lines are squeezed into a tube/string; pulling apart the quarks leads to pair creation.</li>
+          <li>This explains why isolated quarks are not observed: they are confined inside hadrons.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Draw two quarks connected by a string-like flux tube and describe what happens when you try to pull them apart very far.
+          </p>
+        </div>
+
+        <!-- Day 40 -->
+        <h3>Day 40 – Partons & PDFs (More Detail)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Hadrons are composed of partons (quarks and gluons) carrying momentum fractions \( x \) of the hadron’s momentum.</li>
+          <li>Parton distribution functions (PDFs) \( f_i(x, Q^2) \) describe the probability density to find parton \( i \) with momentum fraction \( x \) at scale \( Q \).</li>
+          <li>Hadron-level cross sections factorize into PDFs and partonic cross sections:
+            \[
+            \sigma = \sum_{i,j} \int dx_1 dx_2\, f_i(x_1,Q^2)\,f_j(x_2,Q^2)\,\hat{\sigma}_{ij\to X}(x_1,x_2,Q^2).
+            \]</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write the above factorization formula and explain what the PDFs \( f_i \) and partonic cross sections \( \hat{\sigma}_{ij\to X} \) represent physically.
+          </p>
+        </div>
+
+        <!-- Day 41 -->
+        <h3>Day 41 – Jets & Hadronization (More Detail)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>High-energy partons radiate gluons and then hadronize into collimated sprays of hadrons called jets.</li>
+          <li>Jet algorithms group energy deposits in the detector into jets, approximating the underlying partons.</li>
+          <li>Jets carry information about the hard scattering process and QCD dynamics.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Draw a simple event with two back-to-back jets in the transverse plane.
+            Label the approximate transverse momenta and annotate the steps: hard scattering → parton shower → hadronization → jets.
+          </p>
+        </div>
+
+        <!-- Day 42 -->
+        <h3>Day 42 – Module 6 Review</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>QCD is a non-Abelian SU(3) gauge theory with self-interacting gluons and color-charged quarks.</li>
+          <li>Running coupling leads to asymptotic freedom at high energies and confinement at low energies.</li>
+          <li>Partons and jets connect partonic QCD to hadron-level observables.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Build a QCD concept map connecting:
+            “SU(3) gauge”, “gluons”, “running coupling”, “confinement”, “partons”, and “jets”, with arrows and short explanations.
+          </p>
+        </div>
+      </section>
+
+      <!-- MODULE 7 -->
+      <section class="card" id="module7">
+        <div class="card-header">
+          <h2>Module 7 – Neutrino Physics & Flavor</h2>
+          <span class="card-tag">Days 43–49</span>
+        </div>
+        <p class="card-subtitle">
+          Flavor vs mass eigenstates, oscillation probabilities, PMNS matrix, CP violation, and absolute mass scale.
+        </p>
+        <hr class="card-divider" />
+
+        <!-- Day 43 -->
+        <h3>Day 43 – Flavor vs Mass Eigenstates</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Neutrinos produced and detected in flavor eigenstates \(|\nu_\alpha\rangle\) (α = e, μ, τ).</li>
+          <li>Propagation is in mass eigenstates \(|\nu_i\rangle\) (i = 1, 2, 3).</li>
+          <li>Relation via PMNS matrix:
+            \[
+            |\nu_\alpha\rangle = \sum_i U_{\alpha i} |\nu_i\rangle.
+            \]</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write the above relation and explain what the indices α and i represent in words.
+          </p>
+        </div>
+
+        <!-- Day 44 -->
+        <h3>Day 44 – Neutrino Oscillation Formula (2-Flavor Case)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>In a 2-flavor approximation (ν\(_e\), ν\(_\mu\)), the oscillation probability is:
+            \[
+            P(\nu_e \to \nu_\mu) = \sin^2(2\theta)\,\sin^2\left(\frac{\Delta m^2\,L}{4E}\right),
+            \]
+            where θ is the mixing angle, Δm² is mass-squared difference, L is distance, E is energy.</li>
+          <li>Oscillation pattern depends on L/E and the parameters θ, Δm².</li>
+          <li>Oscillations imply that at least one neutrino mass is non-zero.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Copy the oscillation formula and label each parameter.
+            Explain qualitatively how changing L or E modifies the oscillation pattern.
+          </p>
+        </div>
+
+        <!-- Day 45 -->
+        <h3>Day 45 – Experimental Evidence for Oscillations</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Solar neutrinos: observed deficit compared to predictions → solved by oscillations.</li>
+          <li>Atmospheric neutrinos: zenith-angle dependence indicates ν\(_\mu\) disappearance via oscillations.</li>
+          <li>Reactor and accelerator experiments confirm oscillations with controlled sources and baselines.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write four bullet points summarizing:
+            the solar neutrino problem, atmospheric neutrino anomaly, and how oscillations resolve these observations.
+          </p>
+        </div>
+
+        <!-- Day 46 -->
+        <h3>Day 46 – 3-Flavor Mixing & PMNS Structure</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>PMNS matrix is a 3×3 unitary mixing matrix with three mixing angles and (at least) one CP-violating phase.</li>
+          <li>Mass ordering (normal vs inverted) refers to the ordering of \( m_1, m_2, m_3 \).</li>
+          <li>3-flavor oscillations produce richer patterns than the 2-flavor approximation.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Draw a 3×3 box labeled as the PMNS matrix and compare its general structure to that of the CKM matrix (which one appears more hierarchical?).
+          </p>
+        </div>
+
+        <!-- Day 47 -->
+        <h3>Day 47 – CP Violation in the Neutrino Sector (Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>CP-violating phase in PMNS can cause differences in oscillation probabilities between neutrinos and antineutrinos.</li>
+          <li>Measuring this CP violation is a major goal of long-baseline experiments.</li>
+          <li>Neutrino CP violation might connect to the matter–antimatter asymmetry of the universe (leptogenesis scenarios).</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            In a short paragraph, explain why measuring CP violation in neutrino oscillations is important for understanding why the universe is dominated by matter.
+          </p>
+        </div>
+
+        <!-- Day 48 -->
+        <h3>Day 48 – Absolute Neutrino Mass & Majorana vs Dirac</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Oscillations measure mass-squared differences, not absolute masses.</li>
+          <li>Experiments like beta-decay endpoint and neutrinoless double-beta decay probe absolute mass and Majorana nature.</li>
+          <li>Majorana neutrinos are their own antiparticles, which has implications for lepton number violation and leptogenesis.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Explain in simple language what it would mean if neutrinos are Majorana particles and how this might relate to lepton number violation.
+          </p>
+        </div>
+
+        <!-- Day 49 -->
+        <h3>Day 49 – Module 7 Review</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Mixing between flavor and mass eigenstates leads to neutrino oscillations.</li>
+          <li>PMNS matrix encodes mixing angles and CP phases; oscillation experiments measure its elements.</li>
+          <li>Neutrino physics points clearly to physics beyond the minimal Standard Model.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Create a one-page “Neutrino Physics Cheat Sheet” summarizing key formulas, mixing concepts, and experimental evidence for oscillations.
+          </p>
+        </div>
+      </section>
+
+      <!-- MODULE 8 -->
+      <section class="card" id="module8">
+        <div class="card-header">
+          <h2>Module 8 – Collider Phenomenology & Data Analysis</h2>
+          <span class="card-tag">Days 50–56</span>
+        </div>
+        <p class="card-subtitle">
+          From parton-level cross sections and PDFs to jets, signatures, event selection, and statistical interpretation.
+        </p>
+        <hr class="card-divider" />
+
+        <!-- Day 50 -->
+        <h3>Day 50 – Parton-Level vs Hadron-Level Cross Sections</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>At the fundamental level, collisions occur between partons (quarks and gluons) inside hadrons.</li>
+          <li>Hadron-level cross sections integrate over parton distributions as in the factorization formula.</li>
+          <li>Short-distance physics is captured in partonic cross sections; long-distance in PDFs and hadronization.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Choose a process such as \( pp \to Z \to \ell^+\ell^- \).
+            Describe the chain from parton-level annihilation to Z production and decay, and how this appears at the hadron level.
+          </p>
+        </div>
+
+        <!-- Day 51 -->
+        <h3>Day 51 – Kinematics at Hadron Colliders</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Transverse momentum \( p_T \) and rapidity/pseudorapidity are natural variables at colliders.</li>
+          <li>Detectors are roughly cylindrical; the beam axis defines a special direction.</li>
+          <li>Invariant mass and transverse mass are key reconstructed quantities for identifying resonances and heavy particles.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Draw a top-view (transverse plane) of a collider event with two high-\( p_T \) leptons and indicate their momenta.
+            Explain what the invariant mass of this pair represents physically.
+          </p>
+        </div>
+
+        <!-- Day 52 -->
+        <h3>Day 52 – Jets in Practice</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Jet algorithms cluster energy deposits or particles into jets (e.g., anti-k\(_T\)).</li>
+          <li>Jet properties such as \( p_T \), rapidity, and multiplicity are used to characterize events.</li>
+          <li>Jets are proxies for the underlying high-energy quarks and gluons.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Sketch an event with three jets in the transverse plane, label their approximate \( p_T \), and describe what this tells you about the underlying scattering.
+          </p>
+        </div>
+
+        <!-- Day 53 -->
+        <h3>Day 53 – Identifying Signatures (Objects)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Experimental objects: electrons, muons, photons, jets, missing transverse energy (MET).</li>
+          <li>Different physics processes produce distinctive combinations of these objects.</li>
+          <li>Separating signal from background relies on event selection (“cuts”) based on object kinematics and topology.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Choose a hypothetical signal, such as a heavy boson decaying to \( e^+e^- \).
+            List expected objects, main background processes, and simple cuts you might use to enhance signal over background.
+          </p>
+        </div>
+
+        <!-- Day 54 -->
+        <h3>Day 54 – Statistical Interpretation (Conceptual)</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Hypothesis testing compares background-only versus signal+background models.</li>
+          <li>p-values and significance (in “σ”) quantify how incompatible data are with the background-only hypothesis.</li>
+          <li>Systematic uncertainties affect both rates and shapes of predicted distributions.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Explain what it means when an experiment claims a “5σ” discovery.
+            Relate this to the probability that the observation is a background fluctuation.
+          </p>
+        </div>
+
+        <!-- Day 55 -->
+        <h3>Day 55 – Example: Higgs Discovery Strategy</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Key Higgs channels: \( H \to \gamma\gamma \), \( H \to ZZ \to 4\ell \), etc., each with unique advantages and backgrounds.</li>
+          <li>Discovery involved looking for narrow peaks in invariant mass distributions over smooth backgrounds.</li>
+          <li>Combining multiple channels increased the overall significance of the observed signal.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Consider the \( H \to \gamma\gamma \) channel.
+            Describe the final-state objects, the distribution you would plot (diphoton invariant mass), and what a Higgs signal would look like on top of the background.
+          </p>
+        </div>
+
+        <!-- Day 56 -->
+        <h3>Day 56 – Module 8 Review</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Hadron collider phenomenology links parton-level theory to detector-level signatures.</li>
+          <li>Jets, leptons, photons, and MET are combined to identify processes and search for new physics.</li>
+          <li>Statistical tools quantify whether observed patterns indicate a genuine signal or fluctuations.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Draw a flow chart:
+            “Theory → Event generator → Detector simulation → Reconstruction → Selection → Statistical test”
+            and briefly explain each step.
+          </p>
+        </div>
+      </section>
+
+      <!-- MODULE 9 -->
+      <section class="card" id="module9">
+        <div class="card-header">
+          <h2>Module 9 – BSM & Wrap-Up</h2>
+          <span class="card-tag">Days 57–60</span>
+        </div>
+        <p class="card-subtitle">
+          Effective field theory, beyond-Standard-Model ideas, global review, and your future study roadmap.
+        </p>
+        <hr class="card-divider" />
+
+        <!-- Day 57 -->
+        <h3>Day 57 – Effective Field Theory (EFT) Idea</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>EFT: at low energies, effects of heavy new physics appear as higher-dimension operators suppressed by powers of a large scale Λ.</li>
+          <li>Standard Model can be viewed as the leading part of an EFT, with higher-dimension terms encoding BSM effects.</li>
+          <li>EFT provides a systematic, model-independent way to parametrize new physics in precision measurements.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Explain in a short paragraph how unknown heavy physics can affect low-energy experiments even if the heavy particles are not directly produced.
+          </p>
+        </div>
+
+        <!-- Day 58 -->
+        <h3>Day 58 – SUSY, Dark Matter & Other BSM Sketches</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Supersymmetry (SUSY) introduces superpartners for each SM particle and can address the hierarchy problem and dark matter.</li>
+          <li>Dark matter candidates include WIMPs, axions, sterile neutrinos, etc.</li>
+          <li>Other ideas: extra dimensions, composite Higgs, etc., each with specific motivations and experimental signatures.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Make a table with three BSM ideas (e.g., SUSY, axions, extra dimensions).
+            For each, list the main theoretical motivation and a typical experimental signature or effect.
+          </p>
+        </div>
+
+        <!-- Day 59 -->
+        <h3>Day 59 – Global Review & Concept Map</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Integrate QFT basics, gauge theories, Standard Model structure, neutrino physics, and collider phenomenology.</li>
+          <li>Recognize how theory, experiment, and BSM ideas interconnect.</li>
+          <li>Identify which areas you understand well and which you would like to deepen.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Create a large concept map on paper (or digitally) with “Particle Physics II” at the center.
+            Connect branches for QFT, Standard Model, Neutrinos, Collider Physics, and BSM, adding key subtopics under each branch.
+          </p>
+        </div>
+
+        <!-- Day 60 -->
+        <h3>Day 60 – Self-Assessment & Future Roadmap</h3>
+        <div class="section-label">Key Ideas</div>
+        <ul>
+          <li>Consolidate your understanding and identify knowledge gaps.</li>
+          <li>Plan your next steps: deeper QFT, group theory, advanced phenomenology, or specific research topics.</li>
+          <li>Reflect on which areas of particle physics excite you the most.</li>
+        </ul>
+        <div class="task-box">
+          <span class="task-label">Do This Today</span>
+          <p>
+            Write a 2–3 page reflection covering:
+            (1) What you now understand about the theoretical structure of particle physics;
+            (2) Which topics you want to study more deeply;
+            (3) A concrete 3–6 month roadmap (e.g., specific textbooks and chapters) for continuing your learning.
+          </p>
+        </div>
+      </section>
+
+      <!-- SUMMARY -->
+      <section class="card" id="summary">
+        <div class="card-header">
+          <h2>End-of-Course Summary Notes</h2>
+          <span class="card-tag">Quick Review</span>
+        </div>
+        <p class="card-subtitle">
+          Use this section as a compact “cheat sheet” for Particle Physics II. Expand it with your own notes as you study.
+        </p>
+        <hr class="card-divider" />
+
+        <div class="summary-list">
+          <div>
+            <h3>Relativistic QM → QFT</h3>
+            <ul>
+              <li>Relativistic energy–momentum relation: \[ E^2 = p^2c^2 + m^2c^4. \]</li>
+              <li>Klein–Gordon & Dirac equations: relativistic wave equations for spin-0 and spin-½ particles.</li>
+              <li>Problems with single-particle interpretation motivate quantum fields and multi-particle states.</li>
+            </ul>
+
+            <h3>QFT Structure</h3>
+            <ul>
+              <li>Action \( S = \int d^4x\,\mathcal{L} \); Euler–Lagrange equations → field equations.</li>
+              <li>Free Lagrangian → propagators; interaction terms → vertices.</li>
+              <li>Feynman rules encode diagrammatic expansion of amplitudes.</li>
+            </ul>
+
+            <h3>Gauge Theories</h3>
+            <ul>
+              <li>Local symmetries require gauge fields and covariant derivatives.</li>
+              <li>QED: U(1) gauge → photon and electron–photon coupling.</li>
+              <li>QCD: SU(3) gauge → gluons, color charge, self-interactions.</li>
+            </ul>
+
+            <h3>Electroweak & Higgs</h3>
+            <ul>
+              <li>SU(2)\(_L\)×U(1)\(_Y\) gauge structure with left-handed doublets and right-handed singlets.</li>
+              <li>Higgs mechanism: SSB gives mass to W, Z, and fermions via Yukawa couplings, leaving the photon massless.</li>
+              <li>CKM & PMNS matrices encode flavor mixing and CP violation.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>QCD & Hadrons</h3>
+            <ul>
+              <li>Non-Abelian SU(3) gauge theory with running coupling and asymptotic freedom.</li>
+              <li>Confinement: quarks and gluons bound inside hadrons; flux tubes and string-like behavior.</li>
+              <li>Partons & PDFs: factorization of hadron-level cross sections into PDFs and partonic cross sections.</li>
+            </ul>
+
+            <h3>Neutrinos & Flavor</h3>
+            <ul>
+              <li>Flavor states are superpositions of mass states via PMNS matrix.</li>
+              <li>Oscillations: \[ P(\nu_e \to \nu_\mu) = \sin^2(2\theta)\,\sin^2\left(\frac{\Delta m^2 L}{4E}\right). \]</li>
+              <li>CP violation in neutrino sector and absolute mass scale remain key open questions.</li>
+            </ul>
+
+            <h3>Collider Phenomenology</h3>
+            <ul>
+              <li>Cross sections at hadron colliders: PDFs ⊗ partonic cross sections.</li>
+              <li>Jets, leptons, photons, and MET define experimental signatures.</li>
+              <li>Statistical tools (p-values, σ) used to claim discoveries and set limits.</li>
+            </ul>
+
+            <h3>Beyond the Standard Model & EFT</h3>
+            <ul>
+              <li>EFT: SM as leading term, with higher-dimension operators capturing low-energy effects of heavy new physics.</li>
+              <li>BSM ideas (SUSY, dark matter, extra dimensions, etc.) address open problems like hierarchy and dark matter.</li>
+              <li>Precision measurements and high-energy searches together probe the limits of the Standard Model.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // Simple active-link highlighting on scroll
+    (function() {
+      const sections = document.querySelectorAll('section.card[id]');
+      const links = document.querySelectorAll('.toc-link');
+
+      function onScroll() {
+        let currentId = null;
+        const offset = 80; // adjust heuristic offset
+
+        sections.forEach(sec => {
+          const rect = sec.getBoundingClientRect();
+          if (rect.top <= offset && rect.bottom > offset) {
+            currentId = sec.id;
+          }
+        });
+
+        links.forEach(link => {
+          link.classList.remove('active');
+          const href = link.getAttribute('href');
+          if (href && currentId && href === '#' + currentId) {
+            link.classList.add('active');
+          }
+        });
+      }
+
+      document.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+  </script>
+</body>
+</html>

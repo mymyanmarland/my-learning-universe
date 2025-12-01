@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>60-Day Particle Physics Course</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Font -->
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+  />
+
+  <!-- MathJax Configuration -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <!-- MathJax Script -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    async
+  ></script>
+
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --bg-card: #ffffff;
+      --text-main: #1f2933;
+      --text-muted: #6b7280;
+      --accent: #1e40af;
+      --accent-soft: #e0e7ff;
+      --border-subtle: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe, #f9fafb 45%, #eef2ff);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 1.5rem 1.25rem;
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      height: 100vh;
+      overflow-y: auto;
+      box-shadow: 4px 0 20px rgba(15, 23, 42, 0.4);
+      z-index: 10;
+    }
+
+    .sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .sidebar-title span.icon {
+      display: inline-flex;
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      margin-bottom: 1.25rem;
+    }
+
+    .toc {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .toc li {
+      margin-bottom: 0.4rem;
+    }
+
+    .toc a {
+      color: #e5e7eb;
+      text-decoration: none;
+      display: block;
+      padding: 0.25rem 0.4rem;
+      border-radius: 6px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .toc a:hover {
+      background: rgba(79, 70, 229, 0.2);
+      color: #ffffff;
+    }
+
+    .toc .toc-section {
+      margin-top: 0.75rem;
+      margin-bottom: 0.25rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+    }
+
+    .toc .toc-sub {
+      padding-left: 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .sidebar-footer {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: #6b7280;
+      border-top: 1px solid rgba(55, 65, 81, 0.7);
+      padding-top: 0.75rem;
+    }
+
+    /* Main content */
+    .content-wrapper {
+      flex: 1;
+      padding: 2rem 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header.course-header {
+      margin-bottom: 1.75rem;
+    }
+
+    .course-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .course-label-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin: 0.7rem 0 0.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .course-subtitle {
+      color: var(--text-muted);
+      max-width: 720px;
+      font-size: 0.98rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 1.75rem 1.8rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .card h2 {
+      font-size: 1.4rem;
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      margin-top: 1.2rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .card h4 {
+      font-size: 1rem;
+      margin-top: 0.9rem;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin-top: 0.3rem;
+      margin-bottom: 0.4rem;
+    }
+
+    ul {
+      margin: 0.25rem 0 0.5rem 1.2rem;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 0.2rem;
+    }
+
+    .module-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+
+    .module-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.7rem;
+    }
+
+    .day-block {
+      border-left: 3px solid #e5e7eb;
+      padding-left: 0.9rem;
+      margin-top: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .day-title {
+      font-weight: 600;
+      font-size: 0.98rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.1rem 0.6rem;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.78rem;
+      font-weight: 500;
+      margin-left: 0.25rem;
+    }
+
+    .subnote {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 1rem 0;
+    }
+
+    .summary-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .summary-card {
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 0.9rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .summary-card h4 {
+      margin-top: 0;
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+      color: var(--accent);
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.3);
+        border-radius: 0 0 18px 18px;
+      }
+
+      .content-wrapper {
+        padding: 1.2rem 1.1rem 2rem;
+      }
+
+      .card {
+        padding: 1.35rem 1.35rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.7rem;
+      }
+      .card h2 {
+        font-size: 1.25rem;
+      }
+      .sidebar-title {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar / TOC -->
+    <aside class="sidebar">
+      <div class="sidebar-title">
+        <span class="icon"></span>
+        60-Day Particle Physics
+      </div>
+      <div class="sidebar-subtitle">
+        Guided roadmap from foundations to detectors &amp; beyond.
+      </div>
+      <ul class="toc">
+        <li class="toc-section">Core Structure</li>
+        <li><a href="#overview">Course Overview</a></li>
+        <li><a href="#weekly-breakdown">Weekly Breakdown</a></li>
+
+        <li class="toc-section">Modules</li>
+        <li>
+          <a href="#module-1">Module 1 – Foundations</a>
+        </li>
+        <li>
+          <a href="#module-2">Module 2 – QM Essentials</a>
+        </li>
+        <li>
+          <a href="#module-3">Module 3 – Relativity &amp; 4-Vectors</a>
+        </li>
+        <li>
+          <a href="#module-4">Module 4 – Standard Model Zoo</a>
+        </li>
+        <li>
+          <a href="#module-5">Module 5 – Symmetries &amp; Quantum Numbers</a>
+        </li>
+        <li>
+          <a href="#module-6">Module 6 – Interactions &amp; Feynman Diagrams</a>
+        </li>
+        <li>
+          <a href="#module-7">Module 7 – QCD &amp; Hadrons</a>
+        </li>
+        <li>
+          <a href="#module-8">Module 8 – Detectors &amp; Experiments</a>
+        </li>
+        <li>
+          <a href="#module-9">Module 9 – Beyond SM &amp; Review</a>
+        </li>
+
+        <li class="toc-section">Wrap-Up</li>
+        <li><a href="#summary-notes">End-of-Course Summary</a></li>
+      </ul>
+
+      <div class="sidebar-footer">
+        Tip: Work ~1–2 hours per day. Revisit the summary section (bottom) for quick revision.
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content-wrapper">
+      <header class="course-header" id="top">
+        <div class="course-label">
+          <span class="course-label-dot"></span>
+          60-Day Guided Course
+        </div>
+        <h1>Particle Physics – 60-Day Roadmap</h1>
+        <p class="course-subtitle">
+          A step-by-step journey through modern particle physics: from relativity
+          and quantum mechanics foundations to the Standard Model, QCD, detectors,
+          and hints of physics beyond the Standard Model. Designed for consistent
+          daily progress with clear tasks each day.
+        </p>
+      </header>
+
+      <!-- Course Overview Card -->
+      <section class="card" id="overview">
+        <h2>1. Course Overview – Major Modules</h2>
+        <p>
+          The course is split into nine modules over 60 days. Each day you cover one focused topic and complete a small, concrete task.
+        </p>
+        <ul>
+          <li><strong>Module 1 (Days 1–7):</strong> Foundations of Modern Physics – classical vs quantum, relativity basics, natural units, and what “particles” actually mean.</li>
+          <li><strong>Module 2 (Days 8–14):</strong> Quantum Mechanics Essentials – wave–particle duality, uncertainty, states &amp; operators, spin.</li>
+          <li><strong>Module 3 (Days 15–21):</strong> Relativity &amp; 4-Vectors – energy–momentum, invariants, scattering kinematics.</li>
+          <li><strong>Module 4 (Days 22–28):</strong> The Standard Model Zoo – quarks, leptons, gauge bosons, Higgs, forces as gauge interactions.</li>
+          <li><strong>Module 5 (Days 29–35):</strong> Symmetries &amp; Quantum Numbers – Noether’s theorem idea, charges, baryon/lepton number, C, P, T.</li>
+          <li><strong>Module 6 (Days 36–42):</strong> Interactions &amp; Feynman Diagrams – vertices, propagators, cross sections, decay widths.</li>
+          <li><strong>Module 7 (Days 43–49):</strong> Hadrons, QCD &amp; Confinement – mesons, baryons, color, strong interaction, partons.</li>
+          <li><strong>Module 8 (Days 50–56):</strong> Detectors &amp; Experiments – collider types, detector subsystems, event reconstruction, landmark discoveries.</li>
+          <li><strong>Module 9 (Days 57–60):</strong> Beyond SM &amp; Review – neutrino masses, dark matter, open questions, global wrap-up.</li>
+        </ul>
+      </section>
+
+      <!-- Weekly Breakdown Card -->
+      <section class="card" id="weekly-breakdown">
+        <h2>2. Week-by-Week Breakdown (8 Weeks)</h2>
+
+        <h3>Week 1 (Days 1–7): Foundations</h3>
+        <ul>
+          <li>Day 1: What is particle physics? Historical overview.</li>
+          <li>Day 2: Classical particles vs fields; what is a “point particle”?</li>
+          <li>Day 3: Motivation for special relativity (why Newton fails at high speed).</li>
+          <li>Day 4: Relativistic energy &amp; momentum (conceptual).</li>
+          <li>Day 5: Planck, Einstein and quantization of light.</li>
+          <li>Day 6: Wave–particle duality.</li>
+          <li>Day 7: Natural units and order-of-magnitude thinking.</li>
+        </ul>
+
+        <h3>Week 2 (Days 8–14): Quantum Mechanics Essentials</h3>
+        <ul>
+          <li>Day 8: Quantum states &amp; wavefunctions.</li>
+          <li>Day 9: Operators &amp; observables, expectation values.</li>
+          <li>Day 10: Uncertainty principle.</li>
+          <li>Day 11: Superposition &amp; measurement.</li>
+          <li>Day 12: Spin-½ systems &amp; two-level examples.</li>
+          <li>Day 13: Identical particles, bosons vs fermions.</li>
+          <li>Day 14: Binding energies &amp; simple potentials.</li>
+        </ul>
+
+        <h3>Week 3 (Days 15–21): Relativity in Practice</h3>
+        <ul>
+          <li>Day 15: 4-vectors and Minkowski spacetime.</li>
+          <li>Day 16: Energy–momentum 4-vector &amp; invariants.</li>
+          <li>Day 17: Center-of-mass vs lab frame.</li>
+          <li>Day 18: Threshold energies for particle production.</li>
+          <li>Day 19: Relativistic collisions (kinematics).</li>
+          <li>Day 20: Relativistic time dilation in decays.</li>
+          <li>Day 21: Review of Weeks 1–3.</li>
+        </ul>
+
+        <h3>Week 4 (Days 22–28): Standard Model Particle Zoo</h3>
+        <ul>
+          <li>Day 22: Overview of the Standard Model structure.</li>
+          <li>Day 23: Leptons &amp; neutrinos.</li>
+          <li>Day 24: Quarks &amp; color charges.</li>
+          <li>Day 25: Gauge bosons.</li>
+          <li>Day 26: Higgs field &amp; mass generation.</li>
+          <li>Day 27: Generations, flavor and mixing.</li>
+          <li>Day 28: Classification &amp; Standard Model exercises.</li>
+        </ul>
+
+        <h3>Week 5 (Days 29–35): Symmetries &amp; Quantum Numbers</h3>
+        <ul>
+          <li>Day 29: Symmetries and conservation laws (Noether idea).</li>
+          <li>Day 30: Electric charge, baryon &amp; lepton number.</li>
+          <li>Day 31: Isospin &amp; flavor symmetries.</li>
+          <li>Day 32: Discrete symmetries C, P, T.</li>
+          <li>Day 33: CP violation.</li>
+          <li>Day 34: Global vs gauge symmetries.</li>
+          <li>Day 35: Selection rules and allowed/forbidden processes.</li>
+        </ul>
+
+        <h3>Week 6 (Days 36–42): Interactions &amp; Feynman Diagrams</h3>
+        <ul>
+          <li>Day 36: Strong, electromagnetic and weak interactions.</li>
+          <li>Day 37: What Feynman diagrams represent.</li>
+          <li>Day 38: QED diagrams.</li>
+          <li>Day 39: Weak interaction diagrams (beta decay, neutrinos).</li>
+          <li>Day 40: Decays: lifetime, width, branching ratio.</li>
+          <li>Day 41: Cross section (conceptual and units).</li>
+          <li>Day 42: From diagrams to observables.</li>
+        </ul>
+
+        <h3>Week 7 (Days 43–49): QCD, Hadrons &amp; Confinement</h3>
+        <ul>
+          <li>Day 43: Hadrons vs elementary particles.</li>
+          <li>Day 44: Meson and baryon classification (quark model).</li>
+          <li>Day 45: Color confinement &amp; asymptotic freedom.</li>
+          <li>Day 46: Jets and the parton model.</li>
+          <li>Day 47: Deep inelastic scattering.</li>
+          <li>Day 48: Resonances and hadron spectroscopy.</li>
+          <li>Day 49: QCD summary and practice.</li>
+        </ul>
+
+        <h3>Week 8 (Days 50–56): Experiments &amp; Detectors</h3>
+        <ul>
+          <li>Day 50: Accelerators and collider types.</li>
+          <li>Day 51: Tracking detectors.</li>
+          <li>Day 52: Calorimeters and muon systems.</li>
+          <li>Day 53: Trigger systems &amp; DAQ.</li>
+          <li>Day 54: Event reconstruction &amp; invariant mass peaks.</li>
+          <li>Day 55: Landmark discoveries (W/Z, top, Higgs).</li>
+          <li>Day 56: Analysis pipeline: idea → result.</li>
+        </ul>
+
+        <h3>Final 4 Days (57–60): Beyond SM &amp; Review</h3>
+        <ul>
+          <li>Day 57: Neutrino oscillations &amp; evidence for new physics.</li>
+          <li>Day 58: Dark matter &amp; other BSM ideas.</li>
+          <li>Day 59: Global review &amp; concept map.</li>
+          <li>Day 60: Final self-assessment &amp; next steps.</li>
+        </ul>
+      </section>
+
+      <!-- Module 1 -->
+      <section class="card" id="module-1">
+        <div class="module-tag">Module 1</div>
+        <h2>Foundations of Modern Physics (Days 1–7)</h2>
+        <p class="module-meta">
+          Goal: Understand why we need relativity and quantum mechanics and how they reshape the notion of “particle”.
+        </p>
+
+        <!-- Day 1 -->
+        <div class="day-block">
+          <div class="day-title">Day 1 – What is Particle Physics?<span class="pill">Key ideas</span></div>
+          <p>
+            Particle physics studies the <strong>fundamental constituents</strong> of matter and the forces between them:
+          </p>
+          <ul>
+            <li>Different from atomic, nuclear, or condensed-matter physics (which deal with bound or many-body systems).</li>
+            <li>Historical arcs: classical → relativity &amp; early quantum → modern collider era.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <ul>
+            <li>Write a half-page answer to: “What questions is particle physics trying to answer?”</li>
+            <li>List all elementary particles you’ve heard of (even if incomplete).</li>
+          </ul>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-block">
+          <div class="day-title">Day 2 – Particles vs Fields</div>
+          <p>
+            Classical particle: point with position \( x(t) \) and momentum \( p(t) \).  
+            Field: quantity defined at every point in space and time (e.g. electric field).
+          </p>
+          <p>
+            Modern view: a “particle” is a <strong>quantum excitation</strong> of an underlying field.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Draw a line from “pure point particles” to “pure fields”. Place:
+          </p>
+          <ul>
+            <li>billiard balls</li>
+            <li>electric field</li>
+            <li>photon</li>
+            <li>electron</li>
+          </ul>
+          <p>Explain where you placed each and why.</p>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-block">
+          <div class="day-title">Day 3 – Why Special Relativity?</div>
+          <p>
+            Problems with Newtonian mechanics + Maxwell’s equations:
+          </p>
+          <ul>
+            <li>Maxwell predicts a constant speed of light \( c \) in vacuum.</li>
+            <li>Galilean relativity cannot keep \( c \) invariant for all observers.</li>
+          </ul>
+          <p>Einstein’s postulates:</p>
+          <ul>
+            <li>Laws of physics are the same in all inertial frames.</li>
+            <li>Speed of light in vacuum is the same for all inertial observers.</li>
+          </ul>
+          <p>Leads to time dilation, length contraction, and relativity of simultaneity.</p>
+          <h4>Do this today</h4>
+          <p>
+            Describe a “light clock” (two mirrors, light bouncing) and explain
+            qualitatively why time must dilate when seen from another frame.
+          </p>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-block">
+          <div class="day-title">Day 4 – Relativistic Energy &amp; Momentum</div>
+          <p>
+            Energy–momentum relation:
+          </p>
+          <p>
+            $$E^2 = (pc)^2 + (mc^2)^2$$
+          </p>
+          <ul>
+            <li>Rest energy: \(E_0 = mc^2\).</li>
+            <li>Massless particles (like photons): \(E = pc\).</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Electron mass \(\approx 0.511\ \text{MeV}/c^2\). Its rest energy is:
+          </p>
+          <p>
+            $$E_0 = mc^2 \approx 0.511\ \text{MeV}$$
+          </p>
+          <p>
+            Write in words what “rest energy” means physically for an electron.
+          </p>
+        </div>
+
+        <!-- Day 5 -->
+        <div class="day-block">
+          <div class="day-title">Day 5 – Birth of Quanta: Planck &amp; Einstein</div>
+          <p>
+            Planck introduced energy quantization to solve blackbody radiation:
+            $$E = h\nu$$
+          </p>
+          <p>
+            Einstein proposed light is made of photons with energy \(E = h\nu\), explaining the photoelectric effect.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            In your own words, explain why increasing the intensity of low-frequency light
+            does <em>not</em> eject electrons in the photoelectric effect, but increasing
+            the frequency does.
+          </p>
+        </div>
+
+        <!-- Day 6 -->
+        <div class="day-block">
+          <div class="day-title">Day 6 – Wave–Particle Duality</div>
+          <p>
+            de Broglie hypothesis:
+          </p>
+          <p>
+            $$\lambda = \frac{h}{p}$$
+          </p>
+          <ul>
+            <li>Particles (like electrons) have wave-like behavior (diffraction, interference).</li>
+            <li>For macroscopic objects (like a tennis ball), \(\lambda\) is tiny; wave effects are unobservable.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Compare, qualitatively, the de Broglie wavelength of a fast electron vs a tennis ball.  
+            Which is larger and why?
+          </p>
+        </div>
+
+        <!-- Day 7 -->
+        <div class="day-block">
+          <div class="day-title">Day 7 – Natural Units &amp; Scale Sense</div>
+          <p>
+            In particle physics, we often set \(c = \hbar = 1\). Then energy, mass, and momentum all share the same unit.
+          </p>
+          <ul>
+            <li>\(1\ \text{GeV} = 10^9\ \text{eV}\).</li>
+            <li>Proton mass \(\approx 0.94\ \text{GeV}\).</li>
+            <li>Electron mass \(\approx 0.511\ \text{MeV}\).</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Make a small “scale card” listing:
+          </p>
+          <ul>
+            <li>Electron mass, proton mass.</li>
+            <li>Typical nuclear energy scale (MeV).</li>
+            <li>Collider scale (e.g., LHC energies in TeV).</li>
+          </ul>
+          <p>Keep this card for later weeks.</p>
+        </div>
+      </section>
+
+      <!-- Module 2 -->
+      <section class="card" id="module-2">
+        <div class="module-tag">Module 2</div>
+        <h2>Quantum Mechanics Essentials (Days 8–14)</h2>
+        <p class="module-meta">
+          Goal: Build conceptual tools of quantum mechanics needed in particle physics: states, wavefunctions, operators, uncertainty, spin, and statistics.
+        </p>
+
+        <!-- Day 8 -->
+        <div class="day-block">
+          <div class="day-title">Day 8 – States &amp; Wavefunctions</div>
+          <p>
+            Quantum state: complete description of a system, represented as a vector \(|\psi\rangle\) in Hilbert space.
+          </p>
+          <p>
+            In position representation, the wavefunction \(\psi(x)\) gives a probability density:
+          </p>
+          <p>
+            $$P(x) = |\psi(x)|^2$$
+          </p>
+          <h4>Do this today</h4>
+          <ul>
+            <li>Write a paragraph comparing classical state (position &amp; momentum) vs quantum state.</li>
+            <li>Sketch a 1D wavefunction showing regions of high and low probability.</li>
+          </ul>
+        </div>
+
+        <!-- Day 9 -->
+        <div class="day-block">
+          <div class="day-title">Day 9 – Operators &amp; Observables</div>
+          <p>
+            Observables (position, momentum, energy) are represented by operators (e.g. \(\hat{x}, \hat{p}\)).
+          </p>
+          <ul>
+            <li>Eigenvalues of an operator = possible measurement outcomes.</li>
+            <li>Expectation value gives average outcome over many trials.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <ul>
+            <li>Take a simple 2×2 diagonal matrix as an operator and find its eigenvalues.</li>
+            <li>Explain how eigenvalues correspond to measurement results in quantum mechanics.</li>
+          </ul>
+        </div>
+
+        <!-- Day 10 -->
+        <div class="day-block">
+          <div class="day-title">Day 10 – Uncertainty Principle</div>
+          <p>
+            Heisenberg uncertainty principle:
+          </p>
+          <p>
+            $$\Delta x\,\Delta p \gtrsim \frac{\hbar}{2}$$
+          </p>
+          <p>
+            It is not about bad instruments; it is a fundamental property of quantum systems.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Describe why the uncertainty principle makes the idea of an exact, classical trajectory problematic for particles like electrons.
+          </p>
+        </div>
+
+        <!-- Day 11 -->
+        <div class="day-block">
+          <div class="day-title">Day 11 – Superposition &amp; Measurement</div>
+          <p>
+            States can be superpositions:
+          </p>
+          <p>
+            $$|\psi\rangle = a|0\rangle + b|1\rangle,\quad |a|^2 + |b|^2 = 1$$
+          </p>
+          <p>
+            Measurement “collapses” the state to one of the basis states, with probabilities given by \(|a|^2\) and \(|b|^2\).
+          </p>
+          <h4>Do this today</h4>
+          <ul>
+            <li>Pick a concrete example, e.g. \(a = \frac{1}{\sqrt{3}}, b = \sqrt{\frac{2}{3}}\).</li>
+            <li>Compute the probabilities of measuring 0 or 1.</li>
+          </ul>
+        </div>
+
+        <!-- Day 12 -->
+        <div class="day-block">
+          <div class="day-title">Day 12 – Spin-½ Systems</div>
+          <p>
+            Spin is intrinsic angular momentum (not literal spinning).  
+            Spin-½ particles (e.g. electrons) have two basic states: “up” and “down”.
+          </p>
+          <p>
+            Stern–Gerlach experiment splits a beam into discrete spin components.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Draw a Stern–Gerlach setup and label:
+          </p>
+          <ul>
+            <li>Input beam.</li>
+            <li>Magnet.</li>
+            <li>Two output beams (spin up &amp; spin down).</li>
+          </ul>
+          <p>Explain briefly what it tells us about spin.</p>
+        </div>
+
+        <!-- Day 13 -->
+        <div class="day-block">
+          <div class="day-title">Day 13 – Identical Particles &amp; Statistics</div>
+          <p>
+            Identical quantum particles are indistinguishable:
+          </p>
+          <ul>
+            <li><strong>Bosons:</strong> integer spin, symmetric wavefunctions, can occupy the same state.</li>
+            <li><strong>Fermions:</strong> half-integer spin, antisymmetric wavefunctions, obey Pauli exclusion principle.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>Create a table with columns: particle, spin, boson/fermion (e.g. photon, electron, proton, Higgs, W, gluon).</p>
+        </div>
+
+        <!-- Day 14 -->
+        <div class="day-block">
+          <div class="day-title">Day 14 – Binding &amp; Simple Potentials</div>
+          <p>
+            Quantum particles in a potential well have:
+          </p>
+          <ul>
+            <li>Bound states with discrete energy levels.</li>
+            <li>Scattering states with continuous energy spectrum.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Sketch a simple 1D potential well with a few quantized energy levels and label them.
+          </p>
+        </div>
+      </section>
+
+      <!-- Module 3 -->
+      <section class="card" id="module-3">
+        <div class="module-tag">Module 3</div>
+        <h2>Relativity &amp; Kinematics (Days 15–21)</h2>
+        <p class="module-meta">
+          Goal: Use 4-vectors and invariants to describe relativistic collisions and decays, and connect this to experimental observables.
+        </p>
+
+        <!-- Day 15 -->
+        <div class="day-block">
+          <div class="day-title">Day 15 – 4-Vectors &amp; Spacetime</div>
+          <p>
+            Event in spacetime: \((ct, x, y, z)\).  
+            4-vectors transform cleanly between inertial frames.
+          </p>
+          <p>
+            The invariant interval (Minkowski metric) remains the same in all inertial frames.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Explain why combining space and time into 4-vectors simplifies relativistic physics compared to treating them separately.
+          </p>
+        </div>
+
+        <!-- Day 16 -->
+        <div class="day-block">
+          <div class="day-title">Day 16 – Energy–Momentum 4-Vector</div>
+          <p>
+            4-momentum:
+          </p>
+          <p>
+            $$p^\mu = \left(\frac{E}{c}, \vec{p}\right)$$
+          </p>
+          <p>
+            Invariant:
+          </p>
+          <p>
+            $$p^\mu p_\mu = m^2 c^2$$
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            For an electron at rest, write its 4-momentum and note that \(p = 0\) while \(E = mc^2\).
+          </p>
+        </div>
+
+        <!-- Day 17 -->
+        <div class="day-block">
+          <div class="day-title">Day 17 – Lab vs Center-of-Mass Frame</div>
+          <p>
+            Lab frame: target at rest, projectile incoming.  
+            Center-of-mass (CM) frame: total momentum is zero; simplifies analysis.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Explain why colliders (beam–beam) are more energy-efficient for creating heavy particles than fixed-target experiments.
+          </p>
+        </div>
+
+        <!-- Day 18 -->
+        <div class="day-block">
+          <div class="day-title">Day 18 – Threshold Energy</div>
+          <p>
+            Threshold: minimum CM energy needed to produce a certain final state:
+          </p>
+          <p>
+            $$E_{\text{CM}} \ge \sum m_{\text{final}} c^2$$
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            If you want to create a particle of mass \(1\ \text{GeV}\) in a collider, what is at least the CM energy required? (Answer: \(\ge 1\ \text{GeV}\); in practice, more is needed.)
+          </p>
+        </div>
+
+        <!-- Day 19 -->
+        <div class="day-block">
+          <div class="day-title">Day 19 – Relativistic Collisions &amp; Invariant Mass</div>
+          <p>
+            Invariant mass of a system:
+          </p>
+          <p>
+            $$M^2 c^4 = (E_{\text{tot}})^2 - (p_{\text{tot}} c)^2$$
+          </p>
+          <p>
+            Used to reconstruct particles from their decay products.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Conceptually: if two photons are produced back-to-back with equal energies,
+            what determines the invariant mass of the pair? Explain in words.
+          </p>
+        </div>
+
+        <!-- Day 20 -->
+        <div class="day-block">
+          <div class="day-title">Day 20 – Time Dilation &amp; Decay</div>
+          <p>
+            Lifetime in rest frame: \(\tau_0\). In lab frame:
+          </p>
+          <p>
+            $$\tau = \gamma \tau_0$$
+          </p>
+          <p>
+            Moving particles can travel macroscopic distances before decaying.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            A particle with \(\tau_0 = 1\ \text{ns}\) has \(\gamma = 10\).  
+            Its lab lifetime is \(\tau = 10\ \text{ns}\). If its speed \(\approx c\),
+            estimate how far it travels (about 3 m).
+          </p>
+        </div>
+
+        <!-- Day 21 -->
+        <div class="day-block">
+          <div class="day-title">Day 21 – Review 1 (Weeks 1–3)</div>
+          <p>
+            You should now grasp:
+          </p>
+          <ul>
+            <li>Why relativity and quantum mechanics are needed.</li>
+            <li>States, uncertainty, spin, and 4-vectors.</li>
+            <li>Energy–momentum relations and invariants.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <ul>
+            <li>Write a one-page summary of the most important ideas so far.</li>
+            <li>Create a 10-question conceptual self-quiz and answer it.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Module 4 -->
+      <section class="card" id="module-4">
+        <div class="module-tag">Module 4</div>
+        <h2>The Standard Model Particle Zoo (Days 22–28)</h2>
+        <p class="module-meta">
+          Goal: Learn the structure of the Standard Model: fermions, gauge bosons, and the Higgs sector.
+        </p>
+
+        <!-- Day 22 -->
+        <div class="day-block">
+          <div class="day-title">Day 22 – Standard Model Overview</div>
+          <p>
+            The Standard Model is a gauge theory based on
+            $$SU(3) \times SU(2) \times U(1)$$
+          </p>
+          <p>Main components:</p>
+          <ul>
+            <li><strong>Gauge fields</strong> (forces).</li>
+            <li><strong>Matter fields</strong> (fermions).</li>
+            <li><strong>Higgs field</strong> (gives masses).</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Sketch three labeled boxes: “Gluons (strong)”, “W/Z/γ (electroweak)”, “Higgs field”, and draw arrows to “quarks” and “leptons”.
+          </p>
+        </div>
+
+        <!-- Day 23 -->
+        <div class="day-block">
+          <div class="day-title">Day 23 – Leptons</div>
+          <p>
+            Three charged leptons: \(e, \mu, \tau\).  
+            Three neutrinos: \(\nu_e, \nu_\mu, \nu_\tau\).
+          </p>
+          <p>Approximate conservation of lepton family numbers (electron, muon, tau).</p>
+          <h4>Do this today</h4>
+          <p>
+            Make a table: particle, electric charge, approximate mass, lepton family (e, μ, τ).
+          </p>
+        </div>
+
+        <!-- Day 24 -->
+        <div class="day-block">
+          <div class="day-title">Day 24 – Quarks &amp; Color</div>
+          <p>
+            Six quark flavors:
+          </p>
+          <p>
+            $$u, d, c, s, t, b$$
+          </p>
+          <p>
+            Charges:
+          </p>
+          <ul>
+            <li>Up-type: \(u, c, t\) with \(+2/3\,e\).</li>
+            <li>Down-type: \(d, s, b\) with \(-1/3\,e\).</li>
+          </ul>
+          <p>
+            Quarks carry <strong>color charge</strong> (red, green, blue) and are confined inside hadrons.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Create a table listing each quark with electric charge, typical role (e.g., u/d in nucleons, s in strange hadrons, etc.).
+          </p>
+        </div>
+
+        <!-- Day 25 -->
+        <div class="day-block">
+          <div class="day-title">Day 25 – Gauge Bosons</div>
+          <p>
+            Force carriers:
+          </p>
+          <ul>
+            <li>Photon (\(\gamma\)) for electromagnetism.</li>
+            <li>W\(^{\pm}\), Z\(^{0}\) for weak interaction.</li>
+            <li>Eight gluons for strong interaction.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Draw an “exchange” diagram for EM: two electrons exchanging a photon, labeling initial and final momenta qualitatively.
+          </p>
+        </div>
+
+        <!-- Day 26 -->
+        <div class="day-block">
+          <div class="day-title">Day 26 – Higgs Field &amp; Mass</div>
+          <p>
+            The Higgs field has a nonzero vacuum expectation value; particles coupling to it acquire mass.  
+            Higgs boson = quantum excitation of the Higgs field.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Write a non-technical explanation of how the Higgs gives mass, suitable for a smart high-school student, using analogies instead of equations.
+          </p>
+        </div>
+
+        <!-- Day 27 -->
+        <div class="day-block">
+          <div class="day-title">Day 27 – Generations &amp; Mixing</div>
+          <p>
+            Fermions appear in three generations with increasing mass:
+          </p>
+          <ul>
+            <li>Leptons: \((\nu_e, e), (\nu_\mu, \mu), (\nu_\tau, \tau)\).</li>
+            <li>Quarks: \((u, d), (c, s), (t, b)\).</li>
+          </ul>
+          <p>
+            There is mixing among quarks (CKM) and neutrinos (PMNS), leading to phenomena like neutrino oscillations.
+          </p>
+          <h4>Do this today</h4>
+          <p>Write the three generations explicitly and mark which are lightest vs heaviest.</p>
+        </div>
+
+        <!-- Day 28 -->
+        <div class="day-block">
+          <div class="day-title">Day 28 – Standard Model Classification Practice</div>
+          <p>
+            Pull everything together: classify particles by spin, charge, mass scale, and role (matter, force, or Higgs).
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Make a “particle zoo poster” with sections for leptons, quarks, and bosons, listing their key properties.
+          </p>
+        </div>
+      </section>
+
+      <!-- Module 5 -->
+      <section class="card" id="module-5">
+        <div class="module-tag">Module 5</div>
+        <h2>Symmetries &amp; Quantum Numbers (Days 29–35)</h2>
+        <p class="module-meta">
+          Goal: See how symmetries lead to conservation laws and how quantum numbers organize allowed interactions.
+        </p>
+
+        <!-- Day 29 -->
+        <div class="day-block">
+          <div class="day-title">Day 29 – Symmetries &amp; Conservation Laws</div>
+          <p>
+            Noether’s theorem (conceptual): continuous symmetries correspond to conserved quantities.
+          </p>
+          <ul>
+            <li>Time translations ↔ energy.</li>
+            <li>Space translations ↔ momentum.</li>
+            <li>Rotations ↔ angular momentum.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Write three symmetry–conservation pairs with brief explanations.
+          </p>
+        </div>
+
+        <!-- Day 30 -->
+        <div class="day-block">
+          <div class="day-title">Day 30 – Electric Charge, Baryon &amp; Lepton Numbers</div>
+          <p>
+            Many processes in the Standard Model conserve:
+          </p>
+          <ul>
+            <li>Electric charge \(Q\).</li>
+            <li>Baryon number \(B\).</li>
+            <li>Lepton number \(L\) (and approximately each family lepton number).</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            For beta decay \(n \to p + e^- + \bar{\nu}_e\), verify conservation of:
+          </p>
+          <ul>
+            <li>Electric charge.</li>
+            <li>Baryon number.</li>
+            <li>Lepton number.</li>
+          </ul>
+        </div>
+
+        <!-- Day 31 -->
+        <div class="day-block">
+          <div class="day-title">Day 31 – Isospin &amp; Flavor Symmetries</div>
+          <p>
+            Isospin: treat proton and neutron as a doublet under an approximate SU(2) symmetry.
+          </p>
+          <p>
+            SU(3) flavor symmetry for \(u, d, s\) was used in early quark model to classify hadrons.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Explain why isospin is only approximate (hint: \(u\) and \(d\) have different masses and charges).
+          </p>
+        </div>
+
+        <!-- Day 32 -->
+        <div class="day-block">
+          <div class="day-title">Day 32 – Discrete Symmetries: C, P, T</div>
+          <p>
+            Discrete transformations:
+          </p>
+          <ul>
+            <li><strong>P (parity):</strong> spatial inversion \( \vec{x} \to -\vec{x} \).</li>
+            <li><strong>C (charge conjugation):</strong> particle ↔ antiparticle.</li>
+            <li><strong>T (time reversal):</strong> \(t \to -t\).</li>
+          </ul>
+          <h4>Do this today</h4>
+          <ul>
+            <li>Give a real-life analogy of parity (a mirror reflection).</li>
+            <li>Write a short note on what parity violation in a process means physically.</li>
+          </ul>
+        </div>
+
+        <!-- Day 33 -->
+        <div class="day-block">
+          <div class="day-title">Day 33 – CP Violation</div>
+          <p>
+            Combined CP symmetry can be violated in weak interactions (e.g., in kaon and B-meson decays).
+          </p>
+          <p>
+            CP violation is a key ingredient in explaining why the universe is dominated by matter rather than antimatter (though the Standard Model’s CP violation is likely insufficient by itself).
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Write a paragraph explaining why CP violation is important for the matter–antimatter asymmetry in the universe.
+          </p>
+        </div>
+
+        <!-- Day 34 -->
+        <div class="day-block">
+          <div class="day-title">Day 34 – Global vs Gauge Symmetries</div>
+          <p>
+            <strong>Global symmetry:</strong> same transformation everywhere in spacetime.  
+            <strong>Gauge symmetry:</strong> transformation can vary from point to point; implies existence of gauge fields.
+          </p>
+          <h4>Do this today</h4>
+          <p>Compare global vs gauge symmetries in three bullet points.</p>
+        </div>
+
+        <!-- Day 35 -->
+        <div class="day-block">
+          <div class="day-title">Day 35 – Selection Rules &amp; Allowed/Forbidden Processes</div>
+          <p>
+            Conservation laws impose “selection rules” on which processes can occur.
+          </p>
+          <p>
+            If a proposed reaction violates charge, baryon, or lepton number, it is forbidden in the Standard Model.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Invent a hypothetical reaction and check if it conserves charge, \(B\), and \(L\). If not, explain which conservation law is violated.
+          </p>
+        </div>
+      </section>
+
+      <!-- Module 6 -->
+      <section class="card" id="module-6">
+        <div class="module-tag">Module 6</div>
+        <h2>Interactions &amp; Feynman Diagrams (Days 36–42)</h2>
+        <p class="module-meta">
+          Goal: Understand how interactions are represented by Feynman diagrams and related to cross sections and decay rates.
+        </p>
+
+        <!-- Day 36 -->
+        <div class="day-block">
+          <div class="day-title">Day 36 – Fundamental Interactions Overview</div>
+          <p>
+            Fundamental interactions (ignoring gravity here):
+          </p>
+          <ul>
+            <li><strong>Strong:</strong> mediated by gluons.</li>
+            <li><strong>Electromagnetic:</strong> mediated by photons.</li>
+            <li><strong>Weak:</strong> mediated by W and Z bosons.</li>
+          </ul>
+          <p>They differ in strength, range, and which particles they couple to.</p>
+          <h4>Do this today</h4>
+          <p>Make a table: interaction, mediator, relative strength, range.</p>
+        </div>
+
+        <!-- Day 37 -->
+        <div class="day-block">
+          <div class="day-title">Day 37 – What is a Feynman Diagram?</div>
+          <p>
+            Feynman diagrams are pictorial representations of terms in a perturbative expansion of the amplitude.
+          </p>
+          <ul>
+            <li>External lines: incoming and outgoing real particles.</li>
+            <li>Internal lines: virtual particles.</li>
+            <li>Vertices: interaction points from the Lagrangian.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Draw e\(^{-}\)e\(^{+}\) → μ\(^{-}\)μ\(^{+}\) via a single intermediate photon and label all external and internal lines.
+          </p>
+        </div>
+
+        <!-- Day 38 -->
+        <div class="day-block">
+          <div class="day-title">Day 38 – Basic QED Diagrams</div>
+          <p>
+            QED interaction vertex couples electrons/positrons to photons.
+          </p>
+          <ul>
+            <li>Examples: electron scattering, Compton scattering, pair production.</li>
+            <li>Virtual photons exchanged internally carry momentum but are off-shell.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Draw 2–3 simple QED diagrams (e.g., electron–electron scattering, Compton scattering) and annotate the initial and final states.
+          </p>
+        </div>
+
+        <!-- Day 39 -->
+        <div class="day-block">
+          <div class="day-title">Day 39 – Weak Interaction &amp; Beta Decay</div>
+          <p>
+            Charged current weak interactions involve W\(^{\pm}\), changing quark flavor.
+          </p>
+          <p>
+            Example: beta decay at quark level:
+          </p>
+          <p>
+            $$d \to u + W^- \quad,\quad W^- \to e^- + \bar{\nu}_e$$
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Draw the Feynman diagram for beta decay, labeling the d and u quarks, W boson, electron, and antineutrino.
+          </p>
+        </div>
+
+        <!-- Day 40 -->
+        <div class="day-block">
+          <div class="day-title">Day 40 – Decays: Lifetime &amp; Width</div>
+          <p>
+            An unstable particle decays exponentially with lifetime \(\tau\).
+          </p>
+          <p>
+            Decay width \(\Gamma\) relates to lifetime:
+          </p>
+          <p>
+            $$\Gamma \approx \frac{\hbar}{\tau}$$
+          </p>
+          <p>
+            Branching ratios describe the fraction of decays into different channels.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            If a particle has \(\tau = 10^{-12}\ \text{s}\), estimate its width \(\Gamma\) symbolically using \(\Gamma \approx \hbar/\tau\) and discuss qualitatively what a larger \(\Gamma\) means.
+          </p>
+        </div>
+
+        <!-- Day 41 -->
+        <div class="day-block">
+          <div class="day-title">Day 41 – Cross Sections</div>
+          <p>
+            Cross section \(\sigma\) is an effective area measuring interaction probability.
+          </p>
+          <p>Units: barns (\(1\ \text{b} = 10^{-28}\ \text{m}^2\)).</p>
+          <p>
+            Event rate \(\sim\) (flux) × \(\sigma\) × (target density).
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Write a short explanation: why does a larger cross section, for the same beam and target, mean you detect more events?
+          </p>
+        </div>
+
+        <!-- Day 42 -->
+        <div class="day-block">
+          <div class="day-title">Day 42 – From Diagrams to Observables</div>
+          <p>
+            Steps (qualitative):
+          </p>
+          <ul>
+            <li>Write down Feynman diagrams for a process.</li>
+            <li>Compute amplitude(s) \(\mathcal{M}\).</li>
+            <li>Probability \(\propto |\mathcal{M}|^2\).</li>
+            <li>Integrate over phase space → cross section or decay rate.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            For e\(^{-}\)e\(^{+}\) → μ\(^{-}\)μ\(^{+}\), describe in words the chain: theory → diagram → amplitude → predicted cross section → comparison with experiment.
+          </p>
+        </div>
+      </section>
+
+      <!-- Module 7 -->
+      <section class="card" id="module-7">
+        <div class="module-tag">Module 7</div>
+        <h2>QCD, Hadrons &amp; Confinement (Days 43–49)</h2>
+        <p class="module-meta">
+          Goal: Recognize hadrons as composite states of quarks and gluons, and understand confinement and jets.
+        </p>
+
+        <!-- Day 43 -->
+        <div class="day-block">
+          <div class="day-title">Day 43 – Hadrons vs Elementary Particles</div>
+          <p>
+            Hadrons: composite particles made of quarks and gluons.
+          </p>
+          <ul>
+            <li>Mesons: quark–antiquark states.</li>
+            <li>Baryons: three-quark states.</li>
+          </ul>
+          <p>Elementary particles: quarks, leptons, gauge bosons, Higgs.</p>
+          <h4>Do this today</h4>
+          <p>
+            List at least 3 mesons and 3 baryons (e.g., p, n, π, K, etc.) and note their quark content (at least for p, n, π).
+          </p>
+        </div>
+
+        <!-- Day 44 -->
+        <div class="day-block">
+          <div class="day-title">Day 44 – Quark Model &amp; Classification</div>
+          <p>
+            SU(3) flavor symmetries organize hadrons into multiplets (octets, decuplets, etc.) for \(u, d, s\).
+          </p>
+          <p>
+            Quark model explains patterns in masses and allowed decays.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Sketch a simple baryon octet (triangle) and place p, n, and other light baryons in the diagram.
+          </p>
+        </div>
+
+        <!-- Day 45 -->
+        <div class="day-block">
+          <div class="day-title">Day 45 – Color Confinement &amp; Asymptotic Freedom</div>
+          <p>
+            Color confinement: quarks and gluons are not observed as free particles; they are confined within hadrons.
+          </p>
+          <p>
+            Asymptotic freedom: at very short distances (high energies) the strong coupling becomes small.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Write an analogy for confinement (e.g., quarks connected by a “rubber band” that stretches and snaps, creating new quark–antiquark pairs).
+          </p>
+        </div>
+
+        <!-- Day 46 -->
+        <div class="day-block">
+          <div class="day-title">Day 46 – Jets &amp; Partons</div>
+          <p>
+            High-energy quarks and gluons produced in collisions hadronize into collimated sprays of hadrons called jets.
+          </p>
+          <p>
+            Parton model: hadrons consist of partons (quarks and gluons) carrying fractions of the hadron’s momentum.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Sketch e\(^{+}\)e\(^{-}\) → q\(\bar{q}\) → two back-to-back jets and label the jets.
+          </p>
+        </div>
+
+        <!-- Day 47 -->
+        <div class="day-block">
+          <div class="day-title">Day 47 – Deep Inelastic Scattering (DIS)</div>
+          <p>
+            In DIS, high-energy leptons scatter off nucleons, probing their internal structure.
+          </p>
+          <p>
+            Evidence for point-like constituents (quarks) inside nucleons came from DIS experiments.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Write three bullet points summarizing why DIS was crucial for establishing the quark picture of the proton and neutron.
+          </p>
+        </div>
+
+        <!-- Day 48 -->
+        <div class="day-block">
+          <div class="day-title">Day 48 – Resonances &amp; Hadron Spectroscopy</div>
+          <p>
+            Resonant states appear as peaks in invariant mass distributions.
+          </p>
+          <p>
+            Examples: Δ resonance, J/ψ, Υ, etc.  
+            Each resonance is characterized by mass, width, spin, and parity.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Explain what it means when an experiment sees a sharp peak at a specific invariant mass value in a distribution.
+          </p>
+        </div>
+
+        <!-- Day 49 -->
+        <div class="day-block">
+          <div class="day-title">Day 49 – QCD Week Review</div>
+          <p>
+            You should now be comfortable with:
+          </p>
+          <ul>
+            <li>Hadrons vs elementary particles.</li>
+            <li>Mesons and baryons in the quark model.</li>
+            <li>Confinement, asymptotic freedom, jets, and resonances.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Create a one-page QCD cheat sheet summarizing key definitions (hadron, meson, baryon, jet) and core concepts (confinement, asymptotic freedom).
+          </p>
+        </div>
+      </section>
+
+      <!-- Module 8 -->
+      <section class="card" id="module-8">
+        <div class="module-tag">Module 8</div>
+        <h2>Detectors &amp; Experiments (Days 50–56)</h2>
+        <p class="module-meta">
+          Goal: Understand how accelerators and detectors work together to produce and measure particle collisions.
+        </p>
+
+        <!-- Day 50 -->
+        <div class="day-block">
+          <div class="day-title">Day 50 – Accelerators &amp; Colliders</div>
+          <p>
+            Types of experiments:
+          </p>
+          <ul>
+            <li>Fixed-target: beam hits stationary target.</li>
+            <li>Colliders: two beams collide head-on.</li>
+          </ul>
+          <p>
+            Colliders maximize CM energy for given beam energy. Luminosity measures collision rate per area per time.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Draw a ring collider and label: beam pipes, collision points (detectors), bending magnets, RF cavities.
+          </p>
+        </div>
+
+        <!-- Day 51 -->
+        <div class="day-block">
+          <div class="day-title">Day 51 – Tracking Detectors</div>
+          <p>
+            Tracking detectors measure charged particle trajectories in a magnetic field.
+          </p>
+          <p>
+            Curvature of track → momentum (higher momentum = straighter track).
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Sketch a charged track in a magnetic field inside a detector and explain qualitatively how curvature relates to momentum.
+          </p>
+        </div>
+
+        <!-- Day 52 -->
+        <div class="day-block">
+          <div class="day-title">Day 52 – Calorimeters &amp; Muon Systems</div>
+          <p>
+            Calorimeters:
+          </p>
+          <ul>
+            <li>EM calorimeter measures electrons/photons via EM showers.</li>
+            <li>Hadronic calorimeter measures hadrons via hadronic showers.</li>
+          </ul>
+          <p>
+            Muon systems detect muons, which penetrate through calorimeters.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Draw concentric detector layers: tracker → EM calorimeter → hadronic calorimeter → muon system. Label what each measures.
+          </p>
+        </div>
+
+        <!-- Day 53 -->
+        <div class="day-block">
+          <div class="day-title">Day 53 – Trigger &amp; Data Acquisition (DAQ)</div>
+          <p>
+            Modern colliders produce enormous event rates; we cannot record everything.
+          </p>
+          <p>
+            Trigger systems (hardware + software) select “interesting” events:
+          </p>
+          <ul>
+            <li>Level-1 hardware triggers: very fast and coarse.</li>
+            <li>High-level triggers: more detailed software-based selection.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Write a short explanation of why we need triggers and what would happen if we tried to store every collision.
+          </p>
+        </div>
+
+        <!-- Day 54 -->
+        <div class="day-block">
+          <div class="day-title">Day 54 – Event Reconstruction &amp; Invariant Mass Peaks</div>
+          <p>
+            Event reconstruction: infer particle types, momenta, and energies from detector signals.
+          </p>
+          <p>
+            Invariant mass of combinations of final-state particles is used to search for resonances (peaks).
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Imagine you reconstruct many e\(^{+}\)e\(^{-}\) pairs and plot their invariant mass. Describe what you’d see if a new particle decays into e\(^{+}\)e\(^{-}\) and how it appears in the distribution.
+          </p>
+        </div>
+
+        <!-- Day 55 -->
+        <div class="day-block">
+          <div class="day-title">Day 55 – Landmark Discoveries</div>
+          <p>
+            Key milestones:
+          </p>
+          <ul>
+            <li>W and Z bosons (1983).</li>
+            <li>Top quark (1995).</li>
+            <li>Higgs boson (2012).</li>
+          </ul>
+          <p>
+            Each discovery involved a synergy of theoretical prediction, detector design, and careful data analysis.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Create a timeline with at least five big milestones in particle physics, listing the particle and the year of discovery.
+          </p>
+        </div>
+
+        <!-- Day 56 -->
+        <div class="day-block">
+          <div class="day-title">Day 56 – From Idea to Publication</div>
+          <p>
+            Typical analysis workflow:
+          </p>
+          <ul>
+            <li>Theoretical motivation and definition of a signal.</li>
+            <li>Design of selection criteria and background estimates.</li>
+            <li>Reconstruction of events and statistical analysis.</li>
+            <li>Comparison of data vs prediction; result &amp; publication.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Write a bullet-point list of steps you would follow to search for a hypothetical new particle X in collider data.
+          </p>
+        </div>
+      </section>
+
+      <!-- Module 9 -->
+      <section class="card" id="module-9">
+        <div class="module-tag">Module 9</div>
+        <h2>Beyond the Standard Model &amp; Review (Days 57–60)</h2>
+        <p class="module-meta">
+          Goal: See why the Standard Model is incomplete and consolidate everything you've learned.
+        </p>
+
+        <!-- Day 57 -->
+        <div class="day-block">
+          <div class="day-title">Day 57 – Neutrino Oscillations &amp; New Physics</div>
+          <p>
+            Neutrino oscillations: neutrinos change flavor as they propagate, implying they have mass and mix.
+          </p>
+          <p>
+            Minimal Standard Model predicted massless neutrinos, so oscillations require new elements (e.g., mass terms, mixing matrices).
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Write 4–5 bullet points explaining why neutrino oscillations imply physics beyond the original Standard Model.
+          </p>
+        </div>
+
+        <!-- Day 58 -->
+        <div class="day-block">
+          <div class="day-title">Day 58 – Dark Matter &amp; Other BSM Ideas</div>
+          <p>
+            Evidence for dark matter:
+          </p>
+          <ul>
+            <li>Galaxy rotation curves.</li>
+            <li>Gravitational lensing.</li>
+            <li>Cosmic microwave background &amp; large-scale structure.</li>
+          </ul>
+          <p>
+            Candidate theories: WIMPs, axions, sterile neutrinos, supersymmetric particles, etc.
+          </p>
+          <h4>Do this today</h4>
+          <p>
+            Summarize in one paragraph: “Why we think there is dark matter, and why the Standard Model does not explain it.”
+          </p>
+        </div>
+
+        <!-- Day 59 -->
+        <div class="day-block">
+          <div class="day-title">Day 59 – Global Review &amp; Concept Map</div>
+          <p>
+            Connect all the major pillars:
+          </p>
+          <ul>
+            <li>Relativity + quantum mechanics → need for quantum field theory.</li>
+            <li>Standard Model as a gauge theory of \(SU(3)\times SU(2)\times U(1)\).</li>
+            <li>QCD and electroweak sectors tested in high-energy experiments.</li>
+          </ul>
+          <h4>Do this today</h4>
+          <p>
+            Create a concept map with “Particle Physics” at the center and branches to: Foundations, QM, Relativity, Standard Model, QCD, Experiments, BSM. Under each, list 3–5 keywords.
+          </p>
+        </div>
+
+        <!-- Day 60 -->
+        <div class="day-block">
+          <div class="day-title">Day 60 – Final Summary &amp; Self-Assessment</div>
+          <p>
+            Time to consolidate. Identify what you understand deeply and what needs more practice.
+          </p>
+          <h4>Do this today</h4>
+          <ul>
+            <li>
+              Write a 2–3 page summary of the entire course in your own words, with sections:
+              <ul>
+                <li>Basic principles (relativity &amp; QM).</li>
+                <li>Standard Model &amp; interactions.</li>
+                <li>Experiments &amp; discoveries.</li>
+                <li>Open questions and what excites you.</li>
+              </ul>
+            </li>
+            <li>Make a list of topics you want to deepen next (QFT, group theory, advanced QCD, etc.).</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- End-of-Course Summary -->
+      <section class="card" id="summary-notes">
+        <h2>End-of-Course Summary Notes (Quick Review)</h2>
+        <p class="subnote">
+          Use this as a revision sheet. Expand it with your own notes and examples.
+        </p>
+
+        <div class="summary-list">
+          <div class="summary-card">
+            <h4>Foundations</h4>
+            <ul>
+              <li>Relativistic relation: $$E^2 = (pc)^2 + (mc^2)^2$$</li>
+              <li>4-vectors unify space &amp; time, energy &amp; momentum.</li>
+              <li>Quantum states are vectors; observables are operators.</li>
+              <li>Uncertainty principle: $$\Delta x\,\Delta p \gtrsim \frac{\hbar}{2}$$</li>
+              <li>Wave–particle duality: particles have wavelengths, waves carry quanta.</li>
+            </ul>
+          </div>
+
+          <div class="summary-card">
+            <h4>Standard Model Particles</h4>
+            <ul>
+              <li>Leptons: three families \((\nu_e,e), (\nu_\mu,\mu), (\nu_\tau,\tau)\).</li>
+              <li>Quarks: \(u,d,c,s,t,b\) with charges \(+2/3\) or \(-1/3\) in units of \(e\).</li>
+              <li>Gauge bosons: γ (EM), W &amp; Z (weak), gluons (strong).</li>
+              <li>Higgs boson: excitation of Higgs field; gives mass via coupling.</li>
+            </ul>
+          </div>
+
+          <div class="summary-card">
+            <h4>Symmetries &amp; Conservation</h4>
+            <ul>
+              <li>Noether: continuous symmetries ↔ conserved quantities.</li>
+              <li>Conserved: electric charge, baryon &amp; lepton numbers (approx.).</li>
+              <li>Discrete: C, P, T; combined CPT is exact in local QFT.</li>
+              <li>CP violation in weak interactions crucial for matter asymmetry.</li>
+            </ul>
+          </div>
+
+          <div class="summary-card">
+            <h4>Interactions &amp; Observables</h4>
+            <ul>
+              <li>Feynman diagrams are visual expansions of amplitudes.</li>
+              <li>Decay width \(\Gamma\) and lifetime \(\tau\): \(\Gamma \approx \hbar/\tau\).</li>
+              <li>Cross section \(\sigma\) measures interaction probability (barns).</li>
+              <li>Rates depend on σ, luminosity, and detector efficiency.</li>
+            </ul>
+          </div>
+
+          <div class="summary-card">
+            <h4>QCD &amp; Hadrons</h4>
+            <ul>
+              <li>Hadrons: mesons (q\(\bar{q}\)), baryons (qqq).</li>
+              <li>Color confinement: no free quarks observed.</li>
+              <li>Asymptotic freedom: strong coupling weakens at high energies.</li>
+              <li>Jets: hadronized partons; important in collider analyses.</li>
+            </ul>
+          </div>
+
+          <div class="summary-card">
+            <h4>Detectors &amp; Experiments</h4>
+            <ul>
+              <li>Layered detectors: tracker, calorimeters, muon systems.</li>
+              <li>Triggers select interesting events from huge rates.</li>
+              <li>Invariant mass peaks reveal resonances (e.g., W, Z, Higgs).</li>
+              <li>Statistical significance (e.g., 5σ) used to claim discoveries.</li>
+            </ul>
+          </div>
+
+          <div class="summary-card">
+            <h4>Beyond the Standard Model</h4>
+            <ul>
+              <li>Neutrino oscillations → neutrinos have mass → SM incomplete.</li>
+              <li>Dark matter evidence from astrophysics and cosmology.</li>
+              <li>Candidate frameworks: SUSY, extra dimensions, new gauge sectors, etc.</li>
+              <li>Ongoing experiments search for new particles and interactions.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <p class="subnote">
+          After this course, natural next steps include: a more mathematical treatment via Quantum Field Theory (QFT), group theory for particle physics, and specialized topics like advanced QCD or neutrino physics.
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

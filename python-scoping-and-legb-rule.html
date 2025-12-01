@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Scoping & LEGB Rule - Cute Master Class</title>
+    
+    <!-- Fonts: Nunito (Rounded) for UI/English, Noto Sans Myanmar for Burmese Content -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- PrismJS for Code Highlighting (Customized Theme) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <!-- MathJax for Math Rendering -->
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* --- 1. CORE VARIABLES & RESET --- */
+        :root {
+            /* Cute Pastel Palette (Light Mode Default) */
+            --bg-color: #FFF0F5; /* Lavender Blush */
+            --bg-pattern: radial-gradient(#E0E7FF 1px, transparent 1px);
+            
+            --card-bg: #FFFFFF;
+            --text-main: #000000; /* Pure Black for max contrast */
+            --text-secondary: #1F2937; /* Very Dark Gray */
+            --text-muted: #4B5563;
+            
+            /* Pop Colors */
+            --color-primary: #7C3AED; /* Deep Violet */
+            --color-primary-soft: #DDD6FE;
+            --color-pink: #DB2777; /* Deep Pink */
+            --color-pink-soft: #FCE7F3;
+            --color-mint: #059669; /* Deep Mint */
+            --color-mint-soft: #D1FAE5;
+            --color-blue: #2563EB; /* Deep Blue */
+            --color-blue-soft: #DBEAFE;
+            --color-yellow: #D97706; /* Deep Amber */
+            --color-yellow-soft: #FEF3C7;
+
+            /* UI Elements */
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --shadow-pop: 0 10px 25px -5px rgba(139, 92, 246, 0.15), 0 8px 10px -6px rgba(139, 92, 246, 0.1);
+            --shadow-card: 0 4px 0px 0px rgba(0,0,0,0.05); /* Chunky shadow */
+            --border-card: 2px solid #fff;
+            
+            /* Layout */
+            --sidebar-width: 280px;
+            --header-height: 64px;
+            --sidebar-bg: #FFFFFF;
+        }
+
+        /* --- DARK MODE VARIABLES --- */
+        [data-theme="dark"] {
+            --bg-color: #111827; /* Dark Blue-Gray */
+            --bg-pattern: radial-gradient(#374151 1px, transparent 1px);
+            
+            --card-bg: #1F2937; /* Dark Gray Card */
+            --text-main: #F9FAFB; /* White */
+            --text-secondary: #E5E7EB; /* Light Gray */
+            --text-muted: #9CA3AF;
+            
+            /* Softer Accents for Dark Mode */
+            --color-primary: #A78BFA; 
+            --color-primary-soft: #4C1D95; /* Dark Purple BG */
+            --color-pink: #F472B6;
+            --color-pink-soft: #831843;
+            --color-mint: #34D399;
+            --color-mint-soft: #064E3B;
+            --color-blue: #60A5FA;
+            --color-blue-soft: #1E3A8A;
+            --color-yellow: #FBBF24;
+            --color-yellow-soft: #78350F;
+
+            --shadow-pop: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            --shadow-card: 0 4px 0px 0px rgba(0,0,0,0.3);
+            --border-card: 2px solid #374151;
+            --sidebar-bg: #1F2937;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Nunito', 'Noto Sans Myanmar', sans-serif;
+            background-color: var(--bg-color);
+            background-image: var(--bg-pattern);
+            background-size: 24px 24px;
+            color: var(--text-main);
+            line-height: 1.8; /* Even better readability */
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background: var(--sidebar-bg);
+            padding: 32px;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            z-index: 1000;
+            transform: translateX(-100%); /* Hidden by default on mobile */
+        }
+
+        /* Desktop Layout */
+        @media (min-width: 1024px) {
+            .app-container {
+                grid-template-columns: var(--sidebar-width) 1fr;
+            }
+            .mobile-header { display: none; }
+            .sidebar { 
+                position: sticky; 
+                transform: none; /* Always visible on desktop */
+                display: flex !important;
+                flex-direction: column;
+                border-right: 1px solid rgba(0,0,0,0.05);
+            }
+        }
+
+        /* Mobile Sidebar Active State */
+        .sidebar.active {
+            transform: translateX(0);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+            width: 85%; /* Slightly less than full width */
+            max-width: 320px;
+        }
+        
+        /* Overlay for Mobile Sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 900;
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .content-area {
+            padding: 32px 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            .app-container {
+                display: block; /* Ensure stacking context for mobile */
+            }
+
+            .content-area {
+                padding: 16px 12px; /* Tighten padding for mobile */
+            }
+            
+            h1 { font-size: 1.5rem; line-height: 1.25; }
+            h2 { font-size: 1.25rem; }
+            
+            .card {
+                padding: 16px; /* Reduce internal padding */
+                border-radius: 16px;
+                margin-bottom: 20px;
+            }
+
+            /* Analogy Container: Stack items on mobile */
+            .analogy-container {
+                grid-template-columns: 1fr; /* Force single column */
+                gap: 12px;
+            }
+            
+            .analogy-item {
+                padding: 16px;
+                display: flex;
+                align-items: center;
+                text-align: left;
+                gap: 12px;
+            }
+            
+            .analogy-icon {
+                margin-bottom: 0;
+                font-size: 2rem;
+            }
+            
+            /* Fix Diagram Squashing on Mobile */
+            .scope-layer {
+                padding: 10px;
+                border-width: 2px;
+                margin-top: 0;
+            }
+            .scope-visual {
+                padding: 12px;
+                overflow-x: auto;
+            }
+            .layer-g, .layer-e, .layer-l {
+                margin: 8px 0 0 0; /* Tighter vertical spacing */
+            }
+            .scope-label {
+                font-size: 0.6rem;
+                padding: 2px 6px;
+                top: -9px;
+                left: 10px;
+            }
+            
+            /* Code Block text size */
+            pre[class*="language-"] {
+                font-size: 0.8rem !important;
+            }
+        }
+
+        /* --- 3. TYPOGRAPHY (HIGH CONTRAST) --- */
+        h1, h2, h3 { color: var(--text-main); font-weight: 800; letter-spacing: -0.02em; }
+        h1 { font-size: 2.2rem; margin-bottom: 0.5rem; color: var(--color-primary); line-height: 1.2; }
+        h2 { 
+            font-size: 1.6rem; 
+            margin-bottom: 1.2rem; 
+            margin-top: 0.5rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            line-height: 1.3;
+        }
+        h3 { font-size: 1.25rem; margin-bottom: 1rem; color: var(--color-blue); }
+        
+        p, li { 
+            margin-bottom: 1rem; 
+            color: var(--text-secondary); 
+            font-weight: 600; /* Increased weight for readability */
+            font-size: 1.05rem; 
+        }
+        
+        strong { color: var(--text-main); font-weight: 800; }
+
+        /* --- 4. CUTE CARDS --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-pop);
+            padding: 32px;
+            margin-bottom: 32px;
+            border: var(--border-card);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Cute decorative top border for cards */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--color-pink), var(--color-primary), var(--color-blue));
+        }
+
+        /* --- 5. BADGES & HIGHLIGHTS --- */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            white-space: nowrap;
+        }
+        .badge-purple { background: var(--color-primary-soft); color: var(--color-primary); }
+        .badge-green { background: var(--color-mint-soft); color: var(--color-mint); }
+        .badge-blue { background: var(--color-blue-soft); color: var(--color-blue); }
+        
+        /* Dark mode text adjustment for badges to ensure readability */
+        [data-theme="dark"] .badge {
+             color: #FFFFFF;
+             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .highlight-box {
+            background: var(--color-yellow-soft);
+            border: 2px dashed var(--color-yellow);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            margin: 20px 0;
+            color: var(--text-secondary); /* Dynamic text color */
+        }
+        
+        [data-theme="dark"] .highlight-box {
+            color: #FFFFFF;
+        }
+
+        /* --- 6. NAVIGATION (CUTE SIDEBAR) --- */
+        .mobile-header {
+            height: var(--header-height);
+            background: var(--sidebar-bg);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--color-primary);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* Adjust logo margin for mobile header */
+        .mobile-header .nav-logo {
+            margin-bottom: 0;
+            font-size: 1.3rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--text-muted);
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--color-primary-soft);
+            color: var(--color-primary);
+            transform: scale(1.02);
+        }
+        
+        [data-theme="dark"] .nav-link:hover {
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: var(--color-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        /* --- 7. DIAGRAMS & ANALOGIES (IMPROVED) --- */
+        .analogy-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Desktop grid */
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .analogy-item {
+            background: var(--bg-color); /* Matches page bg */
+            padding: 20px;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .analogy-item:hover {
+            background: var(--card-bg);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-pop);
+        }
+
+        .analogy-icon { 
+            font-size: 2.5rem; 
+            margin-bottom: 12px; 
+            display: block; 
+            filter: drop-shadow(0 4px 2px rgba(0,0,0,0.1));
+        }
+
+        /* Scope Layers (Bento Box Style) */
+        .scope-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 24px;
+            background: var(--card-bg);
+            border: 2px dashed var(--text-muted);
+            border-radius: var(--radius-xl);
+            transition: background-color 0.3s ease;
+            overflow-x: auto; /* Allow scroll if still too small */
+        }
+        
+        .scope-layer {
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            position: relative;
+            border: 3px solid;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+            min-width: 0; /* Flexbox fix */
+        }
+
+        .scope-label {
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .layer-b { 
+            border-color: #9CA3AF; 
+            background: var(--bg-color);
+        }
+        .layer-b .scope-label { background: #6B7280; }
+
+        .layer-g { 
+            border-color: var(--color-blue); 
+            background: var(--color-blue-soft);
+            margin: 15px 0 0 0;
+        }
+        .layer-g .scope-label { background: var(--color-blue); }
+
+        .layer-e { 
+            border-color: var(--color-primary); 
+            background: var(--color-primary-soft);
+            margin: 15px 0 0 0;
+        }
+        .layer-e .scope-label { background: var(--color-primary); }
+
+        .layer-l { 
+            border-color: var(--color-pink); 
+            background: var(--color-pink-soft);
+            margin: 15px 0 0 0;
+            text-align: center;
+            border-style: dashed;
+        }
+        .layer-l .scope-label { background: var(--color-pink); }
+        
+        /* Ensure dark mode text visibility inside scope layers */
+        [data-theme="dark"] .scope-layer code {
+             color: #fff;
+             text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+        [data-theme="dark"] .layer-g code { color: var(--color-blue-soft); text-shadow:none; font-weight: bold;}
+        [data-theme="dark"] .layer-e code { color: var(--color-primary-soft); text-shadow:none; font-weight: bold;}
+        [data-theme="dark"] .layer-l code, [data-theme="dark"] .layer-l strong { color: #fff; }
+
+        /* --- 8. MAC STYLE CODE BLOCKS --- */
+        .code-window {
+            background: #2d2d2d;
+            border-radius: 12px;
+            padding: 10px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            overflow-x: auto; /* Horizontal scroll for mobile */
+        }
+
+        .window-header {
+            display: flex;
+            gap: 8px;
+            padding-bottom: 10px;
+            padding-left: 5px;
+            border-bottom: 1px solid #444;
+            margin-bottom: 10px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #FF5F56; }
+        .dot-yellow { background: #FFBD2E; }
+        .dot-green { background: #27C93F; }
+
+        pre[class*="language-"] {
+            margin: 0 !important;
+            border-radius: 0 0 8px 8px !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            padding: 0 !important;
+            font-size: 0.95rem !important;
+            text-shadow: none !important;
+        }
+
+        /* --- BUTTONS --- */
+        .menu-btn, .theme-toggle-btn {
+            background: var(--color-primary-soft);
+            border: none;
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex; 
+            align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .theme-toggle-btn:hover, .menu-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        [data-theme="dark"] .menu-btn, [data-theme="dark"] .theme-toggle-btn {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleMenu()"></div>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="nav-logo">
+            <span>🧁</span> PyMaster
+        </div>
+        <div class="header-actions">
+            <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Dark Mode">
+                <span id="theme-icon-mobile">🌙</span>
+            </button>
+            <button class="menu-btn" onclick="toggleMenu()" aria-label="Toggle Menu">
+                ☰
+            </button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="nav-logo mobile-hidden">
+                <span>🧁</span> Python EdTech
+            </div>
+            
+            <ul class="nav-links" style="flex-grow: 1;">
+                <li class="nav-item"><a href="#intro" class="nav-link active">မိတ်ဆက်</a></li>
+                <li class="nav-item"><a href="#what-is-scope" class="nav-link">Scope ဆိုတာဘာလဲ</a></li>
+                <li class="nav-item"><a href="#analogy" class="nav-link">ဥပမာ (Analogy)</a></li>
+                <li class="nav-item"><a href="#legb-rule" class="nav-link">LEGB Rule</a></li>
+                <li class="nav-item"><a href="#real-world" class="nav-link">လက်တွေ့အသုံးပြုပုံ</a></li>
+                <li class="nav-item"><a href="#key-notes" class="nav-link">မှတ်သားဖွယ်ရာများ</a></li>
+            </ul>
+
+            <!-- Desktop Theme Toggle -->
+            <div class="mobile-hidden" style="margin-top: auto; padding-top: 20px; border-top: 2px dashed rgba(0,0,0,0.1);">
+                <button class="theme-toggle-btn" onclick="toggleTheme()" style="width: 100%; justify-content: flex-start; padding-left: 16px; background: transparent;">
+                    <span id="theme-icon-desktop" style="margin-right: 10px;">🌙</span> 
+                    <span style="font-weight: 700; font-size: 0.9rem;">Change Theme</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content-area">
+            
+            <!-- Hero Section -->
+            <section id="intro" class="card">
+                <span class="badge badge-purple">✨ Core Concept</span>
+                <h1>Python Programming <br><span style="color: var(--color-primary);">Scoping & LEGB Rule</span></h1>
+                <p>Python တွင် Variable များကို စနစ်တကျ စီမံခန့်ခွဲပုံ၊ နယ်ပယ် (Scope) သတ်မှတ်ပုံ နှင့် LEGB စည်းမျဉ်းများကို ပျော်စရာကောင်းအောင် လေ့လာကြပါမည်။</p>
+            </section>
+
+            <!-- 1. What is Scope? -->
+            <section id="what-is-scope" class="card">
+                <h2>၁။ Scope (နယ်ပယ်) ဆိုတာဘာလဲ</h2>
+                <div class="highlight-box">
+                    <strong>💡 တိုက်ရိုက် ရှင်းလင်းချက်:</strong><br>
+                    Python တွင် <strong>Scope</strong> ဆိုသည်မှာ Variable (တန်ဖိုးသိမ်းဆည်းရာ) တစ်ခုကို <strong>ဘယ်နေရာတွေမှာ ယူသုံးလို့ရလဲ၊ ဘယ်နေရာတွေမှာ အလုပ်လုပ်လဲ</strong> ဆိုသည်ကို သတ်မှတ်ထားသော "နယ်ပယ်" ဖြစ်သည်။
+                </div>
+                
+                <h3>ရိုးရှင်းသော ရှင်းလင်းချက် (Summary)</h3>
+                <p>
+                    <strong>Scope ဆိုတာဘာလဲ?</strong><br>
+                    Scope ဆိုသည်မှာ Variable တစ်ခုကို Code ၏ ဘယ်အပိုင်းကနေ လှမ်းယူသုံးနိုင်သလဲ ဆိုသည့် "မြင်ကွင်းနယ်ပယ်" သတ်မှတ်ချက်ဖြစ်သည်။
+                </p>
+                <p>
+                    <strong>ဘာကြောင့်သုံးရသလဲ?</strong><br>
+                    Variable နာမည်တွေ တူနေရင်တောင် နေရာ (Scope) မတူလျှင် မရောထွေးစေရန်နှင့် မလိုအပ်ဘဲ Memory နေရာယူခြင်းကို လျှော့ချရန် သုံးသည်။
+                </p>
+            </section>
+
+            <!-- 2. Analogy -->
+            <section id="analogy" class="card">
+                <span class="badge badge-blue">🧠 Mental Model</span>
+                <h2>၂။ မျက်စိထဲမြင်သာစေမည့် ဥပမာ</h2>
+                <p style="font-size: 1.2rem; text-align: center; margin: 20px 0; color: var(--text-secondary);">
+                    "Scope ဆိုတာ အိမ်တစ်အိမ်ရဲ့ <strong style="color: var(--color-primary);">လုံခြုံရေးစနစ်</strong> နဲ့ တူပါတယ်။"
+                </p>
+
+                <div class="analogy-container">
+                    <div class="analogy-item">
+                        <span class="analogy-icon">🪥</span>
+                        <div style="font-weight: bold; color: var(--color-pink);">Local Scope</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">အိပ်ခန်းထဲက "သွားတိုက်တံ" ကို ပိုင်ရှင်ပဲ သုံးလို့ရတယ်။</div>
+                    </div>
+                    <div class="analogy-item">
+                        <span class="analogy-icon">📺</span>
+                        <div style="font-weight: bold; color: var(--color-blue);">Global Scope</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">ဧည့်ခန်းထဲက "တီဗီ" ကို အိမ်သားအားလုံး ကြည့်လို့ရတယ်။</div>
+                    </div>
+                    <div class="analogy-item">
+                        <span class="analogy-icon">☁️</span>
+                        <div style="font-weight: bold; color: var(--text-muted);">Built-in Scope</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">နေရာတိုင်းက ရှူလို့ရတဲ့ "လေ" လိုမျိုး Python က အသင့်ပေးထားတာ။</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. LEGB Rule -->
+            <section id="legb-rule" class="card">
+                <span class="badge badge-green">🔥 The Golden Rule</span>
+                <h2>၃။ LEGB Rule ဆိုတာဘာလဲ?</h2>
+                <p>Python သည် Variable တစ်ခုကို ရှာဖွေရာတွင် <strong>LEGB</strong> ဟုခေါ်သော အစဉ်လိုက် စည်းမျဉ်းအတိုင်း ရှာဖွေသည်။</p>
+                
+                <ol style="margin-left: 20px; margin-bottom: 20px; font-weight: 600; color: var(--text-secondary);">
+                    <li style="margin-bottom: 8px;"><span style="color: var(--color-pink)">L - Local Scope:</span> အနီးဆုံး၊ အတွင်းဆုံး (Current Function)။</li>
+                    <li style="margin-bottom: 8px;"><span style="color: var(--color-primary)">E - Enclosing Scope:</span> မိမိကို အုပ်မိုးထားသော Function (Nested Functions)။</li>
+                    <li style="margin-bottom: 8px;"><span style="color: var(--color-blue)">G - Global Scope:</span> အပြင်ဘက်ဆုံး၊ Main Code အပိုင်း။</li>
+                    <li style="margin-bottom: 8px;"><span style="color: var(--text-muted)">B - Built-in Scope:</span> Python က အသင့်ထည့်ပေးထားသော အရာများ (print, len)။</li>
+                </ol>
+
+                <!-- Visualizing Scope Layers -->
+                <h3 style="text-align: center; margin-top: 30px;">Scope Visualization Diagram</h3>
+                <div class="scope-visual">
+                    <!-- Layer B -->
+                    <div class="scope-layer layer-b">
+                        <div class="scope-label">B - Built-in Scope</div>
+                        <code style="color: var(--text-secondary);">print(), len(), list()</code>
+                        
+                        <!-- Layer G -->
+                        <div class="scope-layer layer-g">
+                            <div class="scope-label">G - Global Scope</div>
+                            <code style="color: #1E3A8A;">x = 10</code> (Defined in Main Body)
+                            
+                            <!-- Layer E -->
+                            <div class="scope-layer layer-e">
+                                <div class="scope-label">E - Enclosing Scope</div>
+                                <code style="color: #4C1D95;">outer_var = 5</code>
+                                
+                                <!-- Layer L -->
+                                <div class="scope-layer layer-l">
+                                    <div class="scope-label">L - Local Scope</div>
+                                    <strong style="color: #BE185D;">START HERE</strong><br>
+                                    <span style="font-size: 0.9rem; color: #831843;">Python starts searching here!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Real World Code -->
+            <section id="real-world" class="card">
+                <h2>၄။ Real World Project တွင် အသုံးပြုပုံ</h2>
+                <p>Real World Project များတွင် Database Link သို့မဟုတ် Tax Rate ကဲ့သို့ တန်ဖိုးများကို <strong>Global</strong> အနေဖြင့်ထားပြီး၊ တွက်ချက်မှုများကို <strong>Local</strong> တွင် လုပ်ဆောင်လေ့ရှိသည်။</p>
+
+                <h3>💻 Code Example: Global vs Local</h3>
+                
+                <div class="code-window">
+                    <div class="window-header">
+                        <div class="dot dot-red"></div>
+                        <div class="dot dot-yellow"></div>
+                        <div class="dot dot-green"></div>
+                    </div>
+                    <pre><code class="language-python"># GLOBAL SCOPE
+# တစ်ဆိုင်လုံးနှင့် သက်ဆိုင်သော အခွန်နှုန်းထား (နေရာတိုင်းက ယူသုံးနိုင်သည်)
+TAX_RATE = 0.05  
+
+def calculate_total_price(price):
+    # LOCAL SCOPE
+    # ဒီ function ထဲမှာပဲ သုံးမည့် variable
+    discount = 20 
+    
+    # Global variable (TAX_RATE) ကို လှမ်းယူသုံးနေခြင်း
+    tax_amount = price * TAX_RATE 
+    
+    # Local variable များကို အသုံးပြုတွက်ချက်ခြင်း
+    final_price = (price + tax_amount) - discount
+    return final_price
+
+# print(discount)  <-- Error! discount is not defined here.
+print(f"Total: {calculate_total_price(1000)}")</code></pre>
+                </div>
+
+                <h3>💻 Code Example: Nested Functions</h3>
+                <div class="code-window">
+                    <div class="window-header">
+                        <div class="dot dot-red"></div>
+                        <div class="dot dot-yellow"></div>
+                        <div class="dot dot-green"></div>
+                    </div>
+                    <pre><code class="language-python">def user_profile_builder(username):
+    # Enclosing Scope variable
+    greeting_prefix = "Hello" 
+
+    def make_sentence():
+        # Local Scope
+        # အပြင်ဘက် function ၏ variable ကို လှမ်းသုံးခြင်း
+        return f"{greeting_prefix}, {username}!"
+    
+    return make_sentence()
+
+print(user_profile_builder("Mg Mg"))</code></pre>
+                </div>
+            </section>
+
+            <!-- 5. Key Notes -->
+            <section id="key-notes" class="card" style="border-left: 8px solid var(--color-yellow);">
+                <h2>၅။ မဖြစ်မနေ မှတ်သားထားရမည့် အချက်များ</h2>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 16px; display: flex; gap: 12px; align-items: flex-start;">
+                        <span style="font-size: 1.2rem;">✅</span>
+                        <span><strong>Search Order:</strong> Python သည် Variable ကို တွေ့လျှင် <span style="background: var(--color-yellow-soft); color: var(--color-yellow-soft-text); padding: 2px 6px; border-radius: 4px;">L -> E -> G -> B</span> အစဉ်လိုက်အတိုင်း အမြဲရှာသည်။</span>
+                    </li>
+                    <li style="margin-bottom: 16px; display: flex; gap: 12px; align-items: flex-start;">
+                        <span style="font-size: 1.2rem;">✅</span>
+                        <span><strong>Naming Conflict:</strong> Local variable နာမည်နှင့် Global variable နာမည် တူနေလျှင် Function အတွင်း၌ Local variable ကသာ အနိုင်ရသည် (Shadowing)။</span>
+                    </li>
+                    <li style="margin-bottom: 16px; display: flex; gap: 12px; align-items: flex-start;">
+                        <span style="font-size: 1.2rem;">✅</span>
+                        <span><strong>Modifying Global:</strong> Function အတွင်းမှနေ၍ Global variable ကို ပြောင်းလဲချင်လျှင် <code>global</code> keyword ကို အသုံးပြုရမည်။</span>
+                    </li>
+                </ul>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- PrismJS for Syntax Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+    <script>
+        // Theme Logic
+        const htmlEl = document.documentElement;
+        const iconMobile = document.getElementById('theme-icon-mobile');
+        const iconDesktop = document.getElementById('theme-icon-desktop');
+        
+        // Check saved preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            htmlEl.setAttribute('data-theme', 'dark');
+            updateIcons(true);
+        }
+
+        function toggleTheme() {
+            const currentTheme = htmlEl.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlEl.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            updateIcons(newTheme === 'dark');
+        }
+
+        function updateIcons(isDark) {
+            const icon = isDark ? '☀️' : '🌙';
+            iconMobile.textContent = icon;
+            iconDesktop.textContent = icon;
+        }
+
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Close menu when clicking a link (Mobile)
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    const sidebar = document.getElementById('sidebar');
+                    const overlay = document.getElementById('sidebar-overlay');
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Scroll Spy (Highlight active link)
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(li => {
+                li.classList.remove('active');
+                if (li.getAttribute('href').includes(current)) {
+                    li.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

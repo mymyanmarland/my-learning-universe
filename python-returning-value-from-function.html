@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Return Functions - Cute Edition</title>
+    
+    <!-- Google Fonts: Nunito for Cuteness, Fira Code for Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (For Layout Power) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- PrismJS for Beautiful Code -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <style>
+        /* --- DESIGN SYSTEM & CUSTOM STYLES --- */
+        :root {
+            /* Light Mode Default Variables */
+            --bg-cream: #FFFDF5;
+            --text-black: #0f172a; 
+            --card-white: #ffffff;
+            --nav-bg: rgba(255, 255, 255, 0.9);
+            
+            /* Pastel Palette (Light) */
+            --pastel-pink: #FFD6E0;
+            --pastel-blue: #C4E4FF;
+            --pastel-green: #C1F0C1;
+            --pastel-purple: #E2CFFF;
+            --pastel-yellow: #FFF5BA;
+            --pastel-orange: #FFEDD5; /* New for Key Notes */
+            
+            /* Borders */
+            --pop-pink: #FF99AA;
+            --pop-blue: #7AC2FF;
+            --pop-green: #76D676;
+            --pop-purple: #B085FF;
+            --pop-orange: #FDBA74; /* New for Key Notes */
+            
+            --shadow-color: rgba(0,0,0,0.1);
+        }
+
+        /* --- DARK MODE VARIABLES --- */
+        body.dark-mode {
+            --bg-cream: #0f172a; /* Deep Slate */
+            --text-black: #e2e8f0; /* Light Slate */
+            --card-white: #1e293b; /* Slate 800 */
+            --nav-bg: rgba(30, 41, 59, 0.9);
+
+            /* Pastel Palette (Dark - Muted/Deep versions) */
+            --pastel-pink: #831843; 
+            --pastel-blue: #1e3a8a; 
+            --pastel-green: #14532d; 
+            --pastel-purple: #581c87; 
+            --pastel-yellow: #713f12;
+            --pastel-orange: #7c2d12;
+
+            /* Borders (Lighter for contrast in dark mode) */
+            --pop-pink: #f472b6;
+            --pop-blue: #60a5fa;
+            --pop-green: #4ade80;
+            --pop-purple: #c084fc;
+            --pop-orange: #fb923c;
+            
+            --shadow-color: rgba(0,0,0,0.5);
+        }
+
+        /* Dark Mode Specific Overrides for Tailwind classes */
+        body.dark-mode .text-slate-900 { color: #f1f5f9 !important; }
+        body.dark-mode .text-slate-600 { color: #cbd5e1 !important; }
+        body.dark-mode .text-slate-500 { color: #94a3b8 !important; }
+        
+        /* Header Text Colors in Dark Mode */
+        body.dark-mode .text-pink-900 { color: #fbcfe8 !important; }
+        body.dark-mode .text-blue-900 { color: #bae6fd !important; }
+        body.dark-mode .text-green-900 { color: #bbf7d0 !important; }
+        body.dark-mode .text-purple-900 { color: #e9d5ff !important; }
+        body.dark-mode .text-orange-900 { color: #fdba74 !important; }
+        
+        /* Visual Box Overrides in Dark Mode */
+        body.dark-mode .bg-blue-50 { background-color: #172554 !important; border-color: #1e40af !important; }
+        body.dark-mode .bg-gray-50 { background-color: #374151 !important; border-color: #4b5563 !important; }
+        body.dark-mode .bg-white { background-color: #1e293b !important; border-color: #334155 !important; }
+        body.dark-mode .bg-red-50 { background-color: #450a0a !important; border-color: #7f1d1d !important; }
+        body.dark-mode .text-red-800 { color: #fca5a5 !important; }
+        body.dark-mode .text-blue-600 { color: #60a5fa !important; }
+        body.dark-mode .text-gray-600 { color: #9ca3af !important; }
+        body.dark-mode .bg-orange-50 { background-color: #431407 !important; color: #fdba74 !important; border-color: #7c2d12 !important; }
+        body.dark-mode .text-orange-900 { color: #fdba74 !important; }
+        body.dark-mode .text-orange-800 { color: #fdba74 !important; }
+        body.dark-mode .bg-sky-100 { background-color: #0c4a6e !important; border-color: #075985 !important; }
+        body.dark-mode .text-sky-800 { color: #bae6fd !important; }
+        body.dark-mode .house-roof { border-bottom-color: #7c2d12 !important; }
+        body.dark-mode .scope-container { background-color: #451a03 !important; border-color: #7c2d12 !important; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-black);
+            -webkit-font-smoothing: antialiased;
+            background-image: radial-gradient(#9CA3AF 1px, transparent 1px);
+            background-size: 20px 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Cute Card Design */
+        .cute-card {
+            background: var(--card-white);
+            border-radius: 24px;
+            border: 2px solid;
+            box-shadow: 4px 6px 0px var(--shadow-color); 
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cute-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 6px 8px 0px var(--shadow-color);
+        }
+
+        /* Color Variants for Cards */
+        .card-pink { border-color: var(--pop-pink); }
+        .card-blue { border-color: var(--pop-blue); }
+        .card-green { border-color: var(--pop-green); }
+        .card-purple { border-color: var(--pop-purple); }
+        .card-orange { border-color: var(--pop-orange); }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            font-weight: 800;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .bg-pink-light { background-color: var(--pastel-pink); }
+        .bg-blue-light { background-color: var(--pastel-blue); }
+        .bg-green-light { background-color: var(--pastel-green); }
+        .bg-purple-light { background-color: var(--pastel-purple); }
+        .bg-orange-light { background-color: var(--pastel-orange); }
+
+        .card-body {
+            padding: 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 600; /* Medium weight for readability */
+            line-height: 1.8;
+            color: var(--text-black);
+        }
+
+        /* Emphasized Text */
+        strong {
+            color: var(--text-black);
+            font-weight: 800;
+        }
+
+        /* Mac-Style Code Window */
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            border: 2px solid #334155;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .window-header {
+            background: #334155;
+            padding: 0.5rem 1rem;
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        pre { margin: 0 !important; border-radius: 0 !important; }
+        code { font-family: 'Fira Code', monospace !important; font-size: 0.95rem !important; }
+
+        /* Scope House Visualization */
+        .scope-container {
+            position: relative;
+            background: var(--pastel-yellow);
+            border: 3px solid #FCD34D;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .house-roof {
+            width: 0; 
+            height: 0; 
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 40px solid #FCD34D;
+            margin: -60px auto 0;
+            position: absolute;
+            left: 0; right: 0;
+        }
+
+        /* Pill Navigation */
+        .nav-pill {
+            background: transparent;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            color: var(--text-black);
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .nav-pill:hover, .nav-pill.active {
+            background: var(--text-black);
+            color: var(--bg-cream);
+            border-color: var(--text-black);
+            transform: translateY(-2px);
+        }
+        
+        body.dark-mode .nav-pill:hover, body.dark-mode .nav-pill.active {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        /* Toggle Switch */
+        .theme-toggle {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            background: var(--text-black);
+            color: var(--bg-cream);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            margin-left: 10px;
+            width: 40px;
+            height: 40px;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating-emoji { animation: float 3s ease-in-out infinite; }
+
+    </style>
+</head>
+<body class="pb-20">
+
+    <!-- Navbar -->
+    <nav class="sticky top-4 z-50 mx-auto max-w-4xl px-4">
+        <div style="background-color: var(--nav-bg);" class="backdrop-blur-md border-2 border-gray-100 rounded-full shadow-lg p-2 flex justify-between items-center">
+            <div class="flex gap-1 overflow-x-auto px-2 no-scrollbar">
+                <a href="#intro" class="nav-pill active">Intro</a>
+                <a href="#keynotes" class="nav-pill">Notes</a>
+                <a href="#visuals" class="nav-pill">Visuals</a>
+                <a href="#code" class="nav-pill">Code</a>
+                <a href="#scope" class="nav-pill">Scope</a>
+            </div>
+            <!-- Theme Toggle Button -->
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                🌙
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="text-center pt-16 pb-12 px-4">
+        <div class="text-6xl mb-4 floating-emoji">🎁</div>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
+            Returning Value <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">from Function</span>
+        </h1>
+        <p class="text-lg text-slate-600 font-bold max-w-xl mx-auto">
+            Function တစ်ခု အလုပ်လုပ်ပြီးသွားရင် အဖြေပြန်ယူဖို့ ဘယ်လိုလုပ်ရမလဲ?
+        </p>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-4xl mx-auto px-4 grid gap-8">
+
+        <!-- 1. The Core Concept (Pink Card) -->
+        <section id="intro" class="cute-card card-pink">
+            <div class="card-header bg-pink-light text-pink-900">
+                <span>🎀</span>
+                Concept (သဘောတရား)
+            </div>
+            <div class="card-body">
+                <p class="mb-4">
+                    <strong>Return ဆိုတာ ဘာလဲ?</strong><br>
+                    Function တစ်ခုကို ရေးသားရာတွင် <code>return</code> ဆိုသည်မှာ ထို Function က လုပ်ဆောင်လိုက်သော အလုပ်တစ်ခု ပြီးဆုံးသွားသောအခါ ရရှိလာသော ရလဒ် (Result) ကို <strong>မူလခိုင်းစေလိုက်သော နေရာ (Caller)</strong> ဆီသို့ ပြန်လည် ပေးပို့လိုက်ခြင်း ဖြစ်သည်။
+                </p>
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-xl">
+                    <p class="text-red-800 text-sm font-bold">
+                        ⚠️ မှတ်ထားရန်:<br>
+                        Function ထဲတွင် တွက်ချက်မှုများ ပြုလုပ်ပြီးနောက် ထိုရလဒ်ကို ကွန်ပျူတာ၏ မှတ်ဉာဏ်ထဲတွင် <strong>ဆက်လက်အသုံးပြုလိုသည့်အခါ</strong> return ကို မဖြစ်မနေ သုံးရသည်။
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Key Notes (Orange Card - New Addition) -->
+        <section id="keynotes" class="cute-card card-orange">
+            <div class="card-header bg-orange-light text-orange-900">
+                <span>🔑</span>
+                Key Notes (မေ့လို့မဖြစ်တဲ့ အချက်များ)
+            </div>
+            <div class="card-body">
+                <div class="grid gap-4">
+                    
+                    <!-- Item 1 -->
+                    <div class="flex items-start gap-4 bg-orange-50 p-4 rounded-2xl border border-orange-100">
+                        <div class="text-3xl">🖨️</div>
+                        <div>
+                            <h4 class="font-extrabold text-orange-900 mb-1">Return vs Print</h4>
+                            <p class="text-sm">
+                                <code>print()</code> က လူမြင်အောင် Screen ပေါ် စာပြရုံသာ ဖြစ်သည်။ <code>return</code> က ကွန်ပျူတာ ဆက်သုံးဖို့ Data ပြန်ပေးခြင်း ဖြစ်သည်။ <br>
+                                <span class="text-xs text-orange-800 font-bold">(Real world project တွေမှာ return ကိုသာ အဓိက သုံးသည်။)</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="flex items-start gap-4 bg-orange-50 p-4 rounded-2xl border border-orange-100">
+                        <div class="text-3xl">🛑</div>
+                        <div>
+                            <h4 class="font-extrabold text-orange-900 mb-1">Function ပြီးဆုံးခြင်း</h4>
+                            <p class="text-sm">
+                                <code>return</code> စာကြောင်းကို တွေ့တာနဲ့ Function က ချက်ချင်း အလုပ်လုပ်တာ ရပ်ပြီး အဖြေပြန်ပို့သည်။ Return အောက်က ဘယ်ကုဒ်မှ ဆက်အလုပ်မလုပ်တော့ပါ။
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="flex items-start gap-4 bg-orange-50 p-4 rounded-2xl border border-orange-100">
+                        <div class="text-3xl">📦</div>
+                        <div>
+                            <h4 class="font-extrabold text-orange-900 mb-1">Data Type စုံလင်ခြင်း</h4>
+                            <p class="text-sm">
+                                String, Integer, List, Dictionary စသည့် မည်သည့် Data Type ကိုမဆို Return ပြန်နိုင်သည်။
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="flex items-start gap-4 bg-orange-50 p-4 rounded-2xl border border-orange-100">
+                        <div class="text-3xl">🌫️</div>
+                        <div>
+                            <h4 class="font-extrabold text-orange-900 mb-1">None Type</h4>
+                            <p class="text-sm">
+                                <code>return</code> မရေးထားသော Function တိုင်းသည် <code>None</code> (ဘာမှမရှိ) ဆိုသည့် တန်ဖိုးကို Return ပြန်သည်။
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Visual Explanation (Blue Card) -->
+        <section id="visuals" class="cute-card card-blue">
+            <div class="card-header bg-blue-light text-blue-900">
+                <span>👀</span>
+                Return vs Void (ကွာခြားချက်)
+            </div>
+            <div class="card-body">
+                
+                <!-- Comparison Grid -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    
+                    <!-- Return Type -->
+                    <div class="bg-blue-50 p-6 rounded-3xl border-2 border-blue-100 text-center">
+                        <div class="text-4xl mb-3">🔄</div>
+                        <h3 class="text-xl font-extrabold text-blue-600 mb-2">Return Type</h3>
+                        <p class="text-sm font-bold text-slate-600 mb-4">"အဖြေပြန်ပေးပါ၊ ဆက်သုံးချင်လို့"</p>
+                        <div class="text-left bg-white p-3 rounded-xl text-xs font-mono text-slate-500 border border-blue-100 shadow-sm">
+                            result = calculate()<br>
+                            print(result + 10) ✅
+                        </div>
+                    </div>
+
+                    <!-- Void Type -->
+                    <div class="bg-gray-50 p-6 rounded-3xl border-2 border-gray-200 text-center">
+                        <div class="text-4xl mb-3">🛑</div>
+                        <h3 class="text-xl font-extrabold text-gray-600 mb-2">Void Type</h3>
+                        <p class="text-sm font-bold text-slate-600 mb-4">"လုပ်စရာရှိတာလုပ်၊ ပြီးရင်ပြီးပြီ"</p>
+                        <div class="text-left bg-white p-3 rounded-xl text-xs font-mono text-slate-500 border border-gray-200 shadow-sm">
+                            save_file()<br>
+                            # No value comes back ❌
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Code Example (Purple Card) -->
+        <section id="code" class="cute-card card-purple">
+            <div class="card-header bg-purple-light text-purple-900">
+                <span>💻</span>
+                Code Example
+            </div>
+            <div class="card-body">
+                <p class="mb-2 font-bold text-slate-600">လက်တွေ့ရေးကြည့်ကြမယ်:</p>
+                
+                <div class="code-window">
+                    <div class="window-header">
+                        <div class="dot dot-red"></div>
+                        <div class="dot dot-yellow"></div>
+                        <div class="dot dot-green"></div>
+                    </div>
+<pre><code class="language-python"># 1. Return Function (တန်ဖိုးပြန်ပေးသည်)
+def calculate_price(qty, price):
+    total = qty * price
+    return total  # <--- အဖြေကို အပြင်သို့ ပြန်ပို့သည်
+
+# 2. Void Function (တန်ဖိုးပြန်မပေးပါ)
+def show_welcome():
+    print("Welcome to our shop!") 
+    # return မပါပါ (None ပြန်ပေးမည်)
+
+# Using them:
+cost = calculate_price(5, 200) # cost ထဲတွင် 1000 ရောက်သွားမည်
+print(f"Total is: {cost}")
+
+result = show_welcome()
+print(result) # Output: None</code></pre>
+                </div>
+                
+                <p class="text-sm text-center text-slate-400 font-bold">👆 Code များကို ကူးယူပြီး စမ်းသပ်ကြည့်နိုင်ပါသည်။</p>
+            </div>
+        </section>
+
+        <!-- 5. Scope Diagram (Green Card) -->
+        <section id="scope" class="cute-card card-green">
+            <div class="card-header bg-green-light text-green-900">
+                <span>🏡</span>
+                Global Scope vs Local Scope
+            </div>
+            <div class="card-body">
+                <p class="mb-4">
+                    Function အပြင်ကို <strong>Global Area</strong> လို့ခေါ်ပြီး၊ Function အတွင်းကို <strong>Local Area</strong> လို့ခေါ်ပါတယ်။
+                </p>
+
+                <!-- Visualization of Scope -->
+                <div class="relative bg-sky-100 border-4 border-sky-300 rounded-3xl p-8 mt-8">
+                    <div class="absolute -top-4 left-4 bg-sky-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                        Global Area (အပြင်လောက)
+                    </div>
+                    
+                    <p class="text-center font-bold text-sky-800 mb-6">
+                        🌍 Global Variable: နေရာတိုင်းက သုံးလို့ရတယ်။
+                    </p>
+
+                    <!-- The Function House -->
+                    <div class="bg-white border-4 border-orange-300 rounded-2xl p-6 relative mx-auto max-w-sm shadow-xl">
+                        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-400 text-white px-4 py-1 rounded-full text-xs font-bold uppercase">
+                            Function (အိမ်ထဲ)
+                        </div>
+                        
+                        <p class="font-bold text-orange-800 text-center mb-4">
+                            🏠 Local Variable
+                        </p>
+                        
+                        <div class="bg-orange-50 p-3 rounded-lg border border-orange-200 text-sm text-orange-900 mb-3">
+                            Secret Data = 123
+                        </div>
+                        
+                        <p class="text-xs text-slate-500 text-center leading-relaxed">
+                            ဒီ Data က အိမ်ထဲမှာပဲ ရှိတယ်။<br>
+                            အပြင်က လူ ဝင်ယူလို့ မရဘူး!<br>
+                            <span class="text-green-600 font-extrabold">Return</span> နဲ့ ပေးလိုက်မှ အပြင်ရောက်မယ်။
+                        </p>
+
+                        <!-- Arrow leaving the house -->
+                        <div class="flex justify-center mt-3">
+                            <div class="bg-green-500 text-white px-3 py-1 rounded-lg text-xs font-bold animate-bounce">
+                                ↓ Return Value
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <div class="inline-block bg-white px-4 py-2 rounded-lg border border-sky-300 text-sky-800 font-bold text-sm">
+                            Received Value (အပြင်ရောက်သွားပြီ) ✅
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-10 text-slate-400 font-bold text-sm">
+        <p>Made with 💖 for Python Learners</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    
+    <script>
+        // --- Navigation Logic ---
+        const pills = document.querySelectorAll('.nav-pill');
+        pills.forEach(pill => {
+            pill.addEventListener('click', function() {
+                pills.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // --- Dark Mode Logic ---
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Check for saved user preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
